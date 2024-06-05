@@ -20,8 +20,20 @@ const adminMenu = [
   getItem('Dashboard', '/dashboard', <BarChartOutlined />),
   getItem('Manage Accounts', '/manage-account', <ProfileOutlined />),
   getItem('Manage Evaluation', '/manage-evaluation', <ScheduleOutlined />),
-
+  getItem('Courses', '/courses', <ScheduleOutlined />),
 ]
+
+// const trainerMenu = [
+//   getItem('Dashboard', '/dashboard', <BarChartOutlined />),
+//   getItem('Manage Accounts', '/manage-account', <ProfileOutlined />),
+//   getItem('Manage Evaluation', '/manage-evaluation', <ScheduleOutlined />),
+// ]
+
+// const traineeMenu = [
+//   getItem('Dashboard', '/dashboard', <BarChartOutlined />),
+//   getItem('Manage Accounts', '/manage-account', <ProfileOutlined />),
+//   getItem('Manage Evaluation', '/manage-evaluation', <ScheduleOutlined />),
+// ]
 
 const SiderRender = (props) => {
   const [collapsed, setCollapsed] = useState(false)

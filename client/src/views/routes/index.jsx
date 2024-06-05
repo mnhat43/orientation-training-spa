@@ -10,6 +10,11 @@ import ResetPassword from 'views/pages/forgot-password/reset-password';
 import Dashboard from 'views/pages/dashboard';
 import ManageAccount from 'views/pages/admin/account';
 import ManageEvaluation from 'views/pages/admin/evaluation';
+import Courses from 'views/pages/courses';
+import Modules from 'views/pages/modulesCourse';
+import Lectures from 'views/pages/lectures';
+import Assignments from 'views/pages/assignments';
+import AssessmentCreation from 'views/pages/assessmentCreate/AssessmentCreation';
 
 const Login = loadableComponent(() => import('views/pages/login'))
 
@@ -38,6 +43,18 @@ function AllRoutes() {
           <Route path="/dashboard" element={<MainLayout component={Dashboard} />} />
           <Route path="/manage-account" element={<MainLayout component={ManageAccount} />} />
           <Route path="/manage-evaluation" element={<MainLayout component={ManageEvaluation} />} />
+
+
+          <Route path="/courses" element={<MainLayout component={Courses} />} />
+          <Route path="/course/:courseId/modules" element={<MainLayout component={Modules} />} />
+
+          <Route path="/course/:courseId/lectures" element={<MainLayout component={Lectures} />} />
+          <Route path="/course/:courseId/lectures/:lectureId" element={<MainLayout component={Lectures} />} />
+
+          <Route path="/course/:courseId/assignments/create" element={<MainLayout component={() => <AssessmentCreation assessmentType="Assignment" />} />} />
+
+
+          <Route path="/course/:courseId/assignments" element={<MainLayout component={Assignments} />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

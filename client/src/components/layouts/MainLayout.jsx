@@ -4,9 +4,10 @@ import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import HeaderRender from 'components/header';
 import SiderRender from 'components/siderbar';
 import FooterRender from 'components/footer';
+import CourseNavigation from 'components/CourseNavigation';
 const { Header, Content, Sider } = Layout;
 
-const App = (props) => {
+const MainLayout = ({ component: Component }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -17,7 +18,7 @@ const App = (props) => {
         <SiderRender
           width={200}
           style={{
-            background: colorBgContainer,
+            // background: colorBgContainer,
           }}
           theme="light"
         />
@@ -26,24 +27,25 @@ const App = (props) => {
             padding: '0 24px 24px',
           }}
         >
-          <Breadcrumb
+          {/* <Breadcrumb
             style={{
               margin: '16px 0',
             }}
           >
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          </Breadcrumb>
+          </Breadcrumb> */}
+          <CourseNavigation />
           <Content
             style={{
               padding: 24,
               margin: 0,
               minHeight: 500,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
+              background: 'colorBgContainer',
+              // borderRadius: borderRadiusLG,
             }}
           >
-            <props.component />
+            <Component />
           </Content>
           <FooterRender />
         </Layout>
@@ -51,4 +53,4 @@ const App = (props) => {
     </Layout>
   );
 };
-export default App;
+export default MainLayout;
