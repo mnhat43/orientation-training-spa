@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 // import { useSelector, useDispatch } from 'react-redux'
 
 import { Typography, Button, Modal, Form, Input, List } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { FlexSectionHeader } from 'views/style'
+import { FlexSectionHeader } from '@views/style'
 
 // import { STUDENT } from '../../constants/userRoles'
 import ModuleList from './components/ModuleList'
@@ -19,10 +19,8 @@ import ModuleList from './components/ModuleList'
 // } from '../../reducers/moduleReducer'
 
 // import useCoursePrivilege from '../../hooks/useCourseprivilege'
-const randomHex = () => {
-  return '#' + Math.floor(Math.random() * 16777215).toString(16)
-}
-const Modules = (props) => {
+
+const Modules = () => {
   const { Title } = Typography
 
   // const modules = useSelector((state) => state.modules)
@@ -36,33 +34,33 @@ const Modules = (props) => {
           id: 1,
           title: 'video 1',
           type: 'video',
-          url: 'https://www.youtube.com/',
+          url: 'https://www.youtube.com/'
         },
         {
           id: 2,
           title: 'file 1',
           type: 'file',
-          url: 'http:/123',
+          url: 'http:/123'
         },
         {
           id: 3,
           title: 'video 3',
           type: 'video',
-          url: 'https://www.youtube.com/',
-        },
-      ],
-    },
-  ]);
+          url: 'https://www.youtube.com/'
+        }
+      ]
+    }
+  ])
 
 
   const addModule = (module) => {
-    setModules((prevModules) => [...prevModules, { ...module, id: modules.length + 1 }]);
+    setModules((prevModules) => [...prevModules, { ...module, id: modules.length + 1 }])
     setAddModalActive(false)
     form.resetFields()
-  };
+  }
 
   const editModule = (moduleId, module) => {
-    console.log(moduleId, module);
+    console.log(moduleId, module)
     setModules((prevModules) =>
       prevModules.map((item) =>
         item.id === moduleId ? { ...item, ...module } : item
@@ -73,11 +71,10 @@ const Modules = (props) => {
   const removeModule = (moduleId) => {
     setModules((prevModules) =>
       prevModules.filter((item) => item.id !== moduleId)
-    );
+    )
   }
 
   // const { courseId } = props.match.params
-  const courseId = 1
 
   // const dispatch = useDispatch()
 
@@ -96,13 +93,13 @@ const Modules = (props) => {
             ...module,
             moduleItems: Array.isArray(module.moduleItems)
               ? [...module.moduleItems, moduleItem]
-              : [moduleItem],
-          };
+              : [moduleItem]
+          }
         }
-        return module;
+        return module
       })
-    );
-  };
+    )
+  }
 
   const removeModuleItem = (moduleId, moduleItem) => {
     setModules((prevModules) =>
@@ -112,11 +109,11 @@ const Modules = (props) => {
             ...module,
             moduleItems: module.moduleItems.filter(
               (item) => item !== moduleItem
-            ),
+            )
           }
           : module
       )
-    );
+    )
   }
 
   const [addModalActive, setAddModalActive] = useState(false)

@@ -95,9 +95,9 @@ const CourseNavigation = () => {
           <NavLink to={`/course/${params.courseId}/assignments`}>
             <Button type="text">Assignments</Button>
           </NavLink>
-          {/* <NavLink to={`.course/${params.courseId}/exams`}>
-        <Button type="text">Exams</Button>
-      </NavLink> */}
+          <NavLink to={`/course/${params.courseId}/exams`}>
+            <Button type="text">Exams</Button>
+          </NavLink>
           {/* <NavLink to={`.course/${params.courseId}/exam/12345`} target="_blank">
         <Button type="text">CheatingDetection</Button>
       </NavLink> */}

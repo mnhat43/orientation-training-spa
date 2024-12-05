@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, Modal, Checkbox } from 'antd'
+import { Form, Input, Button, Checkbox } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import messages from 'assets/lang/messages'
-import auth from 'api/auth'
 import './login.scss'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
-import useAuth from 'hooks/useAuth'
 
 function Login() {
   const navigate = useNavigate();
-  const { isLoggedIn, setUserState } = useAuth();
 
-  const handleSubmit = async (dataUser) => {
+  const handleSubmit = async () => {
     try {
       navigate('/dashboard');
       window.location.reload();
     } catch (error) {
-      console.log("error: ", error);
       toast.error('Đăng nhập thất bại')
     }
   }
@@ -50,7 +44,7 @@ function Login() {
             name="login"
             className="login-container__sub__content__form"
             initialValues={{
-              remember: true,
+              remember: true
             }}
             onFinish={handleSubmit}
           >
@@ -69,8 +63,8 @@ function Login() {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your Username!',
-                },
+                  message: 'Please input your Username!'
+                }
               ]}
             >
               <Input
@@ -87,8 +81,8 @@ function Login() {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your Password!',
-                },
+                  message: 'Please input your Password!'
+                }
               ]}
             >
               <Input.Password

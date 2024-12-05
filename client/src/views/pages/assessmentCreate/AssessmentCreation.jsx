@@ -2,12 +2,6 @@ import { Col, Row, Modal } from 'antd'
 
 import React, { useEffect, useState } from 'react'
 
-// import { useDispatch, useSelector } from 'react-redux'
-// import {
-//   clear,
-//   submitAssessment
-// } from '../../../reducers/assessmentCreationReducer'
-
 import { useParams } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 

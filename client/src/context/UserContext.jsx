@@ -1,7 +1,7 @@
 // import API from "api/axiosClient";
-import WithAxios from 'helpers/WithAxios'
+import WithAxios from '@helpers/WithAxios'
 import { createContext, useEffect, useState } from 'react'
-import user from 'api/user'
+import user from '@api/user'
 
 const UserContext = createContext()
 

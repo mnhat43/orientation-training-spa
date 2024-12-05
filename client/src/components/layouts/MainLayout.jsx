@@ -1,16 +1,14 @@
-import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import HeaderRender from 'components/header';
-import SiderRender from 'components/siderbar';
-import FooterRender from 'components/footer';
-import CourseNavigation from 'components/CourseNavigation';
-const { Header, Content, Sider } = Layout;
+import { Layout } from 'antd';
+import HeaderRender from '@components/header';
+import SiderRender from '@components/siderbar';
+import FooterRender from '@components/footer';
+import CourseNavigation from '@components/CourseNavigation';
+const { Content } = Layout;
 
 const MainLayout = ({ component: Component }) => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  // const {
+  //   token: { colorBgContainer, borderRadiusLG }
+  // } = theme.useToken();
   return (
     <Layout>
       <HeaderRender />
@@ -24,7 +22,7 @@ const MainLayout = ({ component: Component }) => {
         />
         <Layout
           style={{
-            padding: '0 24px 24px',
+            padding: '0 24px 24px'
           }}
         >
           {/* <Breadcrumb
@@ -41,7 +39,7 @@ const MainLayout = ({ component: Component }) => {
               padding: 24,
               margin: 0,
               minHeight: 500,
-              background: 'colorBgContainer',
+              background: 'colorBgContainer'
               // borderRadius: borderRadiusLG,
             }}
           >

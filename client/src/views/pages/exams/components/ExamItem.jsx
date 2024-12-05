@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { PlusOutlined, FileTextOutlined } from '@ant-design/icons'
 import { Typography, Button, List, Space, Tag, Dropdown, Menu } from 'antd'
-import { DateTime } from 'luxon'
-import { useParams } from 'react-router'
+import { AiOutlineSolution } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 const { Title, Text } = Typography
 
@@ -20,33 +18,25 @@ const StyledListItem = styled(List.Item)`
     background-color: #d9d9d9;
   }
 `
-const AssignmentItem = ({ assignment, disabled }) => {
-
+const ExamItem = ({ exam, disabled }) => {
     const { courseId } = useParams()
-    const navigate = useNavigate();
-
-    const deleteAssignment = (courseId, assignmentId) => {
-        console.log(courseId, assignmentId);
+    // const { privilege } = useCoursePrivilege()
+    const deleteExam = (courseId, examId) => {
+        console.log(courseId, examId);
     }
-
     const optionMenu = (
         <Menu>
             <Menu.Item>
-                <Link to={`/course/${courseId}/assessment/${assignment.id}/grade`}>
+                <Link to={`/course/${courseId}/assessment/${exam.id}/grade`}>
                     Grade All
                 </Link>
             </Menu.Item>
             <Menu.Item>
-                <Link
-                    to={`/course/${courseId}/assessment/${assignment.id}/submissions`}
-                >
+                <Link to={`/course/${courseId}/assessment/${exam.id}/submissions`}>
                     All Submissions
                 </Link>
             </Menu.Item>
-            <Menu.Item
-                danger
-                onClick={() => deleteAssignment(courseId, assignment.id)}
-            >
+            <Menu.Item danger onClick={() => deleteExam(courseId, exam.id)}>
                 Delete
             </Menu.Item>
         </Menu>
@@ -74,14 +64,15 @@ const AssignmentItem = ({ assignment, disabled }) => {
 
     return (
         <StyledListItem
+            // onClick={() => window.open(`/course/${courseId}/exam/${exam.id}`)}
             onClick={() =>
-                navigate(`/course/${courseId}/assignment/${assignment.id}`)
+                navigate(`/course/${courseId}/exam/${exam.id}`)
             }
-            // extra={getActions(privilege)}
             extra={getActions()}
+        // extra={getActions(privilege)}
         >
             <Space>
-                <FileTextOutlined
+                <AiOutlineSolution
                     style={{
                         fontSize: '32px',
                         color: disabled ? '#a7a7a7d9' : 'intial'
@@ -91,15 +82,22 @@ const AssignmentItem = ({ assignment, disabled }) => {
                     <Space>
                         <span>
                             <Text type="secondary">weight: </Text>
-                            <Text strong>{`${assignment.weight * 100}%`}</Text>
+                            <Text strong>{`${exam.weight * 100}%`}</Text>
                         </span>
                         <span>
                             <Text type="secondary">maxScore: </Text>
-                            <Text strong>{assignment.maxScore}</Text>
+                            <Text strong>{exam.maxScore}</Text>
+                        </span>
+                        <span>
+                            <Text type="secondary">Duration: </Text>
+                            <Text strong>
+                                {Math.round(exam.timeLimit / 60)}
+                                <Text type="secondary"> minutes</Text>
+                            </Text>
                         </span>
                         <span>
                             <Text type="secondary">Submission: </Text>
-                            <Text strong>{assignment.submissionType}</Text>
+                            <Text strong>{exam.submissionType}</Text>
                         </span>
                     </Space>
 
@@ -107,16 +105,20 @@ const AssignmentItem = ({ assignment, disabled }) => {
                         style={{ margin: 0, color: disabled ? '#a7a7a7d9' : 'intial' }}
                         level={5}
                     >
-                        {assignment.title}
+                        {exam.title}
                     </Title>
 
                     <div>
-                        <Tag color="red">Due At</Tag>
-                        <Text type="secondary">
-                            {DateTime.fromISO(assignment.dueDate).toLocaleString(
-                                DateTime.DATETIME_FULL
-                            )}
-                        </Text>
+                        {exam.status.code === 'willOpen' && (
+                            <Tag color="geekblue">{exam.status.code}</Tag>
+                        )}
+                        {exam.status.code === 'open' && (
+                            <Tag color="green">{exam.status.code}</Tag>
+                        )}
+                        {exam.status.code === 'closed' && (
+                            <Tag color="red">{exam.status.code}</Tag>
+                        )}
+                        <Text type="secondary">{exam.status.message}</Text>
                     </div>
                 </Space>
             </Space>
@@ -124,6 +126,4 @@ const AssignmentItem = ({ assignment, disabled }) => {
     )
 }
 
-
-
-export default AssignmentItem;
+export default ExamItem;
