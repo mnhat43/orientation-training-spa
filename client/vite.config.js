@@ -1,23 +1,21 @@
 /** @type {import('vite').UserConfig} */
-import react from '@vitejs/plugin-react'
-import { readdirSync } from 'fs'
-import path from 'path'
 import { defineConfig } from 'vite'
-
-const absolutePathAliases = {}
-const srcPath = path.resolve('./src/')
-const srcRootContent = readdirSync(srcPath, { withFileTypes: true }).map(
-  (dirent) => dirent.name.replace(/(\.jsx){1}(x?)/, ''),
-)
-
-srcRootContent.forEach((directory) => {
-  absolutePathAliases[directory] = path.join(srcPath, directory)
-})
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
   resolve: {
     alias: {
-      ...absolutePathAliases,
+      '@': path.resolve(__dirname, './src'),
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@context': path.resolve(__dirname, './src/context'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@helpers': path.resolve(__dirname, './src/helpers'),
+      '@views': path.resolve(__dirname, './src/views'),
+      '@ts-types': path.resolve(__dirname, './src/ts-types'),
+      '@api': path.resolve(__dirname, './src/api'),
     },
   },
   plugins: [react()],

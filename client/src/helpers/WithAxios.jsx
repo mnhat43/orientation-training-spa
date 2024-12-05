@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import useAuth from 'hooks/useAuth'
-import API from 'api/axios.config'
+import useAuth from '@hooks/useAuth'
+import API from '@api/axios.config'
 import history from './history'
 
 const WithAxios = ({ children }) => {
