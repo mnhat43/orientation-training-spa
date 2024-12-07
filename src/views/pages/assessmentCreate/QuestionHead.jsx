@@ -1,4 +1,3 @@
-import React from 'react'
 import { Form, Input, InputNumber, Select, Space, Typography } from 'antd'
 
 const { Title } = Typography

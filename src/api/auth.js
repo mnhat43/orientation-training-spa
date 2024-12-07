@@ -1,9 +1,9 @@
 import API from './axios.config'
 
 const auth = {
-  login: (credentials) => {
-    const url = '/auth/login'
-    return API.post(url, credentials)
+  login: (params) => {
+    const url = '/auth/login';
+    return API.post(url, params)
   },
   register: (credentials) => {
     const url = '/auth/signup'
@@ -16,7 +16,7 @@ const auth = {
   resetPassword: (credentials) => {
     const url = '/auth/reset-password'
     return API.post(url, credentials)
-  },
+  }
 }
 
 export default auth

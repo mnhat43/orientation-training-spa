@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { List, Space, Button } from 'antd'
 import styled from 'styled-components'
 

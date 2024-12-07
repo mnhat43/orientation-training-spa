@@ -1,85 +1,71 @@
-// import API from "api/axiosClient";
-import WithAxios from '@helpers/WithAxios'
-import { createContext, useEffect, useState } from 'react'
-import user from '@api/user'
+import { createContext, useEffect, useState } from 'react';
 
-const UserContext = createContext()
+const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [userData, setUserData] = useState(null)
-  const [collapsed, setCollapsed] = useState(
-    localStorage.getItem('collapsed') === 'true',
-  )
-  const [authData, setAuthData] = useState(JSON.parse(localStorage.getItem("token")))
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [collapsed, setCollapsed] = useState(localStorage.getItem('collapsed') === 'true');
+  const [authData, setAuthData] = useState(null);
 
+  // UseEffect để đọc token khi ứng dụng được tải lại
   useEffect(() => {
-    if (isLoggedIn) {
-      user.getProfile().then((res) => setUserData(res?.data))
+    const token = localStorage.getItem('token');
+
+    // Kiểm tra nếu token tồn tại và hợp lệ
+    if (token) {
+      try {
+        // Cố gắng parse token và lưu vào state
+        const parsedToken = JSON.parse(token);
+        setIsLoggedIn(true);
+        setAuthData(parsedToken); // Lưu token vào state
+      } catch (error) {
+        console.error('Invalid token in localStorage', error);
+        setIsLoggedIn(false);
+        setAuthData(null);
+      }
     }
-  }, [isLoggedIn])
+  }, []);
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      setIsLoggedIn(true)
-      setAuthData(JSON.parse(localStorage.getItem("token")));
+  // Hàm lưu token vào localStorage và cập nhật state
+  const setUserInfo = (token) => {
+    const cleanedToken = token.replace(/^"|"$/g, '');
+    setIsLoggedIn(true);
+    setAuthData(cleanedToken); // Cập nhật token vào state
+
+    // Lưu token vào localStorage
+    try {
+      localStorage.setItem('token', JSON.stringify(cleanedToken));
+    } catch (error) {
+      console.error('Error saving token to localStorage', error);
     }
-  }, [])
+  };
 
-  const setUserInfo = (data) => {
-    const { user, token } = data
-    setIsLoggedIn(true)
-    setUserData(user)
-    setAuthData(token)
-    localStorage.setItem("token", JSON.stringify(token));
-  }
-  const updateUserData = async ({
-    fullname,
-    email,
-    username,
-    phone_numbers,
-    address,
-    city,
-    country,
-  }) => {
-    const res = await user.updateUserInfo(userData.user_id, {
-      fullname,
-      email,
-      username,
-      phone_numbers,
-      address,
-      city,
-      country,
-    })
-    setUserData(res.data)
-  }
-
+  // Hàm logout (xóa token và reset state)
   const logout = () => {
-    setUserData(null)
-    setAuthData(null)
-    setIsLoggedIn(false)
-    user.logout()
-  }
+    setIsLoggedIn(false);
+    setAuthData(null);
+    localStorage.removeItem('token');
+  };
 
   return (
     <UserContext.Provider
       value={{
         userData,
         setUserData,
-        setUserState: (data) => setUserInfo(data),
+        setUserInfo, // Cung cấp hàm lưu token vào state và localStorage
         logout,
         isLoggedIn,
         setIsLoggedIn,
         authData,
         setAuthData,
         collapsed,
-        setCollapsed,
-        updateUserData,
+        setCollapsed
       }}
     >
-      <WithAxios>{children}</WithAxios>
+      {children}
     </UserContext.Provider>
-  )
-}
+  );
+};
 
-export default UserContext
+export default UserContext;

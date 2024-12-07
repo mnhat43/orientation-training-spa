@@ -15,16 +15,16 @@ export default defineConfig({
       '@helpers': path.resolve(__dirname, './src/helpers'),
       '@views': path.resolve(__dirname, './src/views'),
       '@ts-types': path.resolve(__dirname, './src/ts-types'),
-      '@api': path.resolve(__dirname, './src/api'),
-    },
+      '@api': path.resolve(__dirname, './src/api')
+    }
   },
   plugins: [react()],
   server: {
     watch: {
-      usePolling: true,
+      usePolling: true
     },
     host: true,
     strictPort: true,
-    port: 3001,
-  },
+    port: 3001
+  }
 })

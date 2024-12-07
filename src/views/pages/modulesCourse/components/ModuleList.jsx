@@ -9,14 +9,14 @@ import {
   Input
 } from 'antd'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import ModuleItem from './ModuleItem'
 import ModuleItemForm from './ModuleItemForm'
 
 const ModuleList = (props) => {
   const {
     module,
-    instructorAccess,
+    // instructorAccess,
     editModule,
     removeModule,
     addModuleItem,
@@ -65,7 +65,7 @@ const ModuleList = (props) => {
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
           initialValues={{
-            title: '',
+            title: ''
           }}
         >
           <Form.Item

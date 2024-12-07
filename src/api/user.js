@@ -20,7 +20,7 @@ const user = {
   deleteUser: (user_id) => {
     const url = `/users/${user_id}`
     return API.delete(url)
-  },
+  }
 }
 
 export default user

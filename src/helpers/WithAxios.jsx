@@ -40,7 +40,7 @@ const WithAxios = ({ children }) => {
             }
           }
           return Promise.reject(error)
-        },
+        }
       )
     }
   }, [isLoggedIn, setAuthData, setIsLoggedIn, setUserData])

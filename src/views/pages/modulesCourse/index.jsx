@@ -1,30 +1,12 @@
 import React, { useState } from 'react'
-// import { useSelector, useDispatch } from 'react-redux'
-
 import { Typography, Button, Modal, Form, Input, List } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { FlexSectionHeader } from '@views/style'
-
-// import { STUDENT } from '../../constants/userRoles'
 import ModuleList from './components/ModuleList'
-
-// import {
-//   getAllModules,
-//   createModule,
-//   updateModule,
-//   deleteModule,
-//   createModuleItem,
-//   deleteModuleItem,
-//   clearModules
-// } from '../../reducers/moduleReducer'
-
-// import useCoursePrivilege from '../../hooks/useCourseprivilege'
 
 const Modules = () => {
   const { Title } = Typography
 
-  // const modules = useSelector((state) => state.modules)
-  // const { enrolled, privilege } = useCoursePrivilege()
   const [modules, setModules] = useState([
     {
       id: 1,
@@ -73,17 +55,6 @@ const Modules = () => {
       prevModules.filter((item) => item.id !== moduleId)
     )
   }
-
-  // const { courseId } = props.match.params
-
-  // const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   dispatch(getAllModules(courseId))
-
-  //   return () => dispatch(clearModules())
-  // }, [courseId, dispatch])
-
 
   const addModuleItem = (moduleId, moduleItem) => {
     setModules((prevModules) =>
@@ -188,12 +159,8 @@ const Modules = () => {
                   editModule(module.id, updatedModule)
                 }
                 removeModule={removeModule}
-                addModuleItem={(moduleItem) =>
-                  addModuleItem(module.id, moduleItem)
-                }
-                removeModuleItem={(moduleItem) =>
-                  removeModuleItem(module.id, moduleItem)
-                }
+                addModuleItem={(moduleItem) => addModuleItem(module.id, moduleItem)}
+                removeModuleItem={(moduleItem) => removeModuleItem(module.id, moduleItem)}
               />
             </List.Item>
           )}
