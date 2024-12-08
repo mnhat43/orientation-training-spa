@@ -1,44 +1,71 @@
-import React, { useState } from 'react'
-import { Typography, Button, Modal, Form, Input, List } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Typography, Button, Modal, Form, Input, List, Spin } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
 import { FlexSectionHeader } from '@views/style'
 import ModuleList from './components/ModuleList'
+import module from '@api/module'
+import { toast } from 'react-toastify'
 
 const Modules = () => {
   const { Title } = Typography
+  const { courseId } = useParams()
+  const [addModalActive, setAddModalActive] = useState(false)
+  const [form] = Form.useForm()
+  const [modules, setModules] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  const [modules, setModules] = useState([
-    {
-      id: 1,
-      title: 'Tuần 1',
-      moduleItems: [
-        {
-          id: 1,
-          title: 'video 1',
-          type: 'video',
-          url: 'https://www.youtube.com/'
-        },
-        {
-          id: 2,
-          title: 'file 1',
-          type: 'file',
-          url: 'http:/123'
-        },
-        {
-          id: 3,
-          title: 'video 3',
-          type: 'video',
-          url: 'https://www.youtube.com/'
-        }
-      ]
+  useEffect(() => {
+    fetchModules()
+  }, [courseId])
+
+  const fetchModules = async () => {
+    setLoading(true)
+    try {
+      const response = await module.getListModuleDetail({ course_id: parseInt(courseId) })
+      if (response.status == 200) {
+        const sortedModules = response.data.data.modules.sort((a, b) => a.module_id - b.module_id)
+        setModules(sortedModules)
+      }
+
+    } catch (err) {
+      setError('Failed to fetch modules')
+      toast.error('Failed to fetch modules')
+    } finally {
+      setLoading(false)
     }
-  ])
+  }
 
+  const handleAddModule = async (value) => {
+    setLoading(true)
+    try {
+      const response = await module.addModule({ course_id: parseInt(courseId), title: value.title })
+      if (response.status == 200) {
+        fetchModules()
+      }
 
-  const addModule = (module) => {
-    setModules((prevModules) => [...prevModules, { ...module, id: modules.length + 1 }])
-    setAddModalActive(false)
-    form.resetFields()
+    } catch (err) {
+      toast.error('Failed to add module')
+    } finally {
+      form.resetFields()
+      setAddModalActive(false)
+      setLoading(false)
+    }
+  }
+
+  const handleRemoveModule = async (moduleId) => {
+    setLoading(true)
+    try {
+      const response = await module.deleteModule({ module_id: parseInt(moduleId) })
+      if (response.status == 200) {
+        fetchModules()
+      }
+    } catch (err) {
+      toast.error('Failed to delete module')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const editModule = (moduleId, module) => {
@@ -47,12 +74,6 @@ const Modules = () => {
       prevModules.map((item) =>
         item.id === moduleId ? { ...item, ...module } : item
       )
-    )
-  }
-
-  const removeModule = (moduleId) => {
-    setModules((prevModules) =>
-      prevModules.filter((item) => item.id !== moduleId)
     )
   }
 
@@ -87,18 +108,10 @@ const Modules = () => {
     )
   }
 
-  const [addModalActive, setAddModalActive] = useState(false)
-  const [form] = Form.useForm()
-
-  const handleCancel = () => {
-    setAddModalActive(false)
-  }
-
   return (
     <React.Fragment>
       <FlexSectionHeader>
         <Title level={3}>Modules</Title>
-        {/* {enrolled && privilege !== STUDENT && ( */}
         <Button
           onClick={() => setAddModalActive(true)}
           type="dashed"
@@ -107,16 +120,15 @@ const Modules = () => {
         >
           Add Module
         </Button>
-        {/* )} */}
       </FlexSectionHeader>
 
       <Modal
         title="Add New Module"
         visible={addModalActive}
         onOk={form.submit}
-        onCancel={handleCancel}
+        onCancel={() => setAddModalActive(false)}
         footer={[
-          <Button key="cancel" onClick={handleCancel}>
+          <Button key="cancel" onClick={() => setAddModalActive(false)}>
             Cancel
           </Button>,
           <Button key="submit" type="primary" onClick={form.submit}>
@@ -127,7 +139,7 @@ const Modules = () => {
         <Form
           name="add Module"
           form={form}
-          onFinish={addModule}
+          onFinish={handleAddModule}
           requiredMark={false}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
@@ -148,23 +160,26 @@ const Modules = () => {
       </Modal>
 
       <div style={{ marginTop: '16px' }}>
-        <List
-          dataSource={modules}
-          renderItem={(module) => (
-            <List.Item>
-              <ModuleList
-                module={module}
-                // instructorAccess={privilege !== STUDENT}
-                editModule={(updatedModule) =>
-                  editModule(module.id, updatedModule)
-                }
-                removeModule={removeModule}
-                addModuleItem={(moduleItem) => addModuleItem(module.id, moduleItem)}
-                removeModuleItem={(moduleItem) => removeModuleItem(module.id, moduleItem)}
-              />
-            </List.Item>
-          )}
-        />
+        {loading ? (
+          <Spin size="large" />
+        ) : error ? (
+          <Typography.Text type="danger">{error}</Typography.Text>
+        ) : (
+          <List
+            dataSource={modules}
+            renderItem={(module) => (
+              <List.Item>
+                <ModuleList
+                  module={module}
+                  editModule={(updatedModule) => editModule(module.ID, updatedModule)}
+                  removeModule={handleRemoveModule}
+                  addModuleItem={(moduleItem) => addModuleItem(module.ID, moduleItem)}
+                  removeModuleItem={(moduleItem) => removeModuleItem(module.ID, moduleItem)}
+                />
+              </List.Item>
+            )}
+          />
+        )}
       </div>
     </React.Fragment>
   )

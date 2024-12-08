@@ -27,7 +27,6 @@ const ModuleList = (props) => {
   const [form] = Form.useForm()
 
   // const loadingUpload = module.loadingUpload
-
   const handleCancel = () => {
     setEditModalActive(false)
   }
@@ -40,6 +39,7 @@ const ModuleList = (props) => {
         form.resetFields();
       })
   };
+
 
   return (
     <>
@@ -94,7 +94,7 @@ const ModuleList = (props) => {
         expandIconPosition={'left'}
       >
         <Collapse.Panel
-          header={<Typography.Text strong>{module.title}</Typography.Text>}
+          header={<Typography.Text strong>{module.module_title}</Typography.Text>}
           bordered={false}
           key="1"
           extra={
@@ -116,7 +116,7 @@ const ModuleList = (props) => {
                 type="text"
                 icon={<DeleteOutlined />}
                 danger
-                onClick={() => removeModule(module.id)}
+                onClick={() => removeModule(module.module_id)}
               />
             </Space>
             // )
@@ -124,7 +124,7 @@ const ModuleList = (props) => {
         >
           <List
             locale={{ emptyText: 'no items' }}
-            dataSource={module.moduleItems}
+            dataSource={module.module_items}
             renderItem={(item) => (
               <ModuleItem
                 removeModuleItem={removeModuleItem}

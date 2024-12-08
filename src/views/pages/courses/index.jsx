@@ -112,6 +112,7 @@ const Courses = () => {
         isModalOpen
         &&
         <AddCourseForm
+          isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           handleAddCourse={handleAddCourse}
         />}

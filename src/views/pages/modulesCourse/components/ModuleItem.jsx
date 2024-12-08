@@ -20,12 +20,12 @@ const HoverableListItem = styled(List.Item)`
 `
 
 const getIcon = (item) => {
-  if (item.type === 'video') return <YoutubeOutlined />
-  if (item.type === 'file') return <FileOutlined />
+  if (item.ItemType === 'video') return <YoutubeOutlined />
+  if (item.ItemType === 'file') return <FileOutlined />
 }
 
 const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
-  const { title, type, url } = item
+  const { Title, ItemType, Url } = item
   const { courseId } = useParams()
 
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
     <HoverableListItem
       extra={getActions(item)}
       onClick={() => {
-        if (type === 'file') window.open(url, '_parent')
+        if (ItemType === 'file') window.open(Url, '_parent')
         else {
           navigate(`/course/${courseId}/lectures/${item.id}`)
         }
@@ -63,7 +63,7 @@ const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
     >
       <Space size={20}>
         {getIcon(item)}
-        {title}
+        {Title}
       </Space>
     </HoverableListItem>
   )

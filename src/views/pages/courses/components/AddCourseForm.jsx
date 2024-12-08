@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import './AddCourseForm.scss';
 
-const AddCourseForm = ({ setIsModalOpen, handleAddCourse }) => {
+const AddCourseForm = ({ isModalOpen, setIsModalOpen, handleAddCourse }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [thumbnail] = useState(null);
@@ -15,12 +15,10 @@ const AddCourseForm = ({ setIsModalOpen, handleAddCourse }) => {
     return e && e.fileList;
   };
 
-
-
   return (
     <Modal
       title="Add New Course"
-      visible={true}
+      visible={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
       footer={[
         <Button key="cancel" onClick={() => setIsModalOpen(false)}>
