@@ -1,5 +1,5 @@
 import { Button, Input, Radio, Space, Form, Upload } from 'antd'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { PlusOutlined, InboxOutlined } from '@ant-design/icons'
 
@@ -8,7 +8,7 @@ const { Dragger } = Upload
 const FileForm = ({
   handleCancel,
   addModuleItem,
-  // loadingUpload,
+  loadingUpload,
   setFormActive
 }) => {
   const [form] = Form.useForm()
@@ -16,11 +16,9 @@ const FileForm = ({
   const handleSubmit = (values) => {
     const body = new FormData()
     body.append('file', values.file[0].originFileObj)
-    body.append('type', 'file')
+    body.append('item_type', 'file')
     body.append('title', values.title)
-    // addModuleItem(body).then(() => setFormActive(false))
-    addModuleItem(body)
-    setFormActive(false)
+    addModuleItem(body).then(() => setFormActive(false))
   }
 
   const getFileList = (files) => {
@@ -52,7 +50,7 @@ const FileForm = ({
           </Form.Item>
           <Form.Item>
             <Button
-              // loading={loadingUpload}
+              loading={loadingUpload}
               type="primary"
               onClick={() => form.submit()}
             >
@@ -93,11 +91,13 @@ const FileForm = ({
 const VideoForm = ({ handleCancel, addModuleItem, setFormActive }) => {
   const [form] = Form.useForm()
 
-  const handleSubmit = (moduleItem) => {
-    moduleItem.type = 'video'
-    // addModuleItem(moduleItem).then(() => setFormActive(false))
-    addModuleItem(moduleItem)
-    setFormActive(false)
+  const handleSubmit = (values) => {
+    const body = new FormData()
+    body.append('url', values.url)
+    body.append('item_type', 'video')
+    body.append('title', values.title)
+
+    addModuleItem(body).then(() => setFormActive(false))
   }
 
   return (
@@ -188,7 +188,7 @@ const ModuleItemForm = ({ instructorAccess, addModuleItem, loadingUpload }) => {
             <FileForm
               addModuleItem={addModuleItem}
               handleCancel={handleCancel}
-              // loadingUpload={loadingUpload}
+              loadingUpload={loadingUpload}
               setFormActive={setFormActive}
             />
           )}

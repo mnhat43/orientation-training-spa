@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { FlexSectionHeader } from '@views/style'
 import ModuleList from './components/ModuleList'
 import module from '@api/module'
+import moduleItem from '@api/moduleItem'
 import { toast } from 'react-toastify'
 
 const Modules = () => {
@@ -77,35 +78,47 @@ const Modules = () => {
     )
   }
 
-  const addModuleItem = (moduleId, moduleItem) => {
-    setModules((prevModules) =>
-      prevModules.map((module) => {
-        if (module.id === moduleId) {
-          return {
-            ...module,
-            moduleItems: Array.isArray(module.moduleItems)
-              ? [...module.moduleItems, moduleItem]
-              : [moduleItem]
-          }
-        }
-        return module
-      })
-    )
+  // const fetchModuleItemList = async (moduleId) => {
+  //   try {
+  //     const response = await moduleItem.getModuleItemList({ "module_id": moduleId });
+  //     if (response.status === 200) {
+  //       console.log(response.data);
+  //     } else {
+  //       toast.error('Error: ' + response.data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error('Error: ' + error.message);
+  //   }
+  // }
+
+  const addModuleItem = async (moduleId, formData) => {
+    formData.append('module_id', moduleId);
+    try {
+      const response = await moduleItem.addModuleItem(formData);
+      if (response.status === 200) {
+        toast.success(`${formData.get('item_type')} added successfully!`);
+        // fetchModuleItemList(moduleId);
+        fetchModules()
+      } else {
+        toast.error('Error: ' + response.data.message);
+      }
+    } catch (error) {
+      toast.error('Error: ' + error.message);
+    }
   }
 
-  const removeModuleItem = (moduleId, moduleItem) => {
-    setModules((prevModules) =>
-      prevModules.map((module) =>
-        module.id === moduleId
-          ? {
-            ...module,
-            moduleItems: module.moduleItems.filter(
-              (item) => item !== moduleItem
-            )
-          }
-          : module
-      )
-    )
+  const removeModuleItem = async (id) => {
+    try {
+      const response = await moduleItem.deleteModuleItem({ "moduleItem_id": id });
+      if (response.status === 200) {
+        toast.success(`Deleted successfully!`);
+        fetchModules()
+      } else {
+        toast.error('Error: ' + response.data.message);
+      }
+    } catch (error) {
+      toast.error('Error: ' + error.message);
+    }
   }
 
   return (
@@ -171,10 +184,10 @@ const Modules = () => {
               <List.Item>
                 <ModuleList
                   module={module}
-                  editModule={(updatedModule) => editModule(module.ID, updatedModule)}
+                  editModule={(updatedModule) => editModule(module.module_id, updatedModule)}
                   removeModule={handleRemoveModule}
-                  addModuleItem={(moduleItem) => addModuleItem(module.ID, moduleItem)}
-                  removeModuleItem={(moduleItem) => removeModuleItem(module.ID, moduleItem)}
+                  addModuleItem={(moduleItem) => addModuleItem(module.module_id, moduleItem)}
+                  removeModuleItem={(moduleItem) => removeModuleItem(moduleItem.ID)}
                 />
               </List.Item>
             )}
