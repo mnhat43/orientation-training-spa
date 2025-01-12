@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
-import { TableOutlined, FormOutlined, LogoutOutlined, BarChartOutlined, ScheduleOutlined, ProfileOutlined } from '@ant-design/icons'
-import { Breadcrumb, Button, Layout, Menu, theme } from 'antd'
-import { Navigate, Link, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { BarChartOutlined, ScheduleOutlined, ProfileOutlined } from '@ant-design/icons'
+import { Layout, Menu } from 'antd'
+import { Link, useLocation } from 'react-router-dom'
 const { Sider } = Layout
 import './siderbar.scss'
-import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+// import styled from "styled-components";
+// import { useNavigate } from 'react-router-dom';
 
 function getItem(label, key, icon, children) {
   return {
     key,
     icon,
     children,
-    label,
+    label
   }
 }
 
@@ -20,7 +20,7 @@ const adminMenu = [
   getItem('Dashboard', '/dashboard', <BarChartOutlined />),
   getItem('Manage Accounts', '/manage-account', <ProfileOutlined />),
   getItem('Manage Evaluation', '/manage-evaluation', <ScheduleOutlined />),
-  getItem('Courses', '/courses', <ScheduleOutlined />),
+  getItem('Courses', '/courses', <ScheduleOutlined />)
 ]
 
 // const trainerMenu = [
@@ -38,11 +38,11 @@ const adminMenu = [
 const SiderRender = (props) => {
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate('/login');
-  }
+  // const handleLogout = () => {
+  //   navigate('/login');
+  // }
 
   return (
     <Sider
@@ -94,13 +94,13 @@ const SiderRender = (props) => {
 
 export default SiderRender
 
-const ImageWrapper1 = styled.div`
-  align-self: stretch;
-`;
+// const ImageWrapper1 = styled.div`
+//   align-self: stretch;
+// `;
 
-const Image1 = styled.img`
-  aspect-ratio: 1.41;
-  object-fit: cover;
-  object-position: center;
-  width: 100%;
-`;
+// const Image1 = styled.img`
+//   aspect-ratio: 1.41;
+//   object-fit: cover;
+//   object-position: center;
+//   width: 100%;
+// `;

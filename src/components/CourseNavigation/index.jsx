@@ -1,12 +1,10 @@
-import React from 'react'
 
 // import { useHistory } from 'react-router-dom'
 
-import { Button, Dropdown, Menu, Space } from 'antd'
-import { Link, NavLink, useLocation, useMatch, useParams, useNavigate } from 'react-router-dom'
+import { Button, Space } from 'antd'
+import { NavLink, useLocation, useParams, useNavigate } from 'react-router-dom'
 
-import { DownOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import { red } from '@mui/material/colors'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 // const CourseMenu = ({ url, privilege }) => {
 //   return (
@@ -46,10 +44,10 @@ const CourseNavigation = () => {
   const location = useLocation();
 
 
-  const course = {
-    name: 'Intern ReactJS',
-    backgroundColor: 'black',
-  }
+  // const course = {
+  //   name: 'Intern ReactJS',
+  //   backgroundColor: 'black'
+  // }
   const navigate = useNavigate();
 
   // const { privilege } = useCoursePrivilege(params.id)
@@ -63,7 +61,7 @@ const CourseNavigation = () => {
       {
         location.pathname.includes("/course/")
         &&
-        <div style={{ display: 'flex', backgroundColor: '#ddd', height: '50px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', backgroundColor: '#ddd', height: '50px', alignItems: 'center', padding: '0 20px' }}>
           <Space>
             <Button
               shape="circle"
@@ -75,7 +73,7 @@ const CourseNavigation = () => {
           overlay={<CourseMenu url={url} privilege={privilege} />}
           placement="bottomCenter"
         > */}
-            <Button
+            {/* <Button
               shape="round"
               style={{ backgroundColor: course.backgroundColor }}
             >
@@ -83,7 +81,7 @@ const CourseNavigation = () => {
                 {course.name}
               </span>{' '}
               <DownOutlined style={{ color: 'white' }} />
-            </Button>
+            </Button> */}
             {/* </Dropdown> */}
           </Space>
           <NavLink to={`/course/${params.courseId}/modules`}>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { Empty, Row, Col, Space } from 'antd'
@@ -6,6 +6,7 @@ import { Empty, Row, Col, Space } from 'antd'
 import Video from './components/Video'
 import VideoInfo from './components/VideoInfo'
 import PlaylistMenu from './components/PlaylistMenu'
+import lecture from '@api/lecture'
 
 const selectLecture = (lectures, lectureId) => {
   if (!Array.isArray(lectures) || !lectures.length) return null
@@ -50,28 +51,29 @@ const LecturePage = (props) => {
 }
 
 const Lectures = () => {
-  const lectures = [
-    {
-      id: '1',
-      title: 'Video 1',
-      thumbnail: {
-        url: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-      },
-      duration: '10:11',
-      videoId: 'ckqd8ZxTuDY',
-      publishedAt: '2024/05/02'
-    },
-    {
-      id: '2',
-      title: 'Video 3',
-      thumbnail: {
-        url: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-      },
-      duration: '10:11',
-      videoId: 'vy2A00BcP1w',
-      publishedAt: '2024/03/02'
+  const [lectures, setLectures] = useState([])
+  const [loading, setLoading] = useState(true)
+  const { courseId } = useParams()
+
+  const fetchLectures = async () => {
+    try {
+      setLoading(true)
+      const response = await lecture.getListLecture({ course_id: parseInt(courseId) })
+      setLectures(response.data.data)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+
+      console.error("Failed to fetch lectures:", error.message)
     }
-  ]
+  }
+
+  useEffect(() => {
+    fetchLectures()
+  }, [courseId])
+
+  if (loading) return <div>Loading...</div>
+  if (!lectures.length) return <Empty description="No lectures available" />
 
   return <LecturePage lectures={lectures} />
 }

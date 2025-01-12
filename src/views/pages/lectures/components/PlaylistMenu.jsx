@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { List, Typography } from 'antd'
 import styled from 'styled-components'
 

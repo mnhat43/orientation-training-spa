@@ -20,12 +20,15 @@ const MainLayout = ({ component: Component }) => {
           }}
           theme="light"
         />
-        <Layout
-          style={{
-            padding: '0 24px 24px'
-          }}
-        >
-          {/* <Breadcrumb
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+          <CourseNavigation style={{ display: "fex" }} />
+
+          <Layout
+            style={{
+              padding: '0 24px 24px'
+            }}
+          >
+            {/* <Breadcrumb
             style={{
               margin: '16px 0',
             }}
@@ -33,20 +36,22 @@ const MainLayout = ({ component: Component }) => {
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
           </Breadcrumb> */}
-          <CourseNavigation />
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 500,
-              background: 'colorBgContainer'
-              // borderRadius: borderRadiusLG,
-            }}
-          >
-            <Component />
-          </Content>
-          <FooterRender />
-        </Layout>
+            <Content
+              style={{
+                padding: 24,
+                margin: 0,
+                minHeight: 500,
+                background: 'colorBgContainer',
+                height: '90vh'
+                // borderRadius: borderRadiusLG,
+              }}
+            >
+              <Component />
+            </Content>
+            <FooterRender />
+          </Layout>
+        </div>
+
       </Layout>
     </Layout>
   );

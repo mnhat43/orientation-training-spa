@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Typography, List } from 'antd'
 import styled from 'styled-components'
 
@@ -22,7 +20,7 @@ const VideoItem = ({ lecture, highlight, chooseLecture }) => {
     >
       <img
         style={{ width: '100px', height: '56px' }}
-        src={lecture.thumbnail.url}
+        src={lecture.thumbnail}
         alt="video thumbnail"
       />
       <div style={{ paddingLeft: '8px', width: '100%' }}>
