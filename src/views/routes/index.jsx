@@ -9,6 +9,10 @@ import AssessmentCreation from '@views/pages/assessmentCreate/AssessmentCreation
 import Exams from '@views/pages/exams';
 import Login from '@views/pages/login'
 
+import ManageAccount from '@views/pages/admin/account';
+import ManageEvaluation from '@views/pages/admin/evaluation';
+
+
 function AllRoutes() {
   return (
     <Routes>
@@ -17,6 +21,8 @@ function AllRoutes() {
 
 
       <Route path="/dashboard" element={<MainLayout component={Dashboard} />} />
+      <Route path="/manage-account" element={<MainLayout component={ManageAccount} />} />
+      <Route path="/manage-evaluation" element={<MainLayout component={ManageEvaluation} />} />
 
       <Route path="/courses" element={<MainLayout component={Courses} />} />
       <Route path="/course/:courseId/modules" element={<MainLayout component={Modules} />} />

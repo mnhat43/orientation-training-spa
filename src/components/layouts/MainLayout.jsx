@@ -1,5 +1,5 @@
 import { Layout } from 'antd';
-// import HeaderRender from '@components/header';
+import HeaderRender from '@components/header';
 import SiderRender from '@components/siderbar';
 import FooterRender from '@components/footer';
 import CourseNavigation from '@components/CourseNavigation';
@@ -11,7 +11,7 @@ const MainLayout = ({ component: Component }) => {
   // } = theme.useToken();
   return (
     <Layout>
-      {/* <HeaderRender /> */}
+      <HeaderRender />
       <Layout>
         <SiderRender
           width={200}
