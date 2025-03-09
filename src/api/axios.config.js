@@ -2,7 +2,7 @@ import axios from 'axios'
 import queryString from 'query-string'
 
 const API = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: import.meta.env.VITE_AXIOS_BASE_URL || 'http://localhost:8080',
   withCredentials: true,
   paramsSerializer: (params) => queryString.stringify(params)
 })
