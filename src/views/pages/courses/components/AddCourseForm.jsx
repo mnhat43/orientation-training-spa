@@ -40,7 +40,7 @@ const AddCourseForm = ({ isModalOpen, setIsModalOpen, handleAddCourse }) => {
         {/* Course Title */}
         <Form.Item
           label="Title"
-          name="course_title"
+          name="title"
           rules={[{ required: true, message: 'Please enter the course title!' }]}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
@@ -55,7 +55,7 @@ const AddCourseForm = ({ isModalOpen, setIsModalOpen, handleAddCourse }) => {
         {/* Course Description */}
         <Form.Item
           label="Description"
-          name="course_description"
+          name="description"
           rules={[{ message: 'Please enter a description for the course!' }]}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
@@ -70,7 +70,7 @@ const AddCourseForm = ({ isModalOpen, setIsModalOpen, handleAddCourse }) => {
 
         {/* Thumbnail Upload */}
         <Form.Item
-          name="course_thumbnail"
+          name="thumbnail"
           label="Thumbnail"
           valuePropName="fileList"
           getValueFromEvent={normFile}

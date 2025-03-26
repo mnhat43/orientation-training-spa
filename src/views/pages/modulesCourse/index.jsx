@@ -91,12 +91,12 @@ const Modules = () => {
   //   }
   // }
 
-  const addModuleItem = async (moduleId, formData) => {
-    formData.append('module_id', moduleId);
+  const addModuleItem = async (moduleId, payload) => {
+    console.log(moduleId, payload);
     try {
-      const response = await moduleItem.addModuleItem(formData);
+      const response = await moduleItem.addModuleItem({ ...payload, module_id: moduleId });
       if (response.status === 200) {
-        toast.success(`${formData.get('item_type')} added successfully!`);
+        toast.success(`${payload.item_type} added successfully!`);
         // fetchModuleItemList(moduleId);
         fetchModules()
       } else {

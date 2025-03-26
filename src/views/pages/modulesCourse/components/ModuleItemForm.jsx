@@ -2,6 +2,7 @@ import { Button, Input, Radio, Space, Form, Upload } from 'antd'
 import { useState } from 'react'
 
 import { PlusOutlined, InboxOutlined } from '@ant-design/icons'
+import { convertFileToBase64 } from '@helpers/common'
 
 const { Dragger } = Upload
 
@@ -13,12 +14,21 @@ const FileForm = ({
 }) => {
   const [form] = Form.useForm()
 
-  const handleSubmit = (values) => {
-    const body = new FormData()
-    body.append('file', values.file[0].originFileObj)
-    body.append('item_type', 'file')
-    body.append('title', values.title)
-    addModuleItem(body).then(() => setFormActive(false))
+  const handleSubmit = async (values) => {
+    const { title, file } = values
+    try {
+      const base64File = await convertFileToBase64(file[0].originFileObj);
+
+      const body = {
+        item_type: 'file',
+        title,
+        resource: base64File
+      }
+
+      addModuleItem(body).then(() => setFormActive(false))
+    } catch (error) {
+      console.error('Error converting file to Base64:', error);
+    }
   }
 
   const getFileList = (files) => {
@@ -92,11 +102,12 @@ const VideoForm = ({ handleCancel, addModuleItem, setFormActive }) => {
   const [form] = Form.useForm()
 
   const handleSubmit = (values) => {
-    const body = new FormData()
-    body.append('url', values.url)
-    body.append('item_type', 'video')
-    body.append('title', values.title)
-
+    const { url, title } = values
+    const body = {
+      item_type: 'video',
+      title,
+      resource: url
+    }
     addModuleItem(body).then(() => setFormActive(false))
   }
 

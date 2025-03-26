@@ -13,20 +13,19 @@ const CourseCard = (props) => {
       cover={
         <img
           alt={Title}
-          src={Thumbnail}
+          src={`data:image/png;base64,${Thumbnail}`}
           style={{
-            width: '100%', // Đảm bảo ảnh luôn chiếm hết chiều rộng của Card
-            height: 150,   // Giới hạn chiều cao cố định cho ảnh
-            objectFit: 'cover' // Cắt ảnh để vừa với chiều cao và chiều rộng mà không bị méo
+            width: '100%',
+            height: 150,
+            objectFit: 'cover'
           }}
         />
 
       }
-      onClick={onClick}  // Xử lý khi click vào Card
+      onClick={onClick}
     >
       <Meta title={Title} description={Description} />
 
-      {/* Icon chỉnh sửa ở góc dưới bên phải */}
       <Button
         icon={<EditOutlined />}
         style={{
@@ -39,12 +38,11 @@ const CourseCard = (props) => {
           fontSize: '14px'
         }}
         onClick={(e) => {
-          e.stopPropagation(); // Ngừng sự kiện lan truyền
-          onEdit(CourseID); // Truyền CourseID trực tiếp
+          e.stopPropagation();
+          onEdit(CourseID);
         }}
       />
 
-      {/* Icon xóa ở góc dưới bên phải */}
       <Button
         icon={<DeleteOutlined />}
         style={{
@@ -57,8 +55,8 @@ const CourseCard = (props) => {
           fontSize: '14px'
         }}
         onClick={(e) => {
-          e.stopPropagation(); // Ngừng sự kiện lan truyền
-          onDelete(CourseID); // Truyền CourseID trực tiếp
+          e.stopPropagation();
+          onDelete(CourseID);
         }}
       />
     </Card>

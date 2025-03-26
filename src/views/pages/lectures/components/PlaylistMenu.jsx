@@ -1,45 +1,47 @@
-import { List, Typography } from 'antd'
-import styled from 'styled-components'
-
+import { List, Typography, Collapse } from 'antd'
 import VideoItem from './VideoItem'
+import FileItem from './FileItem'
 
-export const Menu = styled.div`
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.1);
-`
+const { Panel } = Collapse
 
 const PlaylistMenu = (props) => {
-  const { lectures, selectedLecture, chooseLecture } = props
+  const { lectures, selectedLecture, chooseLecture, completedLectures } = props
 
   return (
-    <Menu>
-      <div
-        style={{
-          height: '70px',
-          backgroundColor: '#fafafa',
-          padding: '20px',
-          paddingRight: '0px'
-        }}
-      >
-        <Typography.Title level={4}>Lectures Playlist</Typography.Title>
-      </div>
-      <div style={{ height: '568px' }}>
-        <List
-          style={{ overflowY: 'auto', height: '100%' }}
-          dataSource={lectures}
-          renderItem={(lecture) => (
-            <VideoItem
-              lecture={lecture}
-              highlight={lecture.id === selectedLecture.id}
-              chooseLecture={() => chooseLecture(lecture.id)}
+    <div className="playlist-menu">
+      <Typography.Title level={4} className="playlist-title">
+        Lectures Playlist
+      </Typography.Title>
+      <Collapse accordion>
+        {Object.keys(lectures).map((week) => (
+          <Panel header={week} key={week}>
+            <List
+              dataSource={lectures[week]}
+              renderItem={(lecture) => {
+                const completed = completedLectures.includes(lecture.id)
+                return lecture.itemType === 'video' ? (
+                  <VideoItem
+                    key={lecture.id}
+                    lecture={lecture}
+                    highlight={lecture.id === selectedLecture.id}
+                    chooseLecture={() => chooseLecture(lecture.id)}
+                    completed={completed}
+                  />
+                ) : lecture.itemType === 'file' ? (
+                  <FileItem
+                    key={lecture.id}
+                    lecture={lecture}
+                    highlight={lecture.id === selectedLecture.id}
+                    chooseLecture={() => chooseLecture(lecture.id)}
+                    completed={completed}
+                  />
+                ) : null
+              }}
             />
-          )}
-        />
-      </div>
-    </Menu>
+          </Panel>
+        ))}
+      </Collapse>
+    </div>
   )
 }
 

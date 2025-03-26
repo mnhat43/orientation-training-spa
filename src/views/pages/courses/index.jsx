@@ -6,6 +6,7 @@ import CourseCard from '@components/CourseCard';
 import AddCourseForm from './components/AddCourseForm.jsx';
 import './index.scss';
 import { toast } from 'react-toastify';
+import { convertFileToBase64 } from '@helpers/common.js';
 
 const Courses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,28 +48,36 @@ const Courses = () => {
   };
 
   const handleAddCourse = async (values) => {
-    const formData = new FormData();
-    formData.append('course_title', values.course_title);
-    formData.append('course_description', values.course_description);
-    formData.append('created_by', 1);
-
-    if (values.course_thumbnail && values.course_thumbnail[0]?.originFileObj) {
-      formData.append('course_thumbnail', values.course_thumbnail[0].originFileObj);
-    }
-
     try {
-      const response = await course.addCourse(formData);
+      let base64String = "";
+      const { title, description,thumbnail  } = values;
+  
+      if (thumbnail && thumbnail[0]?.originFileObj) {
+        const file = thumbnail[0].originFileObj;
+        base64String = await convertFileToBase64(file);
+      }
+
+      const payload = {
+        title,
+        description,
+        thumbnail: base64String,
+        created_by: 1,
+      };
+  
+      const response = await course.addCourse(payload);
+  
       if (response.status === 200) {
-        toast.success('Course added successfully!');
+        toast.success("Course added successfully!");
         fetchCourses();
         setIsModalOpen(false);
       } else {
-        toast.error('Error: ' + response.data.message);
+        toast.error("Error: " + response.data.message);
       }
     } catch (error) {
-      toast.error('Error: ' + error.message);
+      toast.error("Error: " + error.message);
     }
   };
+  
 
   const handleEditCourse = async (courseID) => {
     console.log('Edit course:', courseID);
