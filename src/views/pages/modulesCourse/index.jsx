@@ -28,10 +28,7 @@ const Modules = () => {
         course_id: parseInt(courseId),
       })
       if (response.status == 200) {
-        const sortedModules = response.data?.data?.modules?.sort(
-          (a, b) => a.position - b.position,
-        )
-        setModules(sortedModules)
+        setModules(response.data?.data?.modules)
       }
     } catch (err) {
       setError('Failed to fetch modules')

@@ -20,8 +20,8 @@ const HoverableListItem = styled(List.Item)`
 `
 
 const getIcon = (item) => {
-  if (item.ItemType === 'video') return <YoutubeOutlined />
-  if (item.ItemType === 'file') return <FileOutlined />
+  if (item.item_type === 'video') return <YoutubeOutlined />
+  if (item.item_type === 'file') return <FileOutlined />
 }
 
 const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {

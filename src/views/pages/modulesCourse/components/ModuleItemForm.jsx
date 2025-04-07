@@ -1,4 +1,4 @@
-import { Button, Input, Radio, Space, Form, Upload } from 'antd'
+import { Button, Input, Radio, Space, Form, Upload, TimePicker } from 'antd'
 import { useState } from 'react'
 
 import { PlusOutlined, InboxOutlined } from '@ant-design/icons'
@@ -10,24 +10,31 @@ const FileForm = ({
   handleCancel,
   addModuleItem,
   loadingUpload,
-  setFormActive
+  setFormActive,
 }) => {
   const [form] = Form.useForm()
 
   const handleSubmit = async (values) => {
-    const { title, file } = values
+    const { title, file, requiredTime } = values
     try {
-      const base64File = await convertFileToBase64(file[0].originFileObj);
+      const base64File = await convertFileToBase64(file[0].originFileObj)
+
+      const requiredTimeInSeconds = requiredTime
+        ? requiredTime.hour() * 3600 +
+          requiredTime.minute() * 60 +
+          requiredTime.second()
+        : 0
 
       const body = {
         item_type: 'file',
         title,
-        resource: base64File
+        resource: base64File,
+        required_time: requiredTimeInSeconds,
       }
 
       addModuleItem(body).then(() => setFormActive(false))
     } catch (error) {
-      console.error('Error converting file to Base64:', error);
+      console.error('Error converting file to Base64:', error)
     }
   }
 
@@ -51,9 +58,19 @@ const FileForm = ({
           <Form.Item
             name="title"
             label="File Name"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: 'Please enter file name' }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="requiredTime"
+            label="Required Time"
+            tooltip="Set the expected time to complete this file (HH:MM:SS)"
+            rules={[
+              { required: true, message: 'Please specify the required time' },
+            ]}
+          >
+            <TimePicker format="HH:mm:ss" showNow={false} />
           </Form.Item>
           <Form.Item>
             <Button onClick={handleCancel}>Cancel</Button>
@@ -73,7 +90,7 @@ const FileForm = ({
           valuePropName="fileList"
           getValueFromEvent={getFileList}
           rules={[
-            { type: 'array', max: 1, required: true, message: 'only one file' }
+            { type: 'array', max: 1, required: true, message: 'only one file' },
           ]}
         >
           <Dragger
@@ -106,7 +123,7 @@ const VideoForm = ({ handleCancel, addModuleItem, setFormActive }) => {
     const body = {
       item_type: 'video',
       title,
-      resource: url
+      resource: url,
     }
     addModuleItem(body).then(() => setFormActive(false))
   }
@@ -131,8 +148,8 @@ const VideoForm = ({ handleCancel, addModuleItem, setFormActive }) => {
             {
               required: true,
               message: 'Please valid url',
-              type: 'url'
-            }
+              type: 'url',
+            },
           ]}
           name="url"
           label="Video url"
@@ -175,7 +192,7 @@ const ModuleItemForm = ({ instructorAccess, addModuleItem, loadingUpload }) => {
             style={{
               paddingBottom: '16px',
               borderBottom: '0px',
-              marginTop: '16px'
+              marginTop: '16px',
             }}
           >
             <Radio.Group
