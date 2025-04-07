@@ -1,18 +1,26 @@
 import { Typography, List } from 'antd'
-import { CheckCircleOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, LockOutlined } from '@ant-design/icons'
 
-const VideoItem = ({ lecture, highlight, chooseLecture, completed }) => {
+const VideoItem = ({
+  lecture,
+  highlight,
+  chooseLecture,
+  completed,
+  accessible,
+}) => {
   return (
     <List.Item
-      onClick={() => chooseLecture()}
+      onClick={() => accessible && chooseLecture()}
       style={{
         backgroundColor: highlight ? '#d9d9d9' : undefined,
         paddingLeft: '14px',
-        cursor: 'pointer',
+        cursor: accessible ? 'pointer' : 'not-allowed',
         justifyContent: 'initial',
         overflowX: 'hidden',
         display: 'flex',
         alignItems: 'center',
+        position: 'relative',
+        opacity: accessible ? 1 : 0.5,
       }}
     >
       <img
@@ -32,6 +40,9 @@ const VideoItem = ({ lecture, highlight, chooseLecture, completed }) => {
       </div>
       {completed && (
         <CheckCircleOutlined style={{ color: 'green', marginLeft: '8px' }} />
+      )}
+      {!accessible && (
+        <LockOutlined style={{ color: 'red', marginLeft: '8px' }} />
       )}
     </List.Item>
   )

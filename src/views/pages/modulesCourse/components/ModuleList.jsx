@@ -6,12 +6,13 @@ import {
   Typography,
   Form,
   Modal,
-  Input
+  Input,
 } from 'antd'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import ModuleItem from './ModuleItem'
 import ModuleItemForm from './ModuleItemForm'
+import RenderIf from '@components/renderif/RenderIf'
 
 const ModuleList = (props) => {
   const {
@@ -20,7 +21,7 @@ const ModuleList = (props) => {
     editModule,
     removeModule,
     addModuleItem,
-    removeModuleItem
+    removeModuleItem,
   } = props
 
   const [editModalActive, setEditModalActive] = useState(false)
@@ -32,14 +33,12 @@ const ModuleList = (props) => {
   }
 
   const handleOk = () => {
-    form.validateFields()
-      .then((values) => {
-        editModule(values);
-        setEditModalActive(false);
-        form.resetFields();
-      })
-  };
-
+    form.validateFields().then((values) => {
+      editModule(values)
+      setEditModalActive(false)
+      form.resetFields()
+    })
+  }
 
   return (
     <>
@@ -54,7 +53,7 @@ const ModuleList = (props) => {
           </Button>,
           <Button key="submit" type="primary" onClick={handleOk}>
             Submit
-          </Button>
+          </Button>,
         ]}
       >
         <Form
@@ -65,7 +64,7 @@ const ModuleList = (props) => {
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 18 }}
           initialValues={{
-            title: ''
+            title: '',
           }}
         >
           <Form.Item
@@ -74,27 +73,27 @@ const ModuleList = (props) => {
             rules={[
               {
                 required: true,
-                message: 'Please enter the module name'
-              }
+                message: 'Please enter the module name',
+              },
             ]}
           >
             <Input placeholder="New Module Name" />
           </Form.Item>
         </Form>
-      </Modal >
+      </Modal>
 
       <Collapse
         style={{
           borderRadius: '10px',
           width: '100%',
           fontSize: '16px',
-          border: '0px'
+          border: '0px',
         }}
         defaultActiveKey={['1']}
         expandIconPosition={'left'}
       >
         <Collapse.Panel
-          header={<Typography.Text strong>{module.module_title}</Typography.Text>}
+          header={<Typography.Text strong>{module.title}</Typography.Text>}
           bordered={false}
           key="1"
           extra={
@@ -116,27 +115,29 @@ const ModuleList = (props) => {
                 type="text"
                 icon={<DeleteOutlined />}
                 danger
-                onClick={() => removeModule(module.module_id)}
+                onClick={() => removeModule(module.id)}
               />
             </Space>
             // )
           }
         >
-          <List
-            locale={{ emptyText: 'no items' }}
-            dataSource={module.module_items}
-            renderItem={(item) => (
-              <ModuleItem
-                removeModuleItem={removeModuleItem}
-                item={item}
-              // instructorAccess={instructorAccess}
-              />
-            )}
-          />
+          <RenderIf isShow={module.module_items}>
+            <List
+              locale={{ emptyText: 'no items' }}
+              dataSource={module.module_items}
+              renderItem={(item) => (
+                <ModuleItem
+                  removeModuleItem={removeModuleItem}
+                  item={item}
+                  // instructorAccess={instructorAccess}
+                />
+              )}
+            />
+          </RenderIf>
           <ModuleItemForm
             addModuleItem={addModuleItem}
-          // instructorAccess={instructorAccess}
-          // loadingUpload={loadingUpload}
+            // instructorAccess={instructorAccess}
+            // loadingUpload={loadingUpload}
           />
         </Collapse.Panel>
       </Collapse>

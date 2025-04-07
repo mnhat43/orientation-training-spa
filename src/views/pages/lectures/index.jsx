@@ -27,16 +27,37 @@ const LecturePage = (props) => {
 
   if (!selectedLecture) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
 
+  // All lectures are accessible if at least 2 lectures have been completed
+  const allLecturesUnlocked = completedLectures.length >= 2
+
+  // Get a flat list of all lectures
+  const allLectures = Object.values(lectures).flat()
+
+  // Find the index of the last completed lecture
+  let lastCompletedIndex = -1
+  allLectures.forEach((lecture, index) => {
+    if (completedLectures.includes(lecture.id)) {
+      lastCompletedIndex = index
+    }
+  })
+
   const chooseLecture = (lectureId) => {
-    const allLectures = Object.values(lectures).flat()
     const lectureIndex = allLectures.findIndex(
       (lecture) => lecture.id === lectureId,
     )
-    const previousLecturesCompleted = allLectures
-      .slice(0, lectureIndex)
-      .every((lecture) => completedLectures.includes(lecture.id))
 
-    if (previousLecturesCompleted) {
+    // A lecture is accessible if:
+    // 1. All lectures are unlocked (2+ completed)
+    // 2. OR It's the first lecture (index 0)
+    // 3. OR It's already completed
+    // 4. OR It's the next lecture after the last completed one
+    const accessible =
+      allLecturesUnlocked ||
+      lectureIndex === 0 ||
+      completedLectures.includes(lectureId) ||
+      lectureIndex === lastCompletedIndex + 1
+
+    if (accessible) {
       setSelectedLecture(selectLecture(lectures, lectureId))
     } else {
       alert('Please complete the previous lectures first.')
@@ -44,7 +65,9 @@ const LecturePage = (props) => {
   }
 
   const markAsCompleted = (lectureId) => {
-    setCompletedLectures([...completedLectures, lectureId])
+    if (!completedLectures.includes(lectureId)) {
+      setCompletedLectures([...completedLectures, lectureId])
+    }
   }
 
   return (

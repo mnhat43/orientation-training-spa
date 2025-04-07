@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import {
   FileOutlined,
   YoutubeOutlined,
-  DeleteOutlined
+  DeleteOutlined,
 } from '@ant-design/icons'
 import { useParams } from 'react-router'
 import { useNavigate } from 'react-router-dom'
@@ -25,10 +25,10 @@ const getIcon = (item) => {
 }
 
 const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
-  const { Title, ItemType, Url } = item
+  const { title, item_type, url } = item
   const { courseId } = useParams()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // const history = useHistory()
 
@@ -55,7 +55,7 @@ const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
     <HoverableListItem
       extra={getActions(item)}
       onClick={() => {
-        if (ItemType === 'file') window.open(Url, '_parent')
+        if (item_type === 'file') window.open(url, '_parent')
         else {
           navigate(`/course/${courseId}/lectures/${item.id}`)
         }
@@ -63,7 +63,7 @@ const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
     >
       <Space size={20}>
         {getIcon(item)}
-        {Title}
+        {title}
       </Space>
     </HoverableListItem>
   )

@@ -24,12 +24,15 @@ const Modules = () => {
   const fetchModules = async () => {
     setLoading(true)
     try {
-      const response = await module.getListModuleDetail({ course_id: parseInt(courseId) })
+      const response = await module.getListModuleDetail({
+        course_id: parseInt(courseId),
+      })
       if (response.status == 200) {
-        const sortedModules = response.data.data.modules.sort((a, b) => a.module_id - b.module_id)
+        const sortedModules = response.data?.data?.modules?.sort(
+          (a, b) => a.position - b.position,
+        )
         setModules(sortedModules)
       }
-
     } catch (err) {
       setError('Failed to fetch modules')
       toast.error('Failed to fetch modules')
@@ -41,11 +44,14 @@ const Modules = () => {
   const handleAddModule = async (value) => {
     setLoading(true)
     try {
-      const response = await module.addModule({ course_id: parseInt(courseId), title: value.title })
+      const response = await module.addModule({
+        course_id: parseInt(courseId),
+        title: value.title,
+        position: modules.length + 1,
+      })
       if (response.status == 200) {
         fetchModules()
       }
-
     } catch (err) {
       toast.error('Failed to add module')
     } finally {
@@ -58,7 +64,9 @@ const Modules = () => {
   const handleRemoveModule = async (moduleId) => {
     setLoading(true)
     try {
-      const response = await module.deleteModule({ module_id: parseInt(moduleId) })
+      const response = await module.deleteModule({
+        id: parseInt(moduleId),
+      })
       if (response.status == 200) {
         fetchModules()
       }
@@ -73,56 +81,46 @@ const Modules = () => {
     console.log(moduleId, module)
     setModules((prevModules) =>
       prevModules.map((item) =>
-        item.id === moduleId ? { ...item, ...module } : item
-      )
+        item.id === moduleId ? { ...item, ...module } : item,
+      ),
     )
   }
 
-  // const fetchModuleItemList = async (moduleId) => {
-  //   try {
-  //     const response = await moduleItem.getModuleItemList({ "module_id": moduleId });
-  //     if (response.status === 200) {
-  //       console.log(response.data);
-  //     } else {
-  //       toast.error('Error: ' + response.data.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error('Error: ' + error.message);
-  //   }
-  // }
-
   const addModuleItem = async (moduleId, payload) => {
-    console.log(moduleId, payload);
+    console.log(moduleId, payload)
     try {
-      const response = await moduleItem.addModuleItem({ ...payload, module_id: moduleId });
+      const response = await moduleItem.addModuleItem({
+        ...payload,
+        module_id: moduleId,
+      })
       if (response.status === 200) {
-        toast.success(`${payload.item_type} added successfully!`);
+        toast.success(`${payload.item_type} added successfully!`)
         // fetchModuleItemList(moduleId);
         fetchModules()
       } else {
-        toast.error('Error: ' + response.data.message);
+        toast.error('Error: ' + response.data.message)
       }
     } catch (error) {
-      toast.error('Error: ' + error.message);
+      toast.error('Error: ' + error.message)
     }
   }
 
   const removeModuleItem = async (id) => {
     try {
-      const response = await moduleItem.deleteModuleItem({ "moduleItem_id": id });
+      const response = await moduleItem.deleteModuleItem({ moduleItem_id: id })
       if (response.status === 200) {
-        toast.success(`Deleted successfully!`);
+        toast.success(`Deleted successfully!`)
         fetchModules()
       } else {
-        toast.error('Error: ' + response.data.message);
+        toast.error('Error: ' + response.data.message)
       }
     } catch (error) {
-      toast.error('Error: ' + error.message);
+      toast.error('Error: ' + error.message)
     }
   }
 
   return (
-    <React.Fragment>
+    <>
       <FlexSectionHeader>
         <Title level={3}>Modules</Title>
         <Button
@@ -146,7 +144,7 @@ const Modules = () => {
           </Button>,
           <Button key="submit" type="primary" onClick={form.submit}>
             Submit
-          </Button>
+          </Button>,
         ]}
       >
         <Form
@@ -163,8 +161,8 @@ const Modules = () => {
             rules={[
               {
                 required: true,
-                message: 'Please enter the module name'
-              }
+                message: 'Please enter the module name',
+              },
             ]}
           >
             <Input placeholder="Module Name" />
@@ -184,17 +182,23 @@ const Modules = () => {
               <List.Item>
                 <ModuleList
                   module={module}
-                  editModule={(updatedModule) => editModule(module.module_id, updatedModule)}
+                  editModule={(updatedModule) =>
+                    editModule(module.id, updatedModule)
+                  }
                   removeModule={handleRemoveModule}
-                  addModuleItem={(moduleItem) => addModuleItem(module.module_id, moduleItem)}
-                  removeModuleItem={(moduleItem) => removeModuleItem(moduleItem.ID)}
+                  addModuleItem={(moduleItem) =>
+                    addModuleItem(module.id, moduleItem)
+                  }
+                  removeModuleItem={(moduleItem) =>
+                    removeModuleItem(moduleItem.id)
+                  }
                 />
               </List.Item>
             )}
           />
         )}
       </div>
-    </React.Fragment>
+    </>
   )
 }
 
