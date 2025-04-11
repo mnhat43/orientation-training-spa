@@ -1,40 +1,40 @@
-import { useState } from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import './login.scss';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import auth from '@api/auth';
+import { useState } from 'react'
+import { Form, Input, Button, Checkbox } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import './login.scss'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import auth from '@api/auth'
 // import UserContext from '@context/UserContext';
 import useAuth from '@hooks/useAuth'
 
 function Login() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const { setUserInfo } = useAuth()
 
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleSubmit = async (values) => {
     try {
-      const formData = new FormData();
-      formData.append('email', values.email);
-      formData.append('password', values.password);
+      const formData = new FormData()
+      formData.append('email', values.email)
+      formData.append('password', values.password)
 
-      const response = await auth.login(formData);
-      if (response.status === 200) {
-        console.log(response.data.data.token)
-        setUserInfo(response.data.data.token)
+      const response = await auth.login(formData)
+      console.log(response)
+      if (response.status === 1) {
+        setUserInfo(response.data.token)
         toast.success('Đăng nhập thành công')
-        navigate('/courses');
+        navigate('/courses')
       }
-
     } catch (error) {
-      toast.error('Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin đăng nhập.');
+      toast.error(
+        'Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin đăng nhập.',
+      )
     }
-  };
+  }
 
   return (
     <div className="login-container">
@@ -57,8 +57,8 @@ function Login() {
             initialValues={{ email, password, remember: true }}
             onFinish={handleSubmit}
           >
-            <div className='login-container__sub__content__form__header'>
-              <h3 className='login-container__sub__content__form__header__title'>
+            <div className="login-container__sub__content__form__header">
+              <h3 className="login-container__sub__content__form__header__title">
                 Đăng nhập
               </h3>
               <hr />
@@ -70,13 +70,13 @@ function Login() {
               rules={[
                 {
                   required: true,
-                  message: 'Vui lòng nhập email!'
-                }
+                  message: 'Vui lòng nhập email!',
+                },
               ]}
             >
               <Input
                 value={email}
-                type='email'
+                type="email"
                 onChange={(e) => setEmail(e.target.value)}
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Email"
@@ -98,15 +98,12 @@ function Login() {
             </Form.Item>
 
             <Form.Item>
-              <div className='remember-forgot'>
+              <div className="remember-forgot">
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                   <Checkbox>Lưu mật khẩu</Checkbox>
                 </Form.Item>
 
-                <div
-                  className="login-form-forgot"
-                  style={{ color: "#09C4AE" }}
-                >
+                <div className="login-form-forgot" style={{ color: '#09C4AE' }}>
                   Quên mật khẩu?
                 </div>
               </div>
@@ -116,23 +113,19 @@ function Login() {
               type="primary"
               htmlType="submit"
               className="login-form-button"
-              style={{ background: "#209EA6", height: "38px" }}
+              style={{ background: '#209EA6', height: '38px' }}
             >
               Đăng nhập
             </Button>
           </Form>
           <div className="register">
             Chưa có tài khoản?
-            <span
-              className='register-link'
-            >
-              Đăng ký tại đây
-            </span>
+            <span className="register-link">Đăng ký tại đây</span>
           </div>
         </div>
       </div>
-    </div >
-  );
+    </div>
+  )
 }
 
-export default Login;
+export default Login

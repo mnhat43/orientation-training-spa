@@ -1,143 +1,151 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-
-import { Empty, Row, Col, Space, Button } from 'antd'
+import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { Empty, Row, Col, Space, Button, Spin } from 'antd'
 
 import Video from './components/Video'
 import VideoInfo from './components/VideoInfo'
 import PlaylistMenu from './components/PlaylistMenu'
 import lecture from '@api/lecture'
+import File from './components/File'
 
-const selectLecture = (lectures, lectureId) => {
-  const allLectures = Object.values(lectures).flat()
-  if (!Array.isArray(allLectures) || !allLectures.length) return null
-  if (!lectureId) return allLectures[0]
-  const index = allLectures.findIndex((lecture) => lecture.id === lectureId)
-  if (index === -1) return null
-  return allLectures[index]
+const LectureContent = ({ selectedLecture }) => {
+  if (selectedLecture.item_type === 'video') {
+    return (
+      <>
+        <Video videoId={selectedLecture.videoId} />
+        <VideoInfo
+          title={selectedLecture.title}
+          publishedAt={selectedLecture.publishedAt}
+        />
+      </>
+    )
+  }
+
+  return <File filePath={selectedLecture.file_path} />
 }
 
-const LecturePage = (props) => {
-  const { lectures } = props
-  const { lectureId } = useParams()
-  const [selectedLecture, setSelectedLecture] = useState(
-    selectLecture(lectures, lectureId),
+const LecturePage = ({ lectures }) => {
+  const { moduleId, moduleItemId, courseId } = useParams()
+  const navigate = useNavigate()
+  const [selectedLecture, setSelectedLecture] = useState(null)
+
+  const allLectures = useMemo(() => Object.values(lectures).flat(), [lectures])
+
+  const selectLecture = useCallback(
+    (lectures, moduleId, moduleItemId) => {
+      if (!Array.isArray(allLectures) || !allLectures.length) return null
+      if (!moduleId || !moduleItemId) return allLectures[0]
+
+      const index = allLectures.findIndex(
+        (lecture) =>
+          lecture.module_id === parseInt(moduleId) &&
+          lecture.id === parseInt(moduleItemId),
+      )
+
+      return index === -1 ? null : allLectures[index]
+    },
+    [allLectures],
   )
-  const [completedLectures, setCompletedLectures] = useState([])
+
+  const chooseLecture = useCallback(
+    (moduleId, moduleItemId) => {
+      navigate(`/course/${courseId}/lectures/${moduleId}/${moduleItemId}`)
+
+      const lecture = selectLecture(lectures, moduleId, moduleItemId)
+
+      if (lecture) {
+        setSelectedLecture(lecture)
+      }
+      console.log('lecture', lecture)
+      console.log('selectedLecture', selectedLecture)
+    },
+    [navigate, courseId, lectures, selectLecture],
+  )
+
+  useEffect(() => {
+    const lecture = selectLecture(lectures, moduleId, moduleItemId)
+
+    if (lecture) {
+      setSelectedLecture(lecture)
+    } else if (allLectures.length > 0) {
+      setSelectedLecture(allLectures[0])
+
+      const firstLecture = allLectures[0]
+      navigate(
+        `/course/${courseId}/lectures/${firstLecture.module_id}/${firstLecture.id}`,
+        { replace: true },
+      )
+    }
+  }, [
+    lectures,
+    moduleId,
+    moduleItemId,
+    courseId,
+    allLectures,
+    navigate,
+    selectLecture,
+  ])
 
   if (!selectedLecture) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
 
-  // All lectures are accessible if at least 2 lectures have been completed
-  const allLecturesUnlocked = completedLectures.length >= 2
-
-  // Get a flat list of all lectures
-  const allLectures = Object.values(lectures).flat()
-
-  // Find the index of the last completed lecture
-  let lastCompletedIndex = -1
-  allLectures.forEach((lecture, index) => {
-    if (completedLectures.includes(lecture.id)) {
-      lastCompletedIndex = index
-    }
-  })
-
-  const chooseLecture = (lectureId) => {
-    const lectureIndex = allLectures.findIndex(
-      (lecture) => lecture.id === lectureId,
-    )
-
-    // A lecture is accessible if:
-    // 1. All lectures are unlocked (2+ completed)
-    // 2. OR It's the first lecture (index 0)
-    // 3. OR It's already completed
-    // 4. OR It's the next lecture after the last completed one
-    const accessible =
-      allLecturesUnlocked ||
-      lectureIndex === 0 ||
-      completedLectures.includes(lectureId) ||
-      lectureIndex === lastCompletedIndex + 1
-
-    if (accessible) {
-      setSelectedLecture(selectLecture(lectures, lectureId))
-    } else {
-      alert('Please complete the previous lectures first.')
-    }
-  }
-
-  const markAsCompleted = (lectureId) => {
-    if (!completedLectures.includes(lectureId)) {
-      setCompletedLectures([...completedLectures, lectureId])
-    }
-  }
-
   return (
-    <>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={24} xl={18}>
-          <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-            {selectedLecture.itemType === 'video' ? (
-              <>
-                <Video selectedLecture={selectedLecture}></Video>
-                <VideoInfo lecture={selectedLecture} />
-                <Button onClick={() => markAsCompleted(selectedLecture.id)}>
-                  Mark as Completed
-                </Button>
-              </>
-            ) : (
-              <>
-                <embed
-                  src={selectedLecture.file_path}
-                  width="100%"
-                  height="600px"
-                />
-                <Button onClick={() => markAsCompleted(selectedLecture.id)}>
-                  Mark as Completed
-                </Button>
-              </>
-            )}
+    <Row gutter={[16, 16]}>
+      <Col xs={24} sm={24} xl={18}>
+        <Space size="middle" direction="vertical" style={{ width: '100%' }}>
+          <LectureContent selectedLecture={selectedLecture} />
+        </Space>
+      </Col>
 
-            {/* <LectureComments selectedLecture={selectedLecture} /> */}
-          </Space>
-        </Col>
-
-        <Col xs={24} sm={24} xl={6}>
-          <PlaylistMenu
-            lectures={lectures}
-            selectedLecture={selectedLecture}
-            chooseLecture={chooseLecture}
-            completedLectures={completedLectures}
-          />
-        </Col>
-      </Row>
-    </>
+      <Col xs={24} sm={24} xl={6}>
+        <PlaylistMenu
+          lectures={lectures}
+          selectedLecture={selectedLecture}
+          chooseLecture={chooseLecture}
+        />
+      </Col>
+    </Row>
   )
 }
 
 const Lectures = () => {
   const [lectures, setLectures] = useState({})
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { courseId } = useParams()
 
-  const fetchLectures = async () => {
+  const fetchLectures = useCallback(async () => {
+    if (!courseId) return
+
     try {
       setLoading(true)
+      setError(null)
       const response = await lecture.getListLecture({
         course_id: parseInt(courseId),
       })
-      setLectures(response.data.data)
-      setLoading(false)
+      setLectures(response.data)
     } catch (error) {
-      setLoading(false)
-
       console.error('Failed to fetch lectures:', error.message)
+      setError(error.message || 'Failed to fetch lectures')
+    } finally {
+      setLoading(false)
     }
-  }
+  }, [courseId])
 
   useEffect(() => {
     fetchLectures()
-  }, [courseId])
+  }, [fetchLectures])
 
-  if (loading) return <div>Loading...</div>
+  if (loading)
+    return (
+      <Spin
+        tip="Loading lectures..."
+        size="large"
+        style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}
+      />
+    )
+
+  if (error) return <Empty description={`Error: ${error}`} />
+
   if (!Object.keys(lectures).length)
     return <Empty description="No lectures available" />
 

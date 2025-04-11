@@ -27,8 +27,8 @@ const Modules = () => {
       const response = await module.getListModuleDetail({
         course_id: parseInt(courseId),
       })
-      if (response.status == 200) {
-        setModules(response.data?.data?.modules)
+      if (response.status === 1) {
+        setModules(response.data?.modules)
       }
     } catch (err) {
       setError('Failed to fetch modules')
@@ -46,7 +46,7 @@ const Modules = () => {
         title: value.title,
         position: modules.length + 1,
       })
-      if (response.status == 200) {
+      if (response.status == 1) {
         fetchModules()
       }
     } catch (err) {
@@ -64,7 +64,7 @@ const Modules = () => {
       const response = await module.deleteModule({
         id: parseInt(moduleId),
       })
-      if (response.status == 200) {
+      if (response.status == 1) {
         fetchModules()
       }
     } catch (err) {
@@ -90,12 +90,11 @@ const Modules = () => {
         ...payload,
         module_id: moduleId,
       })
-      if (response.status === 200) {
+      if (response.status === 1) {
         toast.success(`${payload.item_type} added successfully!`)
-        // fetchModuleItemList(moduleId);
         fetchModules()
       } else {
-        toast.error('Error: ' + response.data.message)
+        toast.error('Error: ' + response.message)
       }
     } catch (error) {
       toast.error('Error: ' + error.message)
@@ -105,11 +104,11 @@ const Modules = () => {
   const removeModuleItem = async (id) => {
     try {
       const response = await moduleItem.deleteModuleItem({ moduleItem_id: id })
-      if (response.status === 200) {
+      if (response.status === 1) {
         toast.success(`Deleted successfully!`)
         fetchModules()
       } else {
-        toast.error('Error: ' + response.data.message)
+        toast.error('Error: ' + response.message)
       }
     } catch (error) {
       toast.error('Error: ' + error.message)

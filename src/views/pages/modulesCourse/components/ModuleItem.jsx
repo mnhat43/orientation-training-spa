@@ -24,7 +24,7 @@ const getIcon = (item) => {
   if (item.item_type === 'file') return <FileOutlined />
 }
 
-const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
+const ModuleItem = ({ item, moduleId, instructorAccess, removeModuleItem }) => {
   const { title, item_type, url } = item
   const { courseId } = useParams()
 
@@ -55,10 +55,10 @@ const ModuleItem = ({ item, instructorAccess, removeModuleItem }) => {
     <HoverableListItem
       extra={getActions(item)}
       onClick={() => {
-        if (item_type === 'file') window.open(url, '_parent')
-        else {
-          navigate(`/course/${courseId}/lectures/${item.id}`)
-        }
+        // if (item_type === 'file') window.open(url, '_parent')
+        // else {
+        navigate(`/course/${courseId}/lectures/${moduleId}/${item.id}`)
+        // }
       }}
     >
       <Space size={20}>

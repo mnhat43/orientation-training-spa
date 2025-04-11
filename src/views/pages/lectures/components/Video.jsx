@@ -1,10 +1,10 @@
 const Video = (props) => {
-  const { selectedLecture } = props
+  const { videoId } = props
   return (
     <div style={{ position: 'relative', paddingBottom: '56.25%' }}>
       <iframe
         title="courseVideo"
-        src={`https://www.youtube.com/embed/${selectedLecture.videoId}`}
+        src={`https://www.youtube.com/embed/${videoId}`}
         frameBorder="0"
         allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
         allowFullScreen

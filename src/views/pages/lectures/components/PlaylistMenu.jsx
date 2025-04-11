@@ -1,70 +1,62 @@
+import React from 'react'
 import { List, Typography, Collapse } from 'antd'
 import VideoItem from './VideoItem'
 import FileItem from './FileItem'
 
 const { Panel } = Collapse
 
-const PlaylistMenu = (props) => {
-  const { lectures, selectedLecture, chooseLecture, completedLectures } = props
+const PlaylistMenu = ({ lectures, selectedLecture, chooseLecture }) => {
+  const isSelected = React.useCallback(
+    (lecture) => {
+      if (!selectedLecture) return false
+      return (
+        parseInt(lecture.id) === parseInt(selectedLecture.id) &&
+        parseInt(lecture.module_id) === parseInt(selectedLecture.module_id)
+      )
+    },
+    [selectedLecture],
+  )
 
-  // All lectures are accessible if at least 2 lectures have been completed
-  const allLecturesUnlocked = completedLectures.length >= 2
+  // Find the module containing the selected lecture to auto-open that panel
+  const getDefaultActiveKey = React.useMemo(() => {
+    if (!selectedLecture) return Object.keys(lectures)[0]
 
-  // Get a flat list of all lectures
-  const allLecturesFlat = Object.values(lectures).flat()
-
-  // Find the index of the last completed lecture
-  let lastCompletedIndex = -1
-  allLecturesFlat.forEach((lecture, index) => {
-    if (completedLectures.includes(lecture.id)) {
-      lastCompletedIndex = index
+    for (const week in lectures) {
+      const found = lectures[week].some(
+        (lecture) =>
+          lecture.id === selectedLecture.id &&
+          lecture.module_id === selectedLecture.module_id,
+      )
+      if (found) return week
     }
-  })
+    return Object.keys(lectures)[0]
+  }, [lectures, selectedLecture])
 
   return (
     <div className="playlist-menu">
       <Typography.Title level={4} className="playlist-title">
         Lectures Playlist
       </Typography.Title>
-      <Collapse accordion defaultActiveKey={Object.keys(lectures)[0]}>
+      <Collapse accordion defaultActiveKey={getDefaultActiveKey}>
         {Object.keys(lectures).map((week) => (
           <Panel header={week} key={week}>
             <List
               dataSource={lectures[week]}
               renderItem={(lecture) => {
-                const completed = completedLectures.includes(lecture.id)
-
-                // A lecture is accessible if:
-                // 1. All lectures are unlocked (2+ completed)
-                // 2. OR It's the first lecture (index 0)
-                // 3. OR It's already completed
-                // 4. OR It's the next lecture after the last completed one
-                const lectureIndex = allLecturesFlat.findIndex(
-                  (l) => l.id === lecture.id,
-                )
-                const accessible =
-                  allLecturesUnlocked ||
-                  lectureIndex === 0 ||
-                  completed ||
-                  lectureIndex === lastCompletedIndex + 1
-
-                return lecture.itemType === 'video' ? (
+                const highlighted = isSelected(lecture)
+                return lecture.item_type === 'video' ? (
                   <VideoItem
-                    key={lecture.id}
+                    key={`video-${lecture.id}`}
                     lecture={lecture}
-                    highlight={lecture.id === selectedLecture.id}
-                    chooseLecture={() => chooseLecture(lecture.id)}
-                    completed={completed}
-                    accessible={accessible}
+                    highlight={highlighted}
+                    chooseLecture={chooseLecture}
                   />
-                ) : lecture.itemType === 'file' ? (
+                ) : lecture.item_type === 'file' ? (
                   <FileItem
-                    key={lecture.id}
+                    key={`file-${lecture.id}`}
                     lecture={lecture}
-                    highlight={lecture.id === selectedLecture.id}
-                    chooseLecture={() => chooseLecture(lecture.id)}
-                    completed={completed}
-                    accessible={accessible}
+                    highlight={highlighted}
+                    chooseLecture={chooseLecture}
                   />
                 ) : null
               }}
@@ -76,4 +68,4 @@ const PlaylistMenu = (props) => {
   )
 }
 
-export default PlaylistMenu
+export default React.memo(PlaylistMenu)

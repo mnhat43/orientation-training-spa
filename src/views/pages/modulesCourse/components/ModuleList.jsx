@@ -129,6 +129,7 @@ const ModuleList = (props) => {
                 <ModuleItem
                   removeModuleItem={removeModuleItem}
                   item={item}
+                  moduleId={module.id}
                   // instructorAccess={instructorAccess}
                 />
               )}

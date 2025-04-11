@@ -1,9 +1,9 @@
-import { Layout } from 'antd';
+import { Layout } from 'antd'
 // import HeaderRender from '@components/header';
-import SiderRender from '@components/siderbar';
-import FooterRender from '@components/footer';
-import CourseNavigation from '@components/CourseNavigation';
-const { Content } = Layout;
+import SiderRender from '@components/siderbar'
+import FooterRender from '@components/footer'
+import CourseNavigation from '@components/CourseNavigation'
+const { Content } = Layout
 
 const MainLayout = ({ component: Component }) => {
   // const {
@@ -15,17 +15,21 @@ const MainLayout = ({ component: Component }) => {
       <Layout>
         <SiderRender
           width={200}
-          style={{
-            // background: colorBgContainer,
-          }}
+          style={
+            {
+              // background: colorBgContainer,
+            }
+          }
           theme="light"
         />
-        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-          <CourseNavigation style={{ display: "fex" }} />
+        <div
+          style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
+        >
+          <CourseNavigation style={{ display: 'fex' }} />
 
           <Layout
             style={{
-              padding: '0 24px 24px'
+              padding: '0 8px 8px',
             }}
           >
             {/* <Breadcrumb
@@ -42,7 +46,7 @@ const MainLayout = ({ component: Component }) => {
                 margin: 0,
                 minHeight: 500,
                 background: 'colorBgContainer',
-                height: '90vh'
+                // height: '90vh',
                 // borderRadius: borderRadiusLG,
               }}
             >
@@ -51,9 +55,8 @@ const MainLayout = ({ component: Component }) => {
             <FooterRender />
           </Layout>
         </div>
-
       </Layout>
     </Layout>
-  );
-};
-export default MainLayout;
+  )
+}
+export default MainLayout
