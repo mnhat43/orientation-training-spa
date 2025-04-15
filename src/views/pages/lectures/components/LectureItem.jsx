@@ -1,6 +1,11 @@
 import React from 'react'
 import { Typography, List } from 'antd'
-import { CheckCircleFilled, LockOutlined } from '@ant-design/icons'
+import {
+  CheckCircleFilled,
+  LockOutlined,
+  PlaySquareOutlined,
+  FilePdfOutlined,
+} from '@ant-design/icons'
 import { formatTime } from '@helpers/common'
 
 const styles = {
@@ -24,6 +29,7 @@ const styles = {
   }),
   content: {
     flex: 1,
+    marginRight: '10px',
   },
   title: (highlight) => ({
     fontSize: '14px',
@@ -31,8 +37,8 @@ const styles = {
     display: 'block',
     marginBottom: '2px',
     fontWeight: highlight ? 600 : 400,
-    wordBreak: 'break-word',
     whiteSpace: 'normal',
+    wordBreak: 'break-word',
   }),
   metaContainer: {
     display: 'flex',
@@ -44,10 +50,27 @@ const styles = {
     color: highlight ? '#1890ff' : '#8c8c8c',
   }),
   statusIcon: {
-    margin: '0 8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '16px',
   },
   timeText: {
     fontSize: '12px',
+  },
+}
+
+// Media configuration moved inside LectureItem
+const mediaConfig = {
+  video: {
+    icon: PlaySquareOutlined,
+    durationField: 'duration',
+    formatter: (value) => value,
+  },
+  file: {
+    icon: FilePdfOutlined,
+    durationField: 'required_time',
+    formatter: formatTime,
   },
 }
 
@@ -55,24 +78,21 @@ const LectureItem = ({
   lecture,
   highlight,
   chooseLecture,
-  ItemIcon,
-  itemType,
-  durationField,
+  isLatestUnlocked = false,
 }) => {
   const accessible = lecture.unlocked === true
 
+  // Determine type, icon, and duration field from lecture
+  const type = lecture.item_type
+  const config = mediaConfig[type] || mediaConfig.video
+  const ItemIcon = config.icon
+  const durationField = config.durationField
+  const formatValue = config.formatter
+
   const handleClick = () => {
     if (accessible) {
-      chooseLecture(lecture.module_id, lecture.id)
+      chooseLecture(lecture.module_id, lecture.module_item_id)
     }
-  }
-
-  // Display time based on field type
-  const displayTime = () => {
-    if (durationField === 'required_time') {
-      return formatTime(lecture[durationField])
-    }
-    return lecture[durationField]
   }
 
   return (
@@ -81,31 +101,35 @@ const LectureItem = ({
       style={styles.listItem(accessible, highlight)}
       aria-disabled={!accessible}
       role="button"
-      key={`${itemType}-${lecture.id}-${highlight}`}
+      key={`${type}-${lecture.id}-${highlight}`}
     >
       <div style={styles.content}>
-        <Typography.Paragraph
-          style={styles.title(highlight)}
-          strong={highlight}
-        >
+        <Typography.Text style={styles.title(highlight)} strong={highlight}>
           {lecture.title}
-        </Typography.Paragraph>
+        </Typography.Text>
         <div style={styles.metaContainer}>
           <ItemIcon style={styles.icon(highlight)} />
           <Typography.Text type="secondary" style={styles.timeText}>
-            {displayTime()}
+            {formatValue(lecture[durationField])}
           </Typography.Text>
         </div>
       </div>
 
-      {accessible ? (
-        <CheckCircleFilled style={{ ...styles.statusIcon, color: '#52c41a' }} />
-      ) : (
-        <LockOutlined
-          style={{ ...styles.statusIcon, color: '#faad14' }}
-          aria-label="Locked content"
-        />
-      )}
+      <div style={styles.statusIcon}>
+        {accessible ? (
+          !isLatestUnlocked && (
+            <CheckCircleFilled
+              style={{ color: '#52c41a', fontSize: '18px' }}
+              aria-label="Completed content"
+            />
+          )
+        ) : (
+          <LockOutlined
+            style={{ color: '#faad14' }}
+            aria-label="Locked content"
+          />
+        )}
+      </div>
     </List.Item>
   )
 }

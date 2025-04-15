@@ -23,7 +23,6 @@ function Login() {
       formData.append('password', values.password)
 
       const response = await auth.login(formData)
-      console.log(response)
       if (response.status === 1) {
         setUserInfo(response.data.token)
         toast.success('Đăng nhập thành công')
