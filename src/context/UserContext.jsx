@@ -37,7 +37,6 @@ export const UserProvider = ({ children }) => {
     setIsLoading(true)
     try {
       const response = await user.getProfile()
-      console.log('Profile response:', response)
 
       // Handle the response regardless of its structure
       let profileData = null

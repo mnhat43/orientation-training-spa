@@ -95,7 +95,7 @@ const Courses = () => {
       </div>
       <div className="courses__list">
         {loading ? (
-          <Spin tip="Loading courses..." size="large" />
+          <Spin tip="Loading courses..." size="large" fullscreen />
         ) : courseList.length > 0 ? (
           <Row gutter={[16, 16]}>
             {courseList.map((courseItem) => (

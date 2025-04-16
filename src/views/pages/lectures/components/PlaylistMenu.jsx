@@ -160,9 +160,13 @@ const PlaylistMenu = ({
         </Space>
       )}
 
-      <Collapse defaultActiveKey={getDefaultActiveKey} style={collapseStyle}>
-        {Object.keys(lectures).map((week) => (
-          <Panel header={week} key={week}>
+      <Collapse
+        defaultActiveKey={getDefaultActiveKey}
+        style={collapseStyle}
+        items={Object.keys(lectures).map((week) => ({
+          key: week,
+          label: week,
+          children: (
             <List
               dataSource={lectures[week]}
               renderItem={(lecture) => {
@@ -185,9 +189,9 @@ const PlaylistMenu = ({
                 )
               }}
             />
-          </Panel>
-        ))}
-      </Collapse>
+          ),
+        }))}
+      />
     </div>
   )
 }

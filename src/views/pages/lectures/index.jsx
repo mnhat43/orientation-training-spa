@@ -43,6 +43,7 @@ const Lectures = () => {
         tip="Loading lectures..."
         size="large"
         style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}
+        fullscreen
       />
     )
   }
