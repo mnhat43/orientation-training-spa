@@ -77,8 +77,9 @@ const mediaConfig = {
 const LectureItem = ({
   lecture,
   highlight,
-  chooseLecture,
+  onChooseLecture,
   isLatestUnlocked = false,
+  courseCompleted = false,
 }) => {
   const accessible = lecture.unlocked === true
 
@@ -91,7 +92,7 @@ const LectureItem = ({
 
   const handleClick = () => {
     if (accessible) {
-      chooseLecture(lecture.module_id, lecture.module_item_id)
+      onChooseLecture(lecture.module_id, lecture.module_item_id)
     }
   }
 
@@ -117,7 +118,7 @@ const LectureItem = ({
 
       <div style={styles.statusIcon}>
         {accessible ? (
-          !isLatestUnlocked && (
+          (courseCompleted || !isLatestUnlocked) && (
             <CheckCircleFilled
               style={{ color: '#52c41a', fontSize: '18px' }}
               aria-label="Completed content"

@@ -9,10 +9,12 @@ const IS_DEV = process.env.NODE_ENV !== 'production'
 
 const LearningTimer = ({
   lecture,
-  onComplete,
   courseId,
   isVideoPlaying,
   allLectures = [],
+  isLastLecture = false,
+  onCompleteLecture,
+  onCompleteCourse,
 }) => {
   // User data and basic state
   const { userData } = useAuth()
@@ -26,9 +28,9 @@ const LearningTimer = ({
     module_position,
     module_item_id,
     module_item_position,
-    required_time = 0,
+    required_time,
     item_type,
-  } = lecture || {}
+  } = lecture
 
   // Core logic values
   const requiredTime = required_time > 0 ? required_time : REQUIRED_TIME_DEFAULT
@@ -41,6 +43,8 @@ const LearningTimer = ({
     activityTimer: null,
     startTime: null,
     completed: false,
+    accumulatedTime: 0, // Track accumulated time across pauses
+    lastPauseTime: null, // Track when the last pause occurred
   }).current
 
   // Find next lecture in course
@@ -65,17 +69,23 @@ const LearningTimer = ({
     )
   }, [allLectures, module_position, module_item_position])
 
-  // Handle completion - now just notifies parent without API call
+  // Handle completion - now handles both lecture completion and course completion
   const completeProgress = useCallback(() => {
     if (refs.completed) return
     refs.completed = true
 
+    // If this is the last lecture, complete the course instead
+    if (isLastLecture) {
+      onCompleteCourse()
+      return
+    }
+
+    // Otherwise find next lecture and update progress as before
     const nextLecture = findNextLecture()
     if (!nextLecture || !userId) return
 
     // Notify parent component with completion data
-    onComplete({
-      userId,
+    onCompleteLecture({
       courseId: Number(courseId),
       modulePosition: Number(nextLecture.module_position),
       moduleItemPosition: Number(nextLecture.module_item_position),
@@ -88,8 +98,10 @@ const LearningTimer = ({
     findNextLecture,
     module_id,
     module_item_id,
-    onComplete,
     refs,
+    isLastLecture,
+    onCompleteCourse,
+    onCompleteLecture,
   ])
 
   // Reset everything when lecture changes
@@ -101,6 +113,8 @@ const LearningTimer = ({
       refs.activityTimer = null
       refs.startTime = null
       refs.completed = false
+      refs.accumulatedTime = 0 // Reset accumulated time
+      refs.lastPauseTime = null
       setTimeSpent(0)
       setIsUserActive(false)
     }
@@ -144,26 +158,45 @@ const LearningTimer = ({
     }
   }, [isFileContent, refs])
 
-  // Main timer logic
+  // Main timer logic - modified to accumulate time
   useEffect(() => {
     if (refs.timer) {
       clearInterval(refs.timer)
       refs.timer = null
     }
 
-    // Only run timer when user is active
-    if (!isActive || refs.completed) return
+    // When active state changes, handle accumulated time
+    if (!isActive) {
+      // If we were active before and now we're inactive, store progress
+      if (refs.startTime) {
+        const sessionTime = Math.floor(
+          (performance.now() - refs.startTime) / 1000,
+        )
+        refs.accumulatedTime += sessionTime // Add session time to accumulated time
+        refs.lastPauseTime = performance.now()
+        refs.startTime = null
+      }
+      return
+    }
 
+    // Only proceed if active and not completed
+    if (refs.completed) return
+
+    // Start fresh timing session
     refs.startTime = performance.now()
 
     refs.timer = setInterval(() => {
-      const elapsedSeconds = Math.floor(
+      // Calculate current session time
+      const currentSessionTime = Math.floor(
         (performance.now() - refs.startTime) / 1000,
       )
-      setTimeSpent(elapsedSeconds)
+
+      // Total time is accumulated plus current session
+      const totalTimeSpent = refs.accumulatedTime + currentSessionTime
+      setTimeSpent(totalTimeSpent)
 
       // Complete the lesson when time requirement is met
-      if (elapsedSeconds >= requiredTime && !refs.completed) {
+      if (totalTimeSpent >= requiredTime && !refs.completed) {
         clearInterval(refs.timer)
         refs.timer = null
         completeProgress()
@@ -205,7 +238,14 @@ const LearningTimer = ({
         document.body.removeChild(debug)
       }
     }
-  }, [timeSpent, isActive, isFileContent, requiredTime])
+  }, [
+    timeSpent,
+    isActive,
+    isFileContent,
+    requiredTime,
+    refs.accumulatedTime,
+    isLastLecture,
+  ])
 
   return null
 }

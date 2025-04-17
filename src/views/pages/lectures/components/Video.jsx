@@ -75,35 +75,33 @@ const Video = ({ videoId, onPlayStateChange }) => {
   }, [onPlayStateChange, videoId])
 
   return (
-    <Card bodyStyle={{ padding: 0 }}>
-      <div
-        className="video-container"
+    <div
+      className="video-container"
+      style={{
+        position: 'relative',
+        paddingBottom: '56.25%',
+        height: 0,
+        overflow: 'hidden',
+        maxWidth: '100%',
+      }}
+    >
+      <iframe
+        ref={iframeRef}
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&rel=0&modestbranding=1&widgetid=1`}
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
         style={{
-          position: 'relative',
-          paddingBottom: '56.25%',
-          height: 0,
-          overflow: 'hidden',
-          maxWidth: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          border: 0,
         }}
-      >
-        <iframe
-          ref={iframeRef}
-          src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&rel=0&modestbranding=1&widgetid=1`}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            border: 0,
-          }}
-          id={`youtube-player-${videoId}`}
-        />
-      </div>
-    </Card>
+        id={`youtube-player-${videoId}`}
+      />
+    </div>
   )
 }
 
