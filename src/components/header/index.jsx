@@ -9,12 +9,11 @@ import {
   BellOutlined,
   SearchOutlined,
   GlobalOutlined,
-  SettingOutlined
+  SettingOutlined,
 } from '@ant-design/icons'
 import './header.scss'
 
 const HeaderRender = () => {
-
   // const contentNoti = (
   //   <div className='noti-container'>
   //     <div className='noti-item' style={{ borderBottom: " 1px solid #ccc" }}>
@@ -77,8 +76,8 @@ const HeaderRender = () => {
         alignItems: 'center',
         // alignContent: 'center',
         // paddingLeft: '25px',
-        background: "white",
-        borderBottom: "1px solid #ccc",
+        background: 'white',
+        borderBottom: '1px solid #ccc',
         // height: "50px"
       }}
     >
@@ -97,46 +96,37 @@ const HeaderRender = () => {
           <SearchOutlined />
         </div>
 
-
         <div className="header-wrapper__right-side__profile">
           <Link to={'/personal-info'}>
             <Avatar
-              style={{ width: '35px', height: '35px', color: "black" }}
+              style={{ width: '35px', height: '35px', color: 'black' }}
               size={40}
               icon={<UserOutlined />}
             />
-            <span style={{ color: "black", paddingLeft: "5px" }}>Admin</span>
+            <span style={{ color: 'black', paddingLeft: '5px' }}>Admin</span>
           </Link>
-
         </div>
 
         <div className="header-wrapper__right-side__bell">
           {/* <Popover content={contentNoti} title="Thông báo" trigger="click" style={{ color: "red" }}> */}
-          <Badge count={4} overflowCount={10} size='default'>
-            <BellOutlined
-              style={{ color: "black", fontSize: "23px" }}
-            />
+          <Badge count={4} overflowCount={10} size="default">
+            <BellOutlined style={{ color: 'black', fontSize: '23px' }} />
           </Badge>
           {/* </Popover> */}
-
         </div>
 
         <div className="header-wrapper__right-side__question">
           <Link to={'/help'}>
-            <QuestionCircleOutlined
-              style={{ color: "black" }}
-            />
+            <QuestionCircleOutlined style={{ color: 'black' }} />
           </Link>
         </div>
         <div className="header-wrapper__right-side__setting">
           <Link to={'/setting'}>
-            <SettingOutlined
-              style={{ color: "black", fontSize: "20px" }}
-            />
+            <SettingOutlined style={{ color: 'black', fontSize: '20px' }} />
           </Link>
         </div>
-      </div >
-    </Header >
+      </div>
+    </Header>
   )
 }
 

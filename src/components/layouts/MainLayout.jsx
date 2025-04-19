@@ -1,55 +1,38 @@
-import { Layout } from 'antd'
-// import HeaderRender from '@components/header';
+import { Layout, Grid } from 'antd'
+import { useState, useEffect } from 'react'
 import SiderRender from '@components/siderbar'
 import FooterRender from '@components/footer'
 import CourseNavigation from '@components/CourseNavigation'
+import './main-layout.scss'
+
 const { Content } = Layout
+const { useBreakpoint } = Grid
 
 const MainLayout = ({ component: Component }) => {
-  // const {
-  //   token: { colorBgContainer, borderRadiusLG }
-  // } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false)
+  const screens = useBreakpoint()
+
+  // Automatically collapse sidebar on small screens
+  useEffect(() => {
+    setCollapsed(!screens.md)
+  }, [screens.md])
+
   return (
-    <Layout>
-      {/* <HeaderRender /> */}
+    <Layout className="main-layout">
       <Layout>
         <SiderRender
           width={200}
-          style={
-            {
-              // background: colorBgContainer,
-            }
-          }
+          collapsible
+          collapsed={collapsed}
+          onCollapse={setCollapsed}
+          breakpoint="md"
           theme="light"
+          className="main-layout-sider"
         />
-        <div
-          style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
-        >
-          <CourseNavigation style={{ display: 'fex' }} />
-
-          <Layout
-            style={{
-              padding: '0 8px 8px',
-            }}
-          >
-            {/* <Breadcrumb
-            style={{
-              margin: '16px 0',
-            }}
-          >
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          </Breadcrumb> */}
-            <Content
-              style={{
-                padding: 24,
-                margin: 0,
-                minHeight: 500,
-                background: 'colorBgContainer',
-                // height: '90vh',
-                // borderRadius: borderRadiusLG,
-              }}
-            >
+        <div className="main-layout-content-wrapper">
+          <CourseNavigation className="main-layout-navigation" />
+          <Layout className="main-layout-inner">
+            <Content className="main-layout-content">
               <Component />
             </Content>
             <FooterRender />
@@ -59,4 +42,5 @@ const MainLayout = ({ component: Component }) => {
     </Layout>
   )
 }
+
 export default MainLayout

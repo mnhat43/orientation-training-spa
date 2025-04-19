@@ -119,6 +119,31 @@ const useLectureData = (courseId, moduleId, moduleItemId) => {
     [navigate, courseId, selectLecture],
   )
 
+  // Check course completion status
+  const checkCourseCompletionStatus = useCallback(async () => {
+    if (!courseId) return false
+
+    try {
+      const response = await userprogress.getUserProgress({
+        course_id: parseInt(courseId),
+      })
+
+      if (response.status === 1 && response.data) {
+        // If course is marked as completed in the data
+        console.log('Course completion status:', response.data.completed)
+        console.log(typeof response.data.completed)
+        if (response.data.completed === true) {
+          setCourseCompleted(true)
+          return true
+        }
+      }
+      return false
+    } catch (error) {
+      console.error('Failed to check course completion status:', error)
+      return false
+    }
+  }, [courseId])
+
   // Fetch lectures data
   const fetchLectures = async () => {
     if (!courseId) return
@@ -130,6 +155,9 @@ const useLectureData = (courseId, moduleId, moduleItemId) => {
         course_id: parseInt(courseId),
       })
       setLectures(response.data)
+
+      // After fetching lectures, check course completion status
+      await checkCourseCompletionStatus()
     } catch (error) {
       console.error('Failed to fetch lectures:', error.message)
       setError(error.message || 'Failed to fetch lectures')
@@ -206,6 +234,13 @@ const useLectureData = (courseId, moduleId, moduleItemId) => {
       console.error('Failed to update progress:', error)
     }
   }, [])
+
+  // Check completion status on component mount, separately from lecture fetch
+  useEffect(() => {
+    if (courseId) {
+      checkCourseCompletionStatus()
+    }
+  }, [courseId, checkCourseCompletionStatus])
 
   // Fetch lectures on component mount
   useEffect(() => {
