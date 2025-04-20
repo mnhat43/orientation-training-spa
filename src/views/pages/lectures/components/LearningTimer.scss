@@ -1,0 +1,57 @@
+.learning-timer {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    margin-bottom: 16px;
+    border: 1px solid #f0f0f0;
+
+    &__header {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .anticon {
+            color: #1890ff;
+            margin-right: 8px;
+        }
+    }
+
+    &__details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .ant-progress {
+        line-height: 1;
+
+        &-text {
+            font-size: 14px;
+        }
+    }
+
+    .ant-btn {
+        font-size: 12px;
+        height: 24px;
+        padding: 0 8px;
+    }
+}
+
+// Styling for timer container in main layout
+.lectures-page__timer-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 300px;
+    transition: all 0.3s ease;
+
+    @media (max-width: 768px) {
+        bottom: 70px;
+        right: 10px;
+        width: 250px;
+    }
+}

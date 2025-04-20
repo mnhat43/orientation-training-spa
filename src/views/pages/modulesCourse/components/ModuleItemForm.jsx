@@ -1,229 +1,390 @@
-import { Button, Input, Radio, Space, Form, Upload, TimePicker } from 'antd'
-import { useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import { Modal, Form, Input, Typography, Button, Alert, Select } from 'antd'
+import {
+  LinkOutlined,
+  VideoCameraOutlined,
+  FileTextOutlined,
+  QuestionCircleOutlined,
+  DeleteOutlined,
+  UploadOutlined,
+} from '@ant-design/icons'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-import { PlusOutlined, InboxOutlined } from '@ant-design/icons'
-import { convertFileToBase64 } from '@helpers/common'
+const { Option } = Select
 
-const { Dragger } = Upload
+const FileUploadContainer = styled.div`
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+  background-color: #fafafa;
+  cursor: pointer;
+  transition: border-color 0.3s;
 
-const FileForm = ({
-  handleCancel,
-  addModuleItem,
-  loadingUpload,
-  setFormActive,
+  &:hover {
+    border-color: #1890ff;
+  }
+
+  &.has-file {
+    border-color: #52c41a;
+    background-color: #f6ffed;
+  }
+`
+
+const FileInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f;
+
+  .file-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`
+
+const ModuleItemForm = ({
+  visible,
+  onCancel,
+  onSubmit,
+  itemType,
+  initialValues,
 }) => {
   const [form] = Form.useForm()
+  const [fileBase64, setFileBase64] = useState(null)
+  const [fileName, setFileName] = useState('')
+  const fileInputRef = useRef(null)
 
-  const handleSubmit = async (values) => {
-    const { title, file, requiredTime } = values
-    try {
-      const base64File = await convertFileToBase64(file[0].originFileObj)
-
-      const requiredTimeInSeconds = requiredTime
-        ? requiredTime.hour() * 3600 +
-          requiredTime.minute() * 60 +
-          requiredTime.second()
-        : 0
-
-      const body = {
-        item_type: 'file',
-        title,
-        resource: base64File,
-        required_time: requiredTimeInSeconds,
+  useEffect(() => {
+    if (visible) {
+      form.resetFields()
+      setFileBase64(null)
+      setFileName('')
+      if (initialValues) {
+        form.setFieldsValue(initialValues)
       }
+    }
+  }, [visible, initialValues, form])
 
-      addModuleItem(body).then(() => setFormActive(false))
+  const getFormTitle = () => {
+    switch (itemType?.toLowerCase()) {
+      case 'video':
+        return 'Add Video'
+      case 'file':
+        return 'Add File'
+      case 'quiz':
+        return 'Add Quiz'
+      default:
+        return 'Add Item'
+    }
+  }
+
+  const getIcon = () => {
+    switch (itemType?.toLowerCase()) {
+      case 'video':
+        return <VideoCameraOutlined />
+      case 'file':
+        return <FileTextOutlined />
+      case 'quiz':
+        return <QuestionCircleOutlined />
+      default:
+        return null
+    }
+  }
+
+  const handleSubmit = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        // Convert required_time from minutes to seconds for file type
+        if (itemType?.toLowerCase() === 'file' && values.required_time) {
+          // Convert minutes to seconds and ensure it's an integer
+          values.required_time = parseInt(values.required_time) * 60
+        }
+
+        // Set the item_type to "file" instead of "document"
+        const payload = { ...values, item_type: itemType }
+
+        onSubmit(payload)
+        form.resetFields()
+        setFileBase64(null)
+        setFileName('')
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info)
+      })
+  }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    try {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const base64 = event.target.result
+        setFileBase64(base64)
+        setFileName(file.name)
+        form.setFieldsValue({ resource: base64 })
+      }
+      reader.onerror = (error) => {
+        console.error('FileReader error:', error)
+      }
+      reader.readAsDataURL(file)
     } catch (error) {
-      console.error('Error converting file to Base64:', error)
+      console.error('File reading error:', error)
     }
   }
 
-  const getFileList = (files) => {
-    return files.fileList
-  }
-
-  const handleAutoFillName = (value) => {
-    form.setFieldsValue({ ...form.getFieldValue(), title: value.file.name })
-  }
-
-  return (
-    <>
-      <Form
-        form={form}
-        onFinish={handleSubmit}
-        style={{ marginTop: '8px', width: '100%' }}
-        requiredMark="optional"
-      >
-        <Space>
-          <Form.Item
-            name="title"
-            label="File Name"
-            rules={[{ required: true, message: 'Please enter file name' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="requiredTime"
-            label="Required Time"
-            tooltip="Set the expected time to complete this file (HH:MM:SS)"
-            rules={[
-              { required: true, message: 'Please specify the required time' },
-            ]}
-          >
-            <TimePicker format="HH:mm:ss" showNow={false} />
-          </Form.Item>
-          <Form.Item>
-            <Button onClick={handleCancel}>Cancel</Button>
-          </Form.Item>
-          <Form.Item>
-            <Button
-              loading={loadingUpload}
-              type="primary"
-              onClick={() => form.submit()}
-            >
-              Submit
-            </Button>
-          </Form.Item>
-        </Space>
-        <Form.Item
-          name="file"
-          valuePropName="fileList"
-          getValueFromEvent={getFileList}
-          rules={[
-            { type: 'array', max: 1, required: true, message: 'only one file' },
-          ]}
-        >
-          <Dragger
-            onChange={handleAutoFillName}
-            beforeUpload={() => {
-              return false
-            }}
-          >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">
-              Support for a single file upload only.
-            </p>
-          </Dragger>
-        </Form.Item>
-      </Form>
-    </>
-  )
-}
-
-const VideoForm = ({ handleCancel, addModuleItem, setFormActive }) => {
-  const [form] = Form.useForm()
-
-  const handleSubmit = (values) => {
-    const { url, title } = values
-    const body = {
-      item_type: 'video',
-      title,
-      resource: url,
+  const clearFileSelection = () => {
+    setFileBase64(null)
+    setFileName('')
+    form.setFieldsValue({ resource: null })
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
-    addModuleItem(body).then(() => setFormActive(false))
   }
 
-  return (
-    <Form
-      form={form}
-      onFinish={handleSubmit}
-      style={{ marginTop: '8px' }}
-      requiredMark="optional"
-    >
-      <Space size={'middle'}>
+  const handleFileUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
+  // File upload with better UI
+  const renderFileUpload = () => {
+    return (
+      <>
         <Form.Item
           name="title"
-          label="Video Title"
-          rules={[{ required: true }]}
+          label="File Title"
+          rules={[{ required: true, message: 'Please enter a title' }]}
+        >
+          <Input placeholder="Enter file title" />
+        </Form.Item>
+
+        <Form.Item
+          label="Upload File"
+          required
+          tooltip="File will be converted to base64"
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+
+          <FileUploadContainer
+            onClick={handleFileUploadClick}
+            className={fileName ? 'has-file' : ''}
+          >
+            {!fileName ? (
+              <>
+                <p>
+                  <UploadOutlined style={{ fontSize: 24, marginBottom: 8 }} />
+                </p>
+                <p>Click to select a file</p>
+                <p style={{ color: '#8c8c8c', fontSize: 12 }}>
+                  Allowed file types: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT
+                </p>
+              </>
+            ) : (
+              <p style={{ color: '#52c41a' }}>
+                File selected (click to change)
+              </p>
+            )}
+          </FileUploadContainer>
+
+          {fileName && (
+            <FileInfo>
+              <div className="file-name">
+                <FileTextOutlined style={{ color: '#52c41a' }} />
+                <span>{fileName}</span>
+              </div>
+              <Button
+                type="text"
+                icon={<DeleteOutlined />}
+                danger
+                onClick={(e) => {
+                  e.stopPropagation()
+                  clearFileSelection()
+                }}
+              />
+            </FileInfo>
+          )}
+        </Form.Item>
+
+        <Form.Item
+          name="resource"
+          hidden
+          rules={[{ required: true, message: 'Please upload a file' }]}
         >
           <Input />
         </Form.Item>
+
         <Form.Item
+          name="required_time"
+          label="Required Time (minutes)"
           rules={[
+            { required: true, message: 'Please enter the required time' },
             {
-              required: true,
-              message: 'Please valid url',
-              type: 'url',
+              type: 'integer',
+              transform: (value) => parseInt(value),
+              message: 'Please enter a valid number',
             },
           ]}
-          name="url"
-          label="Video url"
+          tooltip="Time needed to view/read file (will be stored as seconds)"
         >
-          <Input />
+          <Input
+            type="number"
+            min="1"
+            step="1"
+            placeholder="Enter time in minutes"
+            suffix="minutes"
+            onChange={(e) => {
+              // Remove decimal points and ensure it's a positive integer
+              const value = e.target.value
+              if (value) {
+                const intValue = Math.max(1, Math.floor(parseFloat(value)))
+                if (intValue.toString() !== value) {
+                  form.setFieldsValue({ required_time: intValue })
+                }
+              }
+            }}
+          />
         </Form.Item>
-        <Form.Item>
-          <Button onClick={handleCancel}>Cancel</Button>
-        </Form.Item>
-        <Form.Item>
-          <Button onClick={form.submit} type="primary">
-            Submit
-          </Button>
-        </Form.Item>
-      </Space>
-    </Form>
+      </>
+    )
+  }
+
+  const renderFormItems = () => {
+    switch (itemType?.toLowerCase()) {
+      case 'video':
+        return (
+          <>
+            <Form.Item
+              name="title"
+              label="Video Title"
+              rules={[{ required: true, message: 'Please enter a title' }]}
+            >
+              <Input placeholder="Enter video title" />
+            </Form.Item>
+            <Form.Item
+              name="resource"
+              label="YouTube Video URL"
+              rules={[
+                { required: true, message: 'Please enter the YouTube URL' },
+                { type: 'url', message: 'Please enter a valid URL' },
+              ]}
+              extra="Enter a valid YouTube video URL"
+            >
+              <Input
+                prefix={<LinkOutlined />}
+                placeholder="https://www.youtube.com/watch?v=..."
+              />
+            </Form.Item>
+          </>
+        )
+
+      case 'file':
+      case 'document': // For backward compatibility
+        return renderFileUpload()
+
+      case 'quiz':
+        return (
+          <>
+            <Form.Item
+              name="title"
+              label="Quiz Title"
+              rules={[{ required: true, message: 'Please enter a title' }]}
+            >
+              <Input placeholder="Enter quiz title" />
+            </Form.Item>
+            <Form.Item name="description" label="Description">
+              <Input.TextArea
+                placeholder="Brief description of the quiz"
+                autoSize={{ minRows: 3, maxRows: 5 }}
+              />
+            </Form.Item>
+            <Alert
+              message="Note"
+              description="You will be able to add questions to this quiz after creating it."
+              type="info"
+              showIcon
+              style={{ marginBottom: 16 }}
+            />
+            <Form.Item name="time_limit" label="Time Limit (minutes)">
+              <Input
+                type="number"
+                placeholder="Time limit for completion (optional)"
+              />
+            </Form.Item>
+            <Form.Item
+              name="passing_score"
+              label="Passing Score (%)"
+              initialValue={70}
+            >
+              <Input type="number" placeholder="Required score to pass" />
+            </Form.Item>
+          </>
+        )
+
+      default:
+        return (
+          <Alert
+            message="Select item type"
+            description="Please select an item type from the options."
+            type="warning"
+            showIcon
+          />
+        )
+    }
+  }
+
+  return (
+    <Modal
+      title={
+        <Typography.Title level={4}>
+          {getIcon()} {getFormTitle()}
+        </Typography.Title>
+      }
+      visible={visible}
+      onCancel={onCancel}
+      onOk={handleSubmit}
+      okText="Add Item"
+      cancelText="Cancel"
+      destroyOnClose
+      width={600}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={initialValues}
+        requiredMark={false}
+      >
+        {renderFormItems()}
+      </Form>
+    </Modal>
   )
 }
 
-const ModuleItemForm = ({ instructorAccess, addModuleItem, loadingUpload }) => {
-  const [formActive, setFormActive] = useState(false)
-  const [moduleItemType, setModuleItemType] = useState('video')
-
-  const handleCancel = () => setFormActive(false)
-
-  // if (!instructorAccess) return null
-
-  return (
-    <>
-      {!formActive && (
-        <div style={{ marginTop: '16px' }}>
-          <Button icon={<PlusOutlined />} onClick={() => setFormActive(true)}>
-            Add Item
-          </Button>
-        </div>
-      )}
-      {formActive && (
-        <>
-          <div
-            style={{
-              paddingBottom: '16px',
-              borderBottom: '0px',
-              marginTop: '16px',
-            }}
-          >
-            <Radio.Group
-              defaultValue="video"
-              buttonStyle="solid"
-              value={moduleItemType}
-              onChange={(e) => setModuleItemType(e.target.value)}
-            >
-              <Radio.Button value="video">Video</Radio.Button>
-              <Radio.Button value="file">File</Radio.Button>
-            </Radio.Group>
-          </div>
-          {moduleItemType === 'video' && (
-            <VideoForm
-              addModuleItem={addModuleItem}
-              handleCancel={handleCancel}
-              setFormActive={setFormActive}
-            />
-          )}
-          {moduleItemType === 'file' && (
-            <FileForm
-              addModuleItem={addModuleItem}
-              handleCancel={handleCancel}
-              loadingUpload={loadingUpload}
-              setFormActive={setFormActive}
-            />
-          )}
-        </>
-      )}
-    </>
-  )
+ModuleItemForm.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  itemType: PropTypes.string,
+  initialValues: PropTypes.object,
 }
 
 export default ModuleItemForm

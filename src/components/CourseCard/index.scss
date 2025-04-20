@@ -1,0 +1,254 @@
+.course-card {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: none !important;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    position: relative;
+
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+
+        .thumbnail-image {
+            transform: scale(1.08);
+        }
+
+        .view-course-overlay {
+            opacity: 1;
+        }
+    }
+
+    .thumbnail-container {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%); // Light gradient background
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            z-index: 1;
+        }
+
+        .view-course-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2;
+
+            .view-button {
+                background: white;
+                color: #1a1a1a;
+                font-weight: 600;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 8px;
+                transform: translateY(10px);
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+                &:hover {
+                    background: #f8f8f8;
+                    transform: translateY(5px) scale(1.05);
+                }
+            }
+        }
+
+        .thumbnail-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center; // Center the image
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+            &.placeholder-image {
+                opacity: 0.15;
+                object-fit: contain;
+                padding: 20px;
+            }
+        }
+
+        .default-thumbnail-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+            z-index: 0;
+
+            .default-thumbnail-icon {
+                font-size: 64px;
+                color: rgba(255, 255, 255, 0.85);
+                opacity: 0.8;
+            }
+        }
+    }
+
+    .course-status {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 3;
+
+        .ant-tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .ant-card-body {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-category {
+        margin-bottom: 12px;
+
+        .ant-tag {
+            margin-right: 0;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+
+            .anticon {
+                margin-right: 4px;
+                font-size: 12px;
+            }
+        }
+    }
+
+    .course-title {
+        font-weight: 600;
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: #222;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.5;
+    }
+
+    .course-description {
+        height: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 4; // Increased from 3 to fill space left by removed metadata
+        -webkit-box-orient: vertical;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 0; // Changed from 16px since we don't have metadata below
+    }
+
+    .ant-card-actions {
+        border-top: 1px solid #f0f0f0;
+        background: #fafafa;
+
+        > li {
+            margin: 0;
+        }
+
+        .action-button {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: all 0.3s;
+            background: transparent;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+
+            &.edit-button:hover {
+                color: #1890ff;
+                background-color: rgba(24, 144, 255, 0.06);
+            }
+
+            &.delete-button:hover {
+                color: #ff4d4f;
+                background-color: rgba(255, 77, 79, 0.06);
+            }
+        }
+    }
+
+    &.trainee-card {
+        .progress-container {
+            margin-top: 12px;
+
+            .ant-progress-outer {
+                padding-right: 0;
+            }
+
+            .ant-progress-text {
+                font-size: 12px;
+                color: rgba(0, 0, 0, 0.65);
+            }
+        }
+    }
+}
+
+// Media queries for responsive design
+@media (max-width: 768px) {
+    .course-card {
+        .thumbnail-container {
+            height: 160px;
+        }
+
+        .course-title {
+            font-size: 16px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .course-card {
+        .ant-card-body {
+            padding: 16px;
+        }
+
+        .course-meta {
+            flex-direction: column;
+            align-items: flex-start;
+
+            .meta-item {
+                margin-bottom: 8px;
+            }
+        }
+    }
+}

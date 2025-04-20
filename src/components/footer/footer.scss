@@ -1,0 +1,28 @@
+.app-footer {
+    height: 36px;
+    line-height: 20px;
+    padding: 8px 24px;
+    text-align: center;
+    background: #f8f9fa;
+    color: #666;
+    font-size: 12px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .copyright {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+
+        .anticon {
+            font-size: 11px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 6px 16px;
+        height: 32px;
+    }
+}

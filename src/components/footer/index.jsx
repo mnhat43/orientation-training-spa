@@ -1,16 +1,15 @@
 import { CopyrightOutlined } from '@ant-design/icons'
 import { Layout } from 'antd'
+import './footer.scss'
 
 const { Footer } = Layout
 
 const FooterRender = () => {
   return (
-    <Footer
-      style={{
-        textAlign: 'center',
-      }}
-    >
-      COPYRIGHT <CopyrightOutlined /> {new Date().getFullYear()} DaoMinhNhat
+    <Footer className="app-footer">
+      <span className="copyright">
+        <CopyrightOutlined /> {new Date().getFullYear()} DaoMinhNhat
+      </span>
     </Footer>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Card } from 'antd'
+import './Video.scss'
 
 const Video = ({ videoId, onPlayStateChange }) => {
   const iframeRef = useRef(null)
@@ -31,14 +31,14 @@ const Video = ({ videoId, onPlayStateChange }) => {
 
           // Handle player state: 1=playing, 2=paused, 0=ended, 3=buffering
           if (playerState === 1 || playerState === 'PLAYING') {
-            onPlayStateChange(true)
+            onPlayStateChange && onPlayStateChange(true)
           } else if (
             playerState === 0 ||
             playerState === 2 ||
             playerState === 'ENDED' ||
             playerState === 'PAUSED'
           ) {
-            onPlayStateChange(false)
+            onPlayStateChange && onPlayStateChange(false)
           }
         }
       } catch (e) {
@@ -75,33 +75,17 @@ const Video = ({ videoId, onPlayStateChange }) => {
   }, [onPlayStateChange, videoId])
 
   return (
-    <div
-      className="video-container"
-      style={{
-        position: 'relative',
-        paddingBottom: '56.25%',
-        height: 0,
-        overflow: 'hidden',
-        maxWidth: '100%',
-      }}
-    >
-      <iframe
-        ref={iframeRef}
-        src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}&rel=0&modestbranding=1&widgetid=1`}
-        title="YouTube video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          border: 0,
-        }}
-        id={`youtube-player-${videoId}`}
-      />
-    </div>
+    <iframe
+      ref={iframeRef}
+      src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(
+        window.location.origin,
+      )}&rel=0&modestbranding=1&widgetid=1`}
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      loading="lazy"
+      className="youtube-iframe"
+    />
   )
 }
 

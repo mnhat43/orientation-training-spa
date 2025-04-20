@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Video from './Video'
 import VideoInfo from './VideoInfo'
 import File from './File'
+import './LectureContent.scss'
 
-const LectureContent = ({ selectedLecture, onPlayStateChange }) => {
+const LectureContent = ({ selectedLecture, onPlayStateChange, isExpanded }) => {
   useEffect(() => {
     // Reset video playing state when lecture changes
     if (onPlayStateChange) {
@@ -16,22 +17,32 @@ const LectureContent = ({ selectedLecture, onPlayStateChange }) => {
   ])
 
   return (
-    <>
+    <div className="lecture-content-container">
       {selectedLecture.item_type === 'video' ? (
-        <>
-          <Video
-            videoId={selectedLecture.videoId}
-            onPlayStateChange={onPlayStateChange}
-          />
-          <VideoInfo
-            title={selectedLecture.title}
-            publishedAt={selectedLecture.publishedAt}
-          />
-        </>
+        <div className="video-container">
+          <div className="video-content">
+            <Video
+              videoId={selectedLecture.videoId}
+              onPlayStateChange={onPlayStateChange}
+            />
+          </div>
+
+          <div className="video-info-container">
+            <VideoInfo
+              title={selectedLecture.title}
+              description={selectedLecture.description}
+              publishedAt={selectedLecture.publishedAt}
+              duration={selectedLecture.duration}
+              tags={selectedLecture.tags}
+            />
+          </div>
+        </div>
       ) : (
-        <File filePath={selectedLecture.file_path} />
+        <div className="file-container">
+          <File filePath={selectedLecture.file_path} />
+        </div>
       )}
-    </>
+    </div>
   )
 }
 

@@ -1,44 +1,25 @@
-import { Layout, Grid } from 'antd'
-import { useState, useEffect } from 'react'
-import SiderRender from '@components/siderbar'
+import { Layout } from 'antd'
+import { useLocation } from 'react-router-dom'
 import FooterRender from '@components/footer'
 import CourseNavigation from '@components/CourseNavigation'
+import HeaderRender from '@components/header'
 import './main-layout.scss'
 
 const { Content } = Layout
-const { useBreakpoint } = Grid
 
 const MainLayout = ({ component: Component }) => {
-  const [collapsed, setCollapsed] = useState(false)
-  const screens = useBreakpoint()
-
-  // Automatically collapse sidebar on small screens
-  useEffect(() => {
-    setCollapsed(!screens.md)
-  }, [screens.md])
+  const location = useLocation()
+  const isCourseRoute = location.pathname.includes('/course/')
 
   return (
     <Layout className="main-layout">
-      <Layout>
-        <SiderRender
-          width={200}
-          collapsible
-          collapsed={collapsed}
-          onCollapse={setCollapsed}
-          breakpoint="md"
-          theme="light"
-          className="main-layout-sider"
-        />
-        <div className="main-layout-content-wrapper">
-          <CourseNavigation className="main-layout-navigation" />
-          <Layout className="main-layout-inner">
-            <Content className="main-layout-content">
-              <Component />
-            </Content>
-            <FooterRender />
-          </Layout>
-        </div>
+      <Layout className="main-layout-header">
+        {isCourseRoute ? <CourseNavigation /> : <HeaderRender />}
       </Layout>
+      <Layout className="main-layout-content">
+        <Component />
+      </Layout>
+      {/* <FooterRender /> */}
     </Layout>
   )
 }

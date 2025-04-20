@@ -8,6 +8,7 @@ import Assignments from '@views/pages/assignments'
 import AssessmentCreation from '@views/pages/assessmentCreate/AssessmentCreation'
 import Exams from '@views/pages/exams'
 import Login from '@views/pages/login'
+import Home from '@views/pages/home'
 
 function AllRoutes() {
   return (
@@ -15,8 +16,8 @@ function AllRoutes() {
       <Route path="/login" element={<Login />} />
 
       <Route path="/dashboard" element={<MainLayout component={Dashboard} />} />
-
       <Route path="/courses" element={<MainLayout component={Courses} />} />
+      <Route path="/" element={<MainLayout component={Home} />} />
       <Route
         path="/course/:courseId/modules"
         element={<MainLayout component={Modules} />}

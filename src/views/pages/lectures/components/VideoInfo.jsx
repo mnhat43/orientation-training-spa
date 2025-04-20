@@ -1,32 +1,57 @@
-import { Typography } from 'antd'
+import React from 'react'
+import { Typography, Space, Tag } from 'antd'
+import { CalendarOutlined } from '@ant-design/icons'
+import './VideoInfo.scss'
 
-const VideoInfo = (props) => {
-  const { title, publishedAt } = props
+const { Title, Paragraph } = Typography
+
+const VideoInfo = ({
+  title,
+  description,
+  publishedAt,
+  duration,
+  tags = [],
+}) => {
+  const formattedDate = publishedAt
+    ? new Date(publishedAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : null
+
   return (
-    <div
-      style={{
-        backgroundColor: '#fafafa',
-        borderRadius: '10px',
-        overflow: 'hidden',
-        alignItems: 'center',
-        padding: '8px 12px',
-      }}
-    >
-      <div>
-        <Typography.Title style={{ margin: '0px' }} level={4}>
+    <div className="video-info">
+      {title && (
+        <Title level={3} className="video-info__title">
           {title}
-        </Typography.Title>
-        <div
-          style={{
-            marginTop: '4px',
-            color: '#bfbfbf',
-            fontSize: '12px',
-            fontWeight: '600',
-          }}
-        >
-          {publishedAt}
-        </div>
+        </Title>
+      )}
+
+      <div className="video-info__meta">
+        {formattedDate && (
+          <Space className="video-info__date">
+            <CalendarOutlined />
+            <span>{formattedDate}</span>
+          </Space>
+        )}
+
+        {duration && <span className="video-info__duration">{duration}</span>}
       </div>
+
+      {tags && tags.length > 0 && (
+        <div className="video-info__tags">
+          {tags.map((tag) => (
+            <Tag key={tag} color="blue">
+              {tag}
+            </Tag>
+          ))}
+        </div>
+      )}
+
+      {description && (
+        <Paragraph className="video-info__description">{description}</Paragraph>
+      )}
     </div>
   )
 }

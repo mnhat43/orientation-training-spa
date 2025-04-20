@@ -1,7 +1,5 @@
 import { useEffect, useState, useCallback, useRef, memo } from 'react'
-import useAuth from '@hooks/useAuth'
 
-// Simple constants
 const REQUIRED_TIME_DEFAULT = 10
 const USER_ACTIVITY_TIMEOUT = 10000
 const TIMER_CHECK_INTERVAL = 500
@@ -12,17 +10,16 @@ const LearningTimer = ({
   courseId,
   isVideoPlaying,
   allLectures = [],
+  courseCompleted = false,
   isLastLecture = false,
   onCompleteLecture,
   onCompleteCourse,
 }) => {
-  // User data and basic state
-  const { userData } = useAuth()
-  const userId = userData?.id
+  if (courseCompleted) return null
+
   const [isUserActive, setIsUserActive] = useState(false)
   const [timeSpent, setTimeSpent] = useState(0)
 
-  // Important lecture properties
   const {
     module_id,
     module_position,
@@ -32,7 +29,6 @@ const LearningTimer = ({
     item_type,
   } = lecture
 
-  // Core logic values
   const requiredTime = required_time > 0 ? required_time : REQUIRED_TIME_DEFAULT
   const isFileContent = item_type !== 'video'
   const isActive = isFileContent ? isUserActive : isVideoPlaying
@@ -43,8 +39,8 @@ const LearningTimer = ({
     activityTimer: null,
     startTime: null,
     completed: false,
-    accumulatedTime: 0, // Track accumulated time across pauses
-    lastPauseTime: null, // Track when the last pause occurred
+    accumulatedTime: 0,
+    lastPauseTime: null,
   }).current
 
   // Find next lecture in course
@@ -82,7 +78,7 @@ const LearningTimer = ({
 
     // Otherwise find next lecture and update progress as before
     const nextLecture = findNextLecture()
-    if (!nextLecture || !userId) return
+    if (!nextLecture) return
 
     // Notify parent component with completion data
     onCompleteLecture({
@@ -93,7 +89,6 @@ const LearningTimer = ({
       currentItem: module_item_id,
     })
   }, [
-    userId,
     courseId,
     findNextLecture,
     module_id,

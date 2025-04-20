@@ -1,108 +1,110 @@
-
-// import { useHistory } from 'react-router-dom'
-
-import { Button, Space } from 'antd'
+import { Button, Menu, Typography, Dropdown, Space } from 'antd'
 import { NavLink, useLocation, useParams, useNavigate } from 'react-router-dom'
+import {
+  ArrowLeftOutlined,
+  BookOutlined,
+  ReadOutlined,
+  FormOutlined,
+  FileTextOutlined,
+  MenuOutlined,
+} from '@ant-design/icons'
+import './course-navigation.scss'
 
-import { ArrowLeftOutlined } from '@ant-design/icons'
-
-// const CourseMenu = ({ url, privilege }) => {
-//   return (
-//     <Menu>
-//       <Menu.Item>
-//         <Link to={`${url}/announcments`}>Announcments</Link>
-//       </Menu.Item>
-//       <Menu.Item>
-//         <Link to={`${url}/gradebook`}>GradeBook</Link>
-//       </Menu.Item>
-//       <Menu.Item>
-//         <Link to={`${url}/discussions`}>Discussions</Link>
-//       </Menu.Item>
-//       {privilege !== 'student' && (
-//         <Menu.Item>
-//           <Link to={`${url}/particpants`}>Particpants</Link>
-//         </Menu.Item>
-//       )}
-
-//       {privilege !== 'student' && (
-//         <Menu.Item>
-//           <Link to={`${url}/settings`}>Settings</Link>
-//         </Menu.Item>
-//       )}
-//     </Menu>
-//   )
-// }
+const { Title } = Typography
 
 const CourseNavigation = () => {
-  // const { params, url } = useRouteMatch('/course/:id')
-
-  // let course = useSelector((state) =>
-  //   state.courses.data.find((course) => course.id === params.id)
-  // )
-  const params = useParams();
-
-  const location = useLocation();
-
-
-  // const course = {
-  //   name: 'Intern ReactJS',
-  //   backgroundColor: 'black'
-  // }
-  const navigate = useNavigate();
-
-  // const { privilege } = useCoursePrivilege(params.id)
+  const params = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const isCourseRoute = location.pathname.includes('/course/')
 
   const goBack = () => {
     navigate('/courses')
   }
 
-  return (
-    <>
-      {
-        location.pathname.includes("/course/")
-        &&
-        <div style={{ display: 'flex', backgroundColor: '#ddd', height: '50px', alignItems: 'center', padding: '0 20px' }}>
-          <Space>
-            <Button
-              shape="circle"
-              type="secondary"
-              onClick={goBack}
-              icon={<ArrowLeftOutlined />}
-            ></Button>
-            {/* <Dropdown
-          overlay={<CourseMenu url={url} privilege={privilege} />}
-          placement="bottomCenter"
-        > */}
-            {/* <Button
-              shape="round"
-              style={{ backgroundColor: course.backgroundColor }}
-            >
-              <span style={{ fontWeight: 600, color: 'white' }}>
-                {course.name}
-              </span>{' '}
-              <DownOutlined style={{ color: 'white' }} />
-            </Button> */}
-            {/* </Dropdown> */}
-          </Space>
-          <NavLink to={`/course/${params.courseId}/modules`}>
-            <Button type="text">Modules</Button>
-          </NavLink>
-          <NavLink to={`/course/${params.courseId}/lectures`}>
-            <Button type="text">Lectures</Button>
-          </NavLink>
-          <NavLink to={`/course/${params.courseId}/assignments`}>
-            <Button type="text">Assignments</Button>
-          </NavLink>
-          <NavLink to={`/course/${params.courseId}/exams`}>
-            <Button type="text">Exams</Button>
-          </NavLink>
-          {/* <NavLink to={`.course/${params.courseId}/exam/12345`} target="_blank">
-        <Button type="text">CheatingDetection</Button>
-      </NavLink> */}
-        </div>
-      }
-    </>
+  const menuItems = [
+    {
+      key: 'modules',
+      icon: <BookOutlined />,
+      label: 'Modules',
+      path: `/course/${params.courseId}/modules`,
+    },
+    {
+      key: 'lectures',
+      icon: <ReadOutlined />,
+      label: 'Lectures',
+      path: `/course/${params.courseId}/lectures`,
+    },
+    {
+      key: 'assignments',
+      icon: <FormOutlined />,
+      label: 'Assignments',
+      path: `/course/${params.courseId}/assignments`,
+    },
+    {
+      key: 'exams',
+      icon: <FileTextOutlined />,
+      label: 'Exams',
+      path: `/course/${params.courseId}/exams`,
+    },
+  ]
 
+  const getActiveKey = () => {
+    const path = location.pathname
+    for (const item of menuItems) {
+      if (path.includes(item.key)) {
+        return item.key
+      }
+    }
+    return 'modules'
+  }
+
+  const mobileMenu = (
+    <Menu>
+      {menuItems.map((item) => (
+        <Menu.Item key={item.key} icon={item.icon}>
+          <NavLink to={item.path}>{item.label}</NavLink>
+        </Menu.Item>
+      ))}
+    </Menu>
+  )
+
+  if (!isCourseRoute) {
+    return null
+  }
+
+  return (
+    <div className={`course-navigation`}>
+      <div className="course-navigation-container">
+        <div className="course-navigation-left">
+          <Button
+            shape="circle"
+            type="text"
+            onClick={goBack}
+            icon={<ArrowLeftOutlined />}
+            className="back-button"
+            title="Back to Courses"
+          />
+          <Title level={4} className="course-title">
+            React JS Training Course
+          </Title>
+        </div>
+
+        <div className="course-navigation-right desktop-menu">
+          <Menu
+            mode="horizontal"
+            selectedKeys={[getActiveKey()]}
+            className="course-menu"
+          >
+            {menuItems.map((item) => (
+              <Menu.Item key={item.key} icon={item.icon}>
+                <NavLink to={item.path}>{item.label}</NavLink>
+              </Menu.Item>
+            ))}
+          </Menu>
+        </div>
+      </div>
+    </div>
   )
 }
 

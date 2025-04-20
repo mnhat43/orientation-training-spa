@@ -1,0 +1,68 @@
+@import "../../styles/variables.scss";
+
+.course-navigation {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin-bottom: 10px;
+
+    &-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: $course-nav-height-desktop;
+        padding: 0 20px;
+        max-width: $max-width;
+        margin: 0 auto;
+    }
+
+    &-left {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+
+        .back-button {
+            margin-right: 12px;
+            transition: all 0.3s;
+            color: #4a6bff;
+            width: 28px;
+            height: 28px;
+
+            &:hover {
+                background-color: rgba(74, 107, 255, 0.1);
+                transform: translateX(-2px);
+                color: #3451d1;
+            }
+        }
+
+        .course-title {
+            margin: 0;
+            max-width: 300px;
+            font-size: 16px;
+        }
+    }
+
+    &-right {
+        .course-menu {
+            background: transparent;
+            .ant-menu-item {
+                transition: all 0.3s;
+
+                &:hover {
+                    background-color: rgba(74, 107, 255, 0.08);
+                    color: #4a6bff;
+                }
+
+                &.ant-menu-item-selected {
+                    color: #4a6bff;
+                    &::after {
+                        border-bottom: 2px solid #4a6bff;
+                    }
+                }
+            }
+        }
+    }
+}

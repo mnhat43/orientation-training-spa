@@ -5,7 +5,6 @@ import { ToastContainer } from 'react-toastify'
 import { GlobalHistory } from '@components/globalhistory'
 import 'react-toastify/dist/ReactToastify.css'
 const App = () => {
-
   return (
     <>
       <UserProvider>

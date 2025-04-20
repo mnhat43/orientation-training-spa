@@ -1,149 +1,303 @@
+import React, { useState } from 'react'
 import {
-  Collapse,
-  List,
-  Space,
-  Button,
+  Card,
   Typography,
-  Form,
-  Modal,
-  Input,
+  Button,
+  Space,
+  Dropdown,
+  Menu,
+  Tooltip,
+  Badge,
+  Tag,
 } from 'antd'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useState } from 'react'
-import ModuleItem from './ModuleItem'
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  FileTextOutlined,
+  VideoCameraOutlined,
+  LinkOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons'
+import styled from 'styled-components'
+import ModuleForm from './ModuleForm'
 import ModuleItemForm from './ModuleItemForm'
-import RenderIf from '@components/renderif/RenderIf'
+import PropTypes from 'prop-types'
 
-const ModuleList = (props) => {
-  const {
-    module,
-    // instructorAccess,
-    editModule,
-    removeModule,
-    addModuleItem,
-    removeModuleItem,
-  } = props
+const { Text } = Typography
 
-  const [editModalActive, setEditModalActive] = useState(false)
-  const [form] = Form.useForm()
+const ModuleCard = styled(Card)`
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+  border: 1px solid #f0f0f0;
 
-  // const loadingUpload = module.loadingUpload
-  const handleCancel = () => {
-    setEditModalActive(false)
+  .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+    min-height: 48px;
+    padding: 0 16px;
   }
 
-  const handleOk = () => {
-    form.validateFields().then((values) => {
-      editModule(values)
-      setEditModalActive(false)
-      form.resetFields()
+  .ant-card-body {
+    padding: 16px;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+`
+
+const ModuleItemWrapper = styled.div`
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background-color: #fafafa;
+  border: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  .module-item-title {
+    display: flex;
+    align-items: center;
+  }
+
+  .module-item-type-icon {
+    margin-right: 8px;
+    font-size: 16px;
+  }
+`
+
+const ItemTypeIcon = ({ type }) => {
+  switch (type?.toLowerCase()) {
+    case 'video':
+      return <VideoCameraOutlined style={{ color: '#1890ff' }} />
+    case 'file':
+      return <FileTextOutlined style={{ color: '#52c41a' }} />
+    case 'link':
+      return <LinkOutlined style={{ color: '#722ed1' }} />
+    case 'quiz':
+      return <QuestionCircleOutlined style={{ color: '#fa8c16' }} />
+    default:
+      return <FileTextOutlined style={{ color: '#d9d9d9' }} />
+  }
+}
+
+const ModuleList = ({
+  module,
+  editModule,
+  removeModule,
+  addModuleItem,
+  removeModuleItem,
+  index,
+  isLoading,
+  moveUp,
+  moveDown,
+  isFirst,
+  isLast,
+}) => {
+  const [editModalVisible, setEditModalVisible] = useState(false)
+  const [addItemModalVisible, setAddItemModalVisible] = useState(false)
+  const [itemType, setItemType] = useState(null)
+
+  const handleEditModule = (values) => {
+    editModule(values)
+    setEditModalVisible(false)
+  }
+
+  const handleAddItem = (values) => {
+    addModuleItem({
+      ...values,
+      item_type: itemType,
+      position: (module.module_items?.length || 0) + 1,
     })
+    setAddItemModalVisible(false)
   }
+
+  const getItemLabel = (type) => {
+    switch (type?.toLowerCase()) {
+      case 'video':
+        return 'Video'
+      case 'file':
+        return 'File'
+      case 'document': // Include this for backward compatibility
+        return 'File'
+      case 'link':
+        return 'Link'
+      case 'quiz':
+        return 'Quiz'
+      default:
+        return 'Content'
+    }
+  }
+
+  const showAddItemModal = (type) => {
+    setItemType(type)
+    setAddItemModalVisible(true)
+  }
+
+  const moduleItemsMenu = (
+    <Menu>
+      <Menu.Item key="video" onClick={() => showAddItemModal('video')}>
+        <VideoCameraOutlined /> Add Video
+      </Menu.Item>
+      <Menu.Item key="file" onClick={() => showAddItemModal('file')}>
+        <FileTextOutlined /> Add File
+      </Menu.Item>
+      <Menu.Item key="quiz" onClick={() => showAddItemModal('quiz')}>
+        <QuestionCircleOutlined /> Add Quiz
+      </Menu.Item>
+    </Menu>
+  )
 
   return (
-    <>
-      <Modal
-        title="Edit Module"
-        visible={editModalActive}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="cancel" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
-            Submit
-          </Button>,
-        ]}
-      >
-        <Form
-          name="edit Module"
-          form={form}
-          onFinish={editModule}
-          requiredMark={false}
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-          initialValues={{
-            title: '',
-          }}
-        >
-          <Form.Item
-            name="title"
-            label="Course Module"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter the module name',
-              },
-            ]}
-          >
-            <Input placeholder="New Module Name" />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      <Collapse
-        style={{
-          borderRadius: '10px',
-          width: '100%',
-          fontSize: '16px',
-          border: '0px',
-        }}
-        defaultActiveKey={['1']}
-        expandIconPosition={'left'}
-      >
-        <Collapse.Panel
-          header={<Typography.Text strong>{module.title}</Typography.Text>}
-          bordered={false}
-          key="1"
-          extra={
-            // instructorAccess && (
-            <Space
-              onClick={(event) => {
-                // If you don't want click extra trigger collapse, you can prevent this:
-                event.stopPropagation()
-              }}
+    <div>
+      <ModuleCard
+        title={
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Text strong>{module.title}</Text>
+            <Badge
+              count={module.module_items?.length || 0}
+              style={{ marginLeft: 8, backgroundColor: '#52c41a' }}
+              showZero
+            />
+          </div>
+        }
+        extra={
+          <Space>
+            {!isFirst && (
+              <Tooltip title="Move Up">
+                <Button
+                  icon={<ArrowUpOutlined />}
+                  type="text"
+                  onClick={moveUp}
+                  disabled={isLoading}
+                />
+              </Tooltip>
+            )}
+            {!isLast && (
+              <Tooltip title="Move Down">
+                <Button
+                  icon={<ArrowDownOutlined />}
+                  type="text"
+                  onClick={moveDown}
+                  disabled={isLoading}
+                />
+              </Tooltip>
+            )}
+            <Tooltip title="Edit Module">
+              <Button
+                icon={<EditOutlined />}
+                type="text"
+                onClick={() => setEditModalVisible(true)}
+                disabled={isLoading}
+              />
+            </Tooltip>
+            <Dropdown
+              overlay={moduleItemsMenu}
+              placement="bottomRight"
+              disabled={isLoading}
             >
               <Button
+                icon={<PlusOutlined />}
                 type="text"
-                icon={<EditOutlined />}
-                onClick={() => {
-                  setEditModalActive(true)
-                }}
+                disabled={isLoading}
               />
+            </Dropdown>
+            <Tooltip title="Delete Module">
               <Button
-                type="text"
                 icon={<DeleteOutlined />}
+                type="text"
                 danger
-                onClick={() => removeModule(module.id)}
+                onClick={removeModule}
+                disabled={isLoading}
               />
-            </Space>
-            // )
-          }
-        >
-          <RenderIf isShow={module.module_items}>
-            <List
-              locale={{ emptyText: 'no items' }}
-              dataSource={module.module_items}
-              renderItem={(item) => (
-                <ModuleItem
-                  removeModuleItem={removeModuleItem}
-                  item={item}
-                  moduleId={module.id}
-                  // instructorAccess={instructorAccess}
-                />
-              )}
-            />
-          </RenderIf>
-          <ModuleItemForm
-            addModuleItem={addModuleItem}
-            // instructorAccess={instructorAccess}
-            // loadingUpload={loadingUpload}
-          />
-        </Collapse.Panel>
-      </Collapse>
-    </>
+            </Tooltip>
+          </Space>
+        }
+      >
+        {module.description && (
+          <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
+            {module.description}
+          </Text>
+        )}
+
+        {module.module_items && module.module_items.length > 0 ? (
+          <div>
+            {module.module_items.map((item) => (
+              <ModuleItemWrapper key={item.id}>
+                <div className="module-item-title">
+                  <span className="module-item-type-icon">
+                    <ItemTypeIcon type={item.item_type} />
+                  </span>
+                  <Space direction="vertical" size={0}>
+                    <Text strong>{item.title}</Text>
+                    {item.description && (
+                      <Text type="secondary" style={{ fontSize: '12px' }}>
+                        {item.description.length > 80
+                          ? `${item.description.substring(0, 80)}...`
+                          : item.description}
+                      </Text>
+                    )}
+                  </Space>
+                </div>
+                <Space>
+                  <Tag color="blue">{getItemLabel(item.item_type)}</Tag>
+                  <Button
+                    icon={<DeleteOutlined />}
+                    size="small"
+                    type="text"
+                    danger
+                    onClick={() => removeModuleItem(item.id)}
+                    disabled={isLoading}
+                  />
+                </Space>
+              </ModuleItemWrapper>
+            ))}
+          </div>
+        ) : (
+          <Text type="secondary">
+            No items in this module. Click the "+" button to add content.
+          </Text>
+        )}
+      </ModuleCard>
+
+      <ModuleForm
+        visible={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        onSubmit={handleEditModule}
+        initialValues={module}
+        title="Edit Module"
+      />
+
+      <ModuleItemForm
+        visible={addItemModalVisible}
+        onCancel={() => setAddItemModalVisible(false)}
+        onSubmit={handleAddItem}
+        itemType={itemType}
+      />
+    </div>
   )
+}
+
+ModuleList.propTypes = {
+  module: PropTypes.object.isRequired,
+  editModule: PropTypes.func.isRequired,
+  removeModule: PropTypes.func.isRequired,
+  addModuleItem: PropTypes.func.isRequired,
+  removeModuleItem: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  isLoading: PropTypes.bool,
+  moveUp: PropTypes.func,
+  moveDown: PropTypes.func,
+  isFirst: PropTypes.bool,
+  isLast: PropTypes.bool,
 }
 
 export default ModuleList

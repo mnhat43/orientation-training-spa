@@ -364,11 +364,9 @@ const CertificateView = ({
         bodyStyle={{ height: '100%', padding: 0 }}
       >
         <div style={certificateStyle.certificateContent}>
-          {/* Decorative elements */}
           <div style={certificateStyle.goldenBorder}></div>
           <div style={certificateStyle.innerBorder}></div>
 
-          {/* Corner accents */}
           <div
             style={{
               ...certificateStyle.cornerAccent,

@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom'
 import { Empty, Row, Col, Spin, Alert, Card } from 'antd'
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import PlaylistMenu from './components/PlaylistMenu'
 import LectureContent from './components/LectureContent'
 import CertificateView from './components/CertificateView'
+import LearningTimer from './components/LearningTimer'
 import useLectureData from '@hooks/useLectureData'
 import './lectures.scss'
 
@@ -11,6 +12,7 @@ const Lectures = () => {
   const { moduleId, moduleItemId, courseId } = useParams()
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [activeTab, setActiveTab] = useState('lecture')
+  const [lastViewedLecture, setLastViewedLecture] = useState(null)
 
   const {
     lectures,
@@ -32,8 +34,21 @@ const Lectures = () => {
   }, [])
 
   const handleViewCertificate = useCallback(() => {
-    setActiveTab('certificate')
-  }, [])
+    if (activeTab === 'certificate') {
+      setActiveTab('lecture')
+    } else {
+      setLastViewedLecture(selectedLecture)
+      setActiveTab('certificate')
+    }
+  }, [activeTab, selectedLecture])
+
+  const handleCompleteLectureForTimer = useCallback(
+    (completionData) => {
+      const { currentModule, currentItem } = completionData
+      handleCompleteLecture(currentModule, currentItem, courseId)
+    },
+    [handleCompleteLecture, courseId],
+  )
 
   // Course name and user name for certificate - memoized
   const courseName = useMemo(
@@ -45,6 +60,16 @@ const Lectures = () => {
     () => allLectures?.[0]?.user_name || 'Student',
     [allLectures],
   )
+
+  // Add debugging effect to check values
+  useEffect(() => {
+    console.log('Timer visibility conditions:', {
+      isLatestUnlocked,
+      hasSelectedLecture: Boolean(selectedLecture),
+      activeTab,
+      selectedLectureType: selectedLecture?.item_type,
+    })
+  }, [isLatestUnlocked, selectedLecture, activeTab])
 
   // Handle loading and error states
   if (loading) {
@@ -64,17 +89,17 @@ const Lectures = () => {
   }
 
   return (
-    <div className="lectures-page">
-      <Row gutter={[16, 16]} className="lectures-page__row">
-        <Col
-          xs={24}
-          sm={24}
-          md={24}
-          lg={18}
-          xl={18}
-          className="lectures-page__content-container"
-        >
-          <div className="lectures-page__content">
+    <>
+      <div className="lectures-page">
+        <Row gutter={[16, 16]}>
+          <Col
+            xs={24}
+            sm={24}
+            md={24}
+            lg={17}
+            xl={17}
+            className="lectures-page__content-container"
+          >
             {activeTab === 'lecture' ? (
               <LectureContent
                 selectedLecture={selectedLecture}
@@ -92,39 +117,56 @@ const Lectures = () => {
                 </Card>
               )
             )}
-          </div>
-        </Col>
+          </Col>
 
-        <Col
-          xs={24}
-          sm={24}
-          md={24}
-          lg={6}
-          xl={6}
-          className="lectures-page__playlist-container"
-        >
-          <PlaylistMenu
+          <Col
+            xs={24}
+            sm={24}
+            md={24}
+            lg={7}
+            xl={7}
+            className="lectures-page__playlist-container"
+          >
+            <PlaylistMenu
+              courseId={courseId}
+              lectures={lectures}
+              allLectures={allLectures}
+              selectedLecture={selectedLecture}
+              latestUnlockedLecture={latestUnlockedLecture}
+              courseCompleted={courseCompleted}
+              isVideoPlaying={isVideoPlaying && activeTab === 'lecture'}
+              isLatestUnlocked={isLatestUnlocked}
+              isLastLecture={isLastLecture}
+              onChooseLecture={(moduleId, moduleItemId) => {
+                handleChooseLecture(moduleId, moduleItemId)
+                setActiveTab('lecture')
+              }}
+              onCompleteCourse={handleCompleteCourse}
+              onCompleteLecture={handleCompleteLecture}
+              onViewCertificate={handleViewCertificate}
+              activeCertificate={activeTab === 'certificate'}
+            />
+          </Col>
+        </Row>
+      </div>
+
+      {isLatestUnlocked && selectedLecture && activeTab === 'lecture' && (
+        <div className="lectures-page__timer-container">
+          <LearningTimer
+            lecture={selectedLecture}
             courseId={courseId}
-            lectures={lectures}
+            isVideoPlaying={
+              selectedLecture.item_type === 'video' ? isVideoPlaying : true
+            }
             allLectures={allLectures}
-            selectedLecture={selectedLecture}
-            latestUnlockedLecture={latestUnlockedLecture}
             courseCompleted={courseCompleted}
-            isVideoPlaying={isVideoPlaying && activeTab === 'lecture'}
-            isLatestUnlocked={isLatestUnlocked}
             isLastLecture={isLastLecture}
-            onChooseLecture={(moduleId, moduleItemId) => {
-              handleChooseLecture(moduleId, moduleItemId)
-              setActiveTab('lecture')
-            }}
+            onCompleteLecture={handleCompleteLectureForTimer}
             onCompleteCourse={handleCompleteCourse}
-            onCompleteLecture={handleCompleteLecture}
-            onViewCertificate={handleViewCertificate}
-            activeCertificate={activeTab === 'certificate'}
           />
-        </Col>
-      </Row>
-    </div>
+        </div>
+      )}
+    </>
   )
 }
 

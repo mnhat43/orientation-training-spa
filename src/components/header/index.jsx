@@ -1,129 +1,182 @@
-import { Badge, Layout, Popover, Menu } from 'antd'
+import { Layout, Menu, Badge, Button, Tooltip, Popover } from 'antd'
 const { Header } = Layout
 import { Avatar } from 'antd'
-import { Link } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   UserOutlined,
-  LogoutOutlined,
-  QuestionCircleOutlined,
-  BellOutlined,
-  SearchOutlined,
-  GlobalOutlined,
   SettingOutlined,
+  HomeOutlined,
+  BookOutlined,
+  TeamOutlined,
+  CalendarOutlined,
+  AppstoreOutlined,
+  BellOutlined,
 } from '@ant-design/icons'
 import './header.scss'
+import { useEffect, useState } from 'react'
 
 const HeaderRender = () => {
-  // const contentNoti = (
-  //   <div className='noti-container'>
-  //     <div className='noti-item' style={{ borderBottom: " 1px solid #ccc" }}>
-  //       <div className="noti-avatar">
-  //         <Avatar size={30} icon={<UserOutlined />} style={{ padding: 0 }} />
-  //       </div>
-  //       <div className='noti-text'>
-  //         Thêm thành công thẻ <b>Học Tiếng Nhật </b>
-  //         <div style={{ color: "rgb(8, 102, 255)" }}>1 ngày trước</div>
-  //       </div>
-  //       <div className='seen'>
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [activeKey, setActiveKey] = useState('home')
 
-  //       </div>
-  //     </div>
-  //     <div className='noti-item' style={{ borderBottom: " 1px solid #ccc" }}>
-  //       <div className="noti-avatar">
-  //         <Avatar size={30} icon={<UserOutlined />} style={{ padding: 0 }} />
-  //       </div>
-  //       <div className='noti-text'>
-  //         Xóa thành công thẻ <b>Điểm rèn luyện</b>
-  //         <div style={{ color: "rgb(8, 102, 255)" }}>2 ngày trước</div>
-  //       </div>
-  //       <div className='seen'>
+  const navigationItems = [
+    {
+      key: 'home',
+      icon: <HomeOutlined />,
+      label: 'Home',
+      path: '/',
+    },
+    {
+      key: 'courses',
+      icon: <BookOutlined />,
+      label: 'Courses',
+      path: '/courses',
+    },
+    {
+      key: 'teams',
+      icon: <TeamOutlined />,
+      label: 'Teams',
+      path: '/teams',
+    },
+    {
+      key: 'calendar',
+      icon: <CalendarOutlined />,
+      label: 'Calendar',
+      path: '/calendar',
+    },
+    {
+      key: 'resources',
+      icon: <AppstoreOutlined />,
+      label: 'Resources',
+      path: '/resources',
+    },
+  ]
 
-  //       </div>
-  //     </div>
-  //     <div className='noti-item' style={{ borderBottom: " 1px solid #ccc" }}>
-  //       <div className="noti-avatar">
-  //         <Avatar size={30} icon={<UserOutlined />} style={{ padding: 0 }} />
-  //       </div>
-  //       <div className='noti-text' >
-  //         <span style={{ color: "rgb(176, 179, 184)" }}>Xóa thành công thẻ <b>Khóa học React </b></span>
-  //         <div style={{ color: "#A5ACB8" }}>1 tuần trước</div>
-  //       </div>
-  //       <div className='seen' style={{ visibility: "hidden" }}>
+  useEffect(() => {
+    const path = location.pathname
+    const matchedItem = navigationItems.find(
+      (item) =>
+        path === item.path ||
+        (path !== '/' && path.startsWith(item.path) && item.path !== '/'),
+    )
+    setActiveKey(matchedItem?.key || 'home')
+  }, [location.pathname])
 
-  //       </div>
-  //     </div>
-  //     <div className='noti-item'>
-  //       <div className="noti-avatar">
-  //         <Avatar size={30} icon={<UserOutlined />} style={{ padding: 0 }} />
-  //       </div>
-  //       <div className='noti-text' >
-  //         <span style={{ color: "rgb(176, 179, 184)" }}>Thêm thành công thẻ <b>Báo cáo ITSS </b></span>
-  //         <div style={{ color: "#A5ACB8" }}>3 tuần trước</div>
-  //       </div>
-  //       <div className='seen' style={{ visibility: "hidden" }}>
+  // Handle menu item click
+  const handleMenuClick = (item) => {
+    const selectedItem = navigationItems.find((nav) => nav.key === item.key)
+    if (selectedItem) {
+      navigate(selectedItem.path)
+      setActiveKey(selectedItem.key)
+    }
+  }
 
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
+  // Notification content
+  const notificationContent = (
+    <div className="notification-popover">
+      <h3>Notifications</h3>
+      <div className="notification-list">
+        <div className="notification-item">
+          <div className="notification-icon course">
+            <BookOutlined />
+          </div>
+          <div className="notification-content">
+            <div className="notification-title">New course available</div>
+            <div className="notification-time">2 hours ago</div>
+          </div>
+          <div className="notification-badge"></div>
+        </div>
+        <div className="notification-item">
+          <div className="notification-icon team">
+            <TeamOutlined />
+          </div>
+          <div className="notification-content">
+            <div className="notification-title">Team meeting scheduled</div>
+            <div className="notification-time">Yesterday</div>
+          </div>
+        </div>
+        <div className="notification-item">
+          <div className="notification-icon resource">
+            <AppstoreOutlined />
+          </div>
+          <div className="notification-content">
+            <div className="notification-title">New resources added</div>
+            <div className="notification-time">3 days ago</div>
+          </div>
+          <div className="notification-badge"></div>
+        </div>
+      </div>
+      <div className="notification-footer">
+        <Button type="link">View all notifications</Button>
+      </div>
+    </div>
+  )
 
   return (
-    <Header
-      className="header-wrapper"
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        // alignContent: 'center',
-        // paddingLeft: '25px',
-        background: 'white',
-        borderBottom: '1px solid #ccc',
-        // height: "50px"
-      }}
-    >
-      <div className="header-wrapper__logo">
-        <img
-          loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/0a7ec8b021aa8f242c74c6fefb029d66b5c28ea7be26ba07593ea659c8fd3147?apiKey=10b1e221f97543f5b056ca1fc29636cb&"
-          alt="eTracking logo"
-        />
-        <div className="textLogo">Orientation</div>
-        <div className="textLogo2">Training</div>
-      </div>
-
-      <div className="header-wrapper__right-side">
-        <div className="header-wrapper__right-side__search">
-          <SearchOutlined />
-        </div>
-
-        <div className="header-wrapper__right-side__profile">
-          <Link to={'/personal-info'}>
-            <Avatar
-              style={{ width: '35px', height: '35px', color: 'black' }}
-              size={40}
-              icon={<UserOutlined />}
+    <Header className="header-wrapper">
+      <div className="header-content">
+        <div className="header-wrapper__logo" onClick={() => navigate('/')}>
+          <div className="logo-container">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/0a7ec8b021aa8f242c74c6fefb029d66b5c28ea7be26ba07593ea659c8fd3147?apiKey=10b1e221f97543f5b056ca1fc29636cb&"
+              alt="Logo"
+              className="logo-image"
             />
-            <span style={{ color: 'black', paddingLeft: '5px' }}>Admin</span>
-          </Link>
+            <div className="textLogo">OrientHub</div>
+          </div>
         </div>
 
-        <div className="header-wrapper__right-side__bell">
-          {/* <Popover content={contentNoti} title="Thông báo" trigger="click" style={{ color: "red" }}> */}
-          <Badge count={4} overflowCount={10} size="default">
-            <BellOutlined style={{ color: 'black', fontSize: '23px' }} />
-          </Badge>
-          {/* </Popover> */}
+        <div className="header-navigation-container">
+          <Menu
+            mode="horizontal"
+            selectedKeys={[activeKey]}
+            onClick={handleMenuClick}
+            className="header-navigation"
+            items={navigationItems.map((item) => ({
+              key: item.key,
+              icon: item.icon,
+              label: item.label,
+            }))}
+          />
         </div>
 
-        <div className="header-wrapper__right-side__question">
-          <Link to={'/help'}>
-            <QuestionCircleOutlined style={{ color: 'black' }} />
-          </Link>
-        </div>
-        <div className="header-wrapper__right-side__setting">
-          <Link to={'/setting'}>
-            <SettingOutlined style={{ color: 'black', fontSize: '20px' }} />
-          </Link>
+        <div className="header-wrapper__right-side">
+          <Popover
+            content={notificationContent}
+            title={null}
+            trigger="click"
+            placement="bottomRight"
+            overlayClassName="notification-popover-container"
+          >
+            <Badge count={3} size="small" className="notification-badge">
+              <Button
+                type="text"
+                icon={<BellOutlined />}
+                className="header-icon-button notification-button"
+              />
+            </Badge>
+          </Popover>
+
+          <Tooltip title="Profile" placement="bottom">
+            <Button
+              type="text"
+              className="profile-button"
+              onClick={() => navigate('/personal-info')}
+            >
+              <Avatar className="user-avatar" icon={<UserOutlined />} />
+            </Button>
+          </Tooltip>
+
+          <Tooltip title="Settings" placement="bottom">
+            <Button
+              type="text"
+              icon={<SettingOutlined />}
+              className="header-icon-button settings-button"
+              onClick={() => navigate('/setting')}
+            />
+          </Tooltip>
         </div>
       </div>
     </Header>

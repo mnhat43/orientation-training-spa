@@ -1,149 +1,261 @@
+@import "../../styles/variables.scss";
+
 .header-wrapper {
-  height: "45px";
-  // position: fixed;
-  // top: 0;
-  z-index: 1;
-  width: 100vw;
-  display: flex;
-  align-items: center;
+  height: $layout-header-height;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+
+  .header-content {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   &__logo {
-    // .content {
-    // height: 45px;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    img {
-      height: 40px;
+    cursor: pointer;
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
     }
+
+    .logo-image {
+      height: 36px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
     .textLogo {
-      color: #528b8b;
-
-      text-align: center;
-      text-shadow: 0px 4px 4px rgba(173, 53, 47, 0.51);
-      font-family: "Wendy One";
-      font-size: 35px;
-      font-style: normal;
-      font-weight: 800;
-      line-height: normal;
-      letter-spacing: -1.08px;
+      font-weight: 600;
+      font-size: 20px;
+      color: white;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-    .textLogo2 {
-      color: var(--Foreground-primary, #000);
+  }
 
-      text-align: center;
-      text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      font-family: "Wendy One";
-      font-size: 35px;
-      font-style: normal;
-      font-weight: 800;
-      line-height: normal;
-      letter-spacing: -1.08px;
+  .header-navigation-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    max-width: 600px;
+  }
+
+  .header-navigation {
+    background: transparent;
+
+    .ant-menu-item {
+      padding: 0 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      color: rgba(255, 255, 255, 0.8);
+
+      &:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .anticon {
+        margin-right: 8px;
+        font-size: 16px;
+      }
     }
-    // }
   }
 
   &__right-side {
-    display: inline-flex;
-    gap: 20px;
-    align-items: center;
-    height: 50px;
     display: flex;
     align-items: center;
-    &__username {
-      display: inline-block;
-      color: #fff;
-      text-align: center;
-    }
-    div {
-      display: inline-block;
-      color: #ffff;
-    }
-    &__search {
-      font-size: 23px;
-      cursor: pointer;
-    }
-    &__question {
-      font-size: 23px;
-      cursor: pointer;
-    }
-    &__bell {
-      font-size: 23px;
-      cursor: pointer;
-    }
+    gap: 12px;
 
-    &__language {
-      font-size: 23px;
-      cursor: pointer;
-    }
-
-    &__profile__username {
-      cursor: pointer;
-    }
-    &__setting {
-      height: 58px;
-      cursor: pointer;
-    }
-  }
-}
-
-header.ant-layout-header.header-wrapper.css-dev-only-do-not-override-1kuana8 {
-  z-index: 900;
-}
-
-.ant-popover-title {
-  color: #209ea6 !important;
-  font-family: "Work Sans";
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: -0.64px;
-  margin-bottom: 15px;
-}
-
-.noti-container {
-  .noti-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 5px;
-    justify-content: space-between;
-    &:hover {
-      opacity: 0.8;
-    }
-    // color: ;
-    .seen {
-      width: 10px;
-      height: 10px;
-      background-color: rgb(8, 102, 255);
+    .header-icon-button {
+      color: rgba(255, 255, 255, 0.8);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
-      margin-left: 10px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &.notification-button {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      &.settings-button {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .notification-badge {
+      .ant-badge-count {
+        box-shadow: 0 0 0 2px #1a237e;
+        background-color: #f5222d;
+      }
+    }
+
+    .profile-button {
+      padding: 0;
+      height: auto;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: transparent;
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      .user-avatar {
+        background: linear-gradient(135deg, #43cea2, #185a9d);
+        color: white;
+        transition: all 0.3s ease;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.6);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+      }
     }
   }
 }
 
-.main-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #fff;
-  padding: 0 24px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  height: 64px;
+.notification-popover {
+  width: 300px;
 
-  .logo {
-    h1 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
+  h3 {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .notification-list {
+    max-height: 320px;
+    overflow-y: auto;
+
+    .notification-item {
+      display: flex;
+      padding: 12px 8px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s;
+      cursor: pointer;
+      align-items: center;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .notification-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 12px;
+        flex-shrink: 0;
+
+        &.course {
+          background: linear-gradient(135deg, #0052d4, #4364f7);
+        }
+
+        &.team {
+          background: linear-gradient(135deg, #ff512f, #dd2476);
+        }
+
+        &.resource {
+          background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+      }
+
+      .notification-content {
+        flex: 1;
+
+        .notification-title {
+          font-weight: 500;
+          color: #333;
+          margin-bottom: 2px;
+        }
+
+        .notification-time {
+          font-size: 12px;
+          color: #999;
+        }
+      }
+
+      .notification-badge {
+        width: 8px;
+        height: 8px;
+        background-color: #1890ff;
+        border-radius: 50%;
+        margin-left: 8px;
+        flex-shrink: 0;
+      }
     }
   }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  .notification-footer {
+    text-align: center;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+
+    .ant-btn-link {
+      font-size: 14px;
+      padding: 0;
+      height: auto;
+    }
   }
 }
