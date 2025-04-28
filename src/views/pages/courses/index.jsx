@@ -3,6 +3,7 @@ import { Button, Row, Col, Spin, Input, Empty, Select, Typography } from 'antd'
 import { SearchOutlined, PlusOutlined, TeamOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import course from '@api/course'
+import userprogress from '@api/userprogress'
 import CourseCard from '@components/CourseCard'
 import AddCourseForm from './components/AddCourseForm.jsx'
 import EnrollTraineesModal from './components/EnrollTraineesModal'
@@ -115,6 +116,21 @@ const Courses = () => {
     }
   }
 
+  const fetchTraineeByCourse = async (courseID) => {
+    try {
+      const response = await userprogress.getListTraineeByCourse({
+        course_id: parseInt(courseID),
+      })
+      if (response.status === 1) {
+        setTrainees(response.data)
+      }
+    } catch (error) {
+      toast.error('Error fetching list trainee by course:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleDeleteCourse = async (courseID) => {
     try {
       const response = await course.deleteCourse({ id: courseID })
@@ -167,12 +183,9 @@ const Courses = () => {
   }
 
   const handleEnrollTrainees = (courseItem) => {
+    fetchTraineeByCourse(parseInt(courseItem.id))
     setSelectedCourse(courseItem)
     setIsEnrollModalOpen(true)
-  }
-
-  const handleEnrollModalCancel = () => {
-    setIsEnrollModalOpen(false)
   }
 
   const handleEnrollSubmit = (values) => {
@@ -297,10 +310,10 @@ const Courses = () => {
 
       <EnrollTraineesModal
         visible={isEnrollModalOpen}
-        onCancel={handleEnrollModalCancel}
+        onCancel={() => setIsEnrollModalOpen(false)}
         onEnroll={handleEnrollSubmit}
         courseData={selectedCourse}
-        traineesData={trainees}
+        trainees={trainees}
       />
     </div>
   )
