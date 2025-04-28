@@ -128,14 +128,13 @@ const useLectureData = (courseId, moduleId, moduleItemId) => {
         course_id: parseInt(courseId),
       })
 
-      if (response.status === 1 && response.data) {
-        // If course is marked as completed in the data
-        console.log('Course completion status:', response.data.completed)
-        console.log(typeof response.data.completed)
-        if (response.data.completed === true) {
-          setCourseCompleted(true)
-          return true
-        }
+      if (
+        response.status === 1 &&
+        response.data &&
+        response.data.completed === true
+      ) {
+        setCourseCompleted(true)
+        return true
       }
       return false
     } catch (error) {
@@ -187,6 +186,7 @@ const useLectureData = (courseId, moduleId, moduleItemId) => {
   const handleCompleteLecture = useCallback(async (lecture) => {
     try {
       const { courseId, modulePosition, moduleItemPosition } = lecture
+      console.log(courseId, modulePosition, moduleItemPosition)
 
       const response = await userprogress.updateUserProgress({
         course_id: courseId,

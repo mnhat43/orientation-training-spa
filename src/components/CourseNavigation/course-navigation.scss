@@ -1,9 +1,10 @@
 @import "../../styles/variables.scss";
 
 .course-navigation {
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     width: 100%;
+    height: $layout-header-height;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -11,12 +12,12 @@
 
     &-container {
         display: flex;
-        justify-content: space-between;
+        gap: 30px;
         align-items: center;
-        height: $course-nav-height-desktop;
-        padding: 0 20px;
+        height: 100%;
         max-width: $max-width;
         margin: 0 auto;
+        padding: 0 15px;
     }
 
     &-left {
@@ -25,7 +26,7 @@
         flex-shrink: 0;
 
         .back-button {
-            margin-right: 12px;
+            margin-right: 15px;
             transition: all 0.3s;
             color: #4a6bff;
             width: 28px;
@@ -40,15 +41,22 @@
 
         .course-title {
             margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             max-width: 300px;
-            font-size: 16px;
+            font-size: 20px;
         }
     }
 
     &-right {
         .course-menu {
+            border-bottom: none;
             background: transparent;
+
             .ant-menu-item {
+                height: $layout-header-height;
+                line-height: $layout-header-height;
                 transition: all 0.3s;
 
                 &:hover {

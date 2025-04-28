@@ -42,14 +42,6 @@ const Lectures = () => {
     }
   }, [activeTab, selectedLecture])
 
-  const handleCompleteLectureForTimer = useCallback(
-    (completionData) => {
-      const { currentModule, currentItem } = completionData
-      handleCompleteLecture(currentModule, currentItem, courseId)
-    },
-    [handleCompleteLecture, courseId],
-  )
-
   // Course name and user name for certificate - memoized
   const courseName = useMemo(
     () => allLectures?.[0]?.course_title || 'Course',
@@ -60,16 +52,6 @@ const Lectures = () => {
     () => allLectures?.[0]?.user_name || 'Student',
     [allLectures],
   )
-
-  // Add debugging effect to check values
-  useEffect(() => {
-    console.log('Timer visibility conditions:', {
-      isLatestUnlocked,
-      hasSelectedLecture: Boolean(selectedLecture),
-      activeTab,
-      selectedLectureType: selectedLecture?.item_type,
-    })
-  }, [isLatestUnlocked, selectedLecture, activeTab])
 
   // Handle loading and error states
   if (loading) {
@@ -161,7 +143,7 @@ const Lectures = () => {
             allLectures={allLectures}
             courseCompleted={courseCompleted}
             isLastLecture={isLastLecture}
-            onCompleteLecture={handleCompleteLectureForTimer}
+            onCompleteLecture={handleCompleteLecture}
             onCompleteCourse={handleCompleteCourse}
           />
         </div>

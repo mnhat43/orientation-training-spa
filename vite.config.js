@@ -12,6 +12,7 @@ export default defineConfig({
       '@context': path.resolve(__dirname, './src/context'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@utils': path.resolve(__dirname, './src/utils'),
+      '@constants': path.resolve(__dirname, './src/constants'),
       '@helpers': path.resolve(__dirname, './src/helpers'),
       '@views': path.resolve(__dirname, './src/views'),
       '@ts-types': path.resolve(__dirname, './src/ts-types'),

@@ -1,12 +1,40 @@
 @import "../../styles/variables.scss";
+@import "../../styles/scrollbar.scss";
 
 .main-layout {
     min-height: 100vh;
+    overflow-x: hidden;
+
+    &-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 0;
+        height: $layout-header-height;
+        line-height: $layout-header-height;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
 
     &-content {
         max-width: $max-width;
         min-width: $min-width;
+        padding: 10px 15px 0 15px;
         margin: 0 auto;
-        min-height: calc(100vh - $layout-header-height);
+        margin-top: $layout-header-height; /* Add space for fixed header */
+        min-height: calc(100vh - $layout-header-height) !important;
+        scrollbar-gutter: stable both-edges;
     }
+}
+
+body {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
+.ant-modal-wrap,
+.ant-modal-mask {
+    padding-right: 0 !important;
 }

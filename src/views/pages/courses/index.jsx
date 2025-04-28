@@ -1,37 +1,105 @@
 import { useState, useEffect } from 'react'
-import {
-  Button,
-  Row,
-  Col,
-  Spin,
-  Input,
-  Empty,
-  Select,
-  Typography,
-  Card,
-} from 'antd'
+import { Button, Row, Col, Spin, Input, Empty, Select, Typography } from 'antd'
 import { SearchOutlined, PlusOutlined, TeamOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import course from '@api/course'
 import CourseCard from '@components/CourseCard'
 import AddCourseForm from './components/AddCourseForm.jsx'
+import EnrollTraineesModal from './components/EnrollTraineesModal'
 import './index.scss'
 import { toast } from 'react-toastify'
 import { convertFileToBase64 } from '@helpers/common.js'
+import BannerComponent from '@components/Banner/index.jsx'
 
-const { Title, Text } = Typography
 const { Option } = Select
+
+const mockTrainees = [
+  {
+    id: '1',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    department: 'Engineering',
+    position: 'Software Engineer',
+    avatar: null,
+    enrolled: true,
+    progress: 75,
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    email: 'jane.smith@example.com',
+    department: 'Marketing',
+    position: 'Marketing Specialist',
+    avatar: null,
+    enrolled: false,
+    progress: 0,
+  },
+  {
+    id: '3',
+    name: 'Robert Johnson',
+    email: 'robert.j@example.com',
+    department: 'HR',
+    position: 'HR Coordinator',
+    avatar: null,
+    enrolled: true,
+    progress: 33,
+  },
+  {
+    id: '4',
+    name: 'Emily Wilson',
+    email: 'emily.w@example.com',
+    department: 'Finance',
+    position: 'Financial Analyst',
+    avatar: null,
+    enrolled: false,
+    progress: 0,
+  },
+  {
+    id: '5',
+    name: 'Michael Brown',
+    email: 'michael.b@example.com',
+    department: 'Customer Support',
+    position: 'Support Specialist',
+    avatar: null,
+    enrolled: true,
+    progress: 67,
+  },
+  {
+    id: '6',
+    name: 'Sarah Davis',
+    email: 'sarah.d@example.com',
+    department: 'Engineering',
+    position: 'QA Engineer',
+    avatar: null,
+    enrolled: false,
+    progress: 0,
+  },
+  {
+    id: '7',
+    name: 'David Miller',
+    email: 'david.m@example.com',
+    department: 'Sales',
+    position: 'Sales Representative',
+    avatar: null,
+    enrolled: false,
+    progress: 0,
+  },
+]
 
 const Courses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false)
   const [courseList, setCourseList] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterCategory, setFilterCategory] = useState('all')
+  const [selectedCourse, setSelectedCourse] = useState(null)
+  const [trainees, setTrainees] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
     fetchCourses()
+    setTrainees(mockTrainees)
   }, [])
 
   const fetchCourses = async () => {
@@ -49,7 +117,7 @@ const Courses = () => {
 
   const handleDeleteCourse = async (courseID) => {
     try {
-      const response = await course.deleteCourse({ course_id: courseID })
+      const response = await course.deleteCourse({ id: courseID })
       if (response.status === 1) {
         fetchCourses()
         toast.success('Course deleted successfully')
@@ -66,7 +134,7 @@ const Courses = () => {
   const handleAddCourse = async (values) => {
     try {
       let base64String = ''
-      const { title, description, thumbnail } = values
+      const { title, description = '', thumbnail, category } = values
 
       if (thumbnail && thumbnail[0]?.originFileObj) {
         const file = thumbnail[0].originFileObj
@@ -77,6 +145,7 @@ const Courses = () => {
         title,
         description,
         thumbnail: base64String,
+        category: category,
       }
 
       const response = await course.addCourse(payload)
@@ -97,12 +166,30 @@ const Courses = () => {
     console.log('Edit course:', courseID)
   }
 
+  const handleEnrollTrainees = (courseItem) => {
+    setSelectedCourse(courseItem)
+    setIsEnrollModalOpen(true)
+  }
+
+  const handleEnrollModalCancel = () => {
+    setIsEnrollModalOpen(false)
+  }
+
+  const handleEnrollSubmit = (values) => {
+    const { traineeIds } = values
+
+    console.log('Enrolling trainees:', {
+      courseId: selectedCourse.id,
+      trainees: traineeIds,
+    })
+
+    setIsEnrollModalOpen(false)
+  }
+
   const filteredCourses = courseList.filter((course) => {
     const matchesSearch =
-      course.course_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      course.course_description
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesCategory =
       filterCategory === 'all' || course.category === filterCategory
@@ -112,19 +199,10 @@ const Courses = () => {
 
   return (
     <div className="courses-container">
-      <div className="welcome-banner">
-        <div className="welcome-content">
-          <TeamOutlined className="welcome-icon" />
-          <div className="welcome-text">
-            <Title level={3}>Employee Orientation Training</Title>
-            <Text>
-              Create, manage, and assign training courses for new employees
-            </Text>
-          </div>
-        </div>
-      </div>
-
-      <div className="courses-header"></div>
+      <BannerComponent
+        title="Manage Courses"
+        description="Create, manage, and assign training courses for new employees"
+      />
 
       <div className="courses-filters">
         <Input
@@ -133,24 +211,24 @@ const Courses = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setIsModalOpen(true)}
-          className="create-course-btn header-btn"
-        />
         <Select
           defaultValue="all"
           onChange={(value) => setFilterCategory(value)}
           className="category-filter"
         >
           <Option value="all">All Categories</Option>
-          <Option value="onboarding">Onboarding Essentials</Option>
-          <Option value="company">Company Policies</Option>
-          <Option value="technical">Technical Skills</Option>
-          <Option value="soft">Soft Skills</Option>
-          <Option value="compliance">Compliance</Option>
+          <Option value="Onboarding">Onboarding Essentials</Option>
+          <Option value="Company">Company Policies</Option>
+          <Option value="Technical">Technical Skills</Option>
+          <Option value="Soft">Soft Skills</Option>
+          <Option value="Compliance">Compliance</Option>
         </Select>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsModalOpen(true)}
+          className="create-course-btn header-btn"
+        />
       </div>
 
       <div className="courses-content">
@@ -160,34 +238,25 @@ const Courses = () => {
             <p>Loading training courses...</p>
           </div>
         ) : filteredCourses.length > 0 ? (
-          <Row
-            gutter={[24, 36]}
-            className="courses-grid"
-            justify="start"
-            align="stretch"
-          >
-            {filteredCourses.map((courseItem) => (
-              <Col
-                xs={24}
-                sm={12}
-                md={8}
-                lg={6}
-                xl={6}
-                key={courseItem.course_id}
-                className="course-column"
-              >
-                <CourseCard
-                  CourseID={courseItem.course_id}
-                  Title={courseItem.course_title}
-                  Thumbnail={courseItem.course_thumbnail}
-                  Description={courseItem.course_description}
-                  onDelete={handleDeleteCourse}
-                  onEdit={handleEditCourse}
-                  onClick={() => handleClickCard(courseItem.course_id)}
-                />
-              </Col>
-            ))}
-          </Row>
+          <div>
+            <Row gutter={[8, 16]} className="courses-grid">
+              {filteredCourses.map((courseItem) => (
+                <Col xs={24} sm={12} md={8} lg={6} xl={6} key={courseItem.id}>
+                  <CourseCard
+                    CourseID={courseItem.id}
+                    Title={courseItem.title}
+                    Thumbnail={courseItem.thumbnail}
+                    Description={courseItem.description}
+                    Category={courseItem.category}
+                    onDelete={handleDeleteCourse}
+                    onEdit={handleEditCourse}
+                    onClick={() => handleClickCard(courseItem.id)}
+                    onEnroll={() => handleEnrollTrainees(courseItem)}
+                  />
+                </Col>
+              ))}
+            </Row>
+          </div>
         ) : (
           <div className="courses-empty">
             <Empty
@@ -225,6 +294,14 @@ const Courses = () => {
           handleAddCourse={handleAddCourse}
         />
       )}
+
+      <EnrollTraineesModal
+        visible={isEnrollModalOpen}
+        onCancel={handleEnrollModalCancel}
+        onEnroll={handleEnrollSubmit}
+        courseData={selectedCourse}
+        traineesData={trainees}
+      />
     </div>
   )
 }

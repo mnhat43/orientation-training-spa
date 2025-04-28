@@ -9,10 +9,6 @@ const userprogress = {
     const url = '/user-progress/get-user-progress'
     return API.post(url, progressData)
   },
-  completeCourse: (courseId) => {
-    const url = '/user-progress/complete-course'
-    return API.post(url, courseId)
-  },
 }
 
 export default userprogress

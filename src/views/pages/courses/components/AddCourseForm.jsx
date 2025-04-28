@@ -1,105 +1,151 @@
-import { useState } from 'react';
-import { Modal, Form, Input, Button, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import './AddCourseForm.scss';
+import React from 'react'
+import {
+  Modal,
+  Form,
+  Input,
+  Upload,
+  Button,
+  Select,
+  Typography,
+  Row,
+  Col,
+} from 'antd'
+import { PlusOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import PropTypes from 'prop-types'
+import './AddCourseForm.scss'
+
+const { Option } = Select
+const { Text, Title } = Typography
+const { TextArea } = Input
 
 const AddCourseForm = ({ isModalOpen, setIsModalOpen, handleAddCourse }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [thumbnail] = useState(null);
+  const [form] = Form.useForm()
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
-      return e;
+      return e
     }
-    return e && e.fileList;
-  };
+    return e?.fileList
+  }
+
+  const handleSubmit = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        handleAddCourse(values)
+        form.resetFields()
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info)
+      })
+  }
 
   return (
     <Modal
-      title="Add New Course"
-      visible={isModalOpen}
+      title={
+        <div className="add-course-modal-header">
+          <Title level={4}>Create New Training Course</Title>
+          <Text type="secondary">
+            Add details for your new employee training course
+          </Text>
+        </div>
+      }
+      open={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
-      footer={[
-        <Button key="cancel" onClick={() => setIsModalOpen(false)}>
-          Cancel
-        </Button>,
-        <Button key="submit" type="primary" htmlType="submit" form="addCourseForm">
-          Add
-        </Button>
-      ]}
+      onOk={handleSubmit}
+      okText="Create Course"
+      cancelText="Cancel"
       className="add-course-modal"
       destroyOnClose={true}
+      width={600}
     >
       <Form
-        id="addCourseForm"
-        onFinish={handleAddCourse}
-        layout="horizontal"
-        initialValues={{ title, description, thumbnail }}
+        form={form}
+        layout="vertical"
+        name="course_form"
+        requiredMark={false}
+        className="course-form"
       >
-        {/* Course Title */}
-        <Form.Item
-          label="Title"
-          name="title"
-          rules={[{ required: true, message: 'Please enter the course title!' }]}
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-        >
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter the title of the course"
-          />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={14}>
+            <Form.Item
+              name="title"
+              label="Title"
+              rules={[{ required: true, message: 'Please enter a title' }]}
+            >
+              <Input placeholder="Enter course title" />
+            </Form.Item>
+          </Col>
+          <Col span={10}>
+            <Form.Item
+              name="category"
+              label="Category"
+              rules={[{ required: true, message: 'Please select a category' }]}
+              tooltip={{
+                title: 'Categorize to help trainees find relevant content',
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <Select placeholder="Select category">
+                <Option value="Onboarding">Onboarding Essentials</Option>
+                <Option value="Company">Company Policies</Option>
+                <Option value="Technical">Technical Skills</Option>
+                <Option value="Soft">Soft Skills</Option>
+                <Option value="Compliance">Compliance</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
 
-        {/* Course Description */}
-        <Form.Item
-          label="Description"
-          name="description"
-          rules={[{ message: 'Please enter a description for the course!' }]}
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-        >
-          <Input.TextArea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            placeholder="Enter the course description"
-          />
-        </Form.Item>
-
-        {/* Thumbnail Upload */}
-        <Form.Item
-          name="thumbnail"
-          label="Thumbnail"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-        >
-          <Upload
-            name="logo"
-            listType="picture"
-            beforeUpload={() => false}
-            maxCount={1}
-          >
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
-        </Form.Item>
-
-        {/* Display Uploaded Thumbnail */}
-        {thumbnail && (
-          <Form.Item
-            label="Uploaded Thumbnail"
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
-          >
-            <img src={thumbnail} alt="Thumbnail Preview" style={{ width: 100, height: 100 }} />
-          </Form.Item>
-        )}
+        <Row gutter={16}>
+          <Col span={14}>
+            <Form.Item
+              name="description"
+              label="Description"
+              tooltip={{
+                title: 'Helps trainees understand what they will learn',
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <TextArea
+                placeholder="Brief description (optional)"
+                rows={5}
+                showCount
+                maxLength={500}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={10}>
+            <Form.Item
+              name="thumbnail"
+              label="Thumbnail"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+              extra="Add an image to make your course visually appealing"
+            >
+              <Upload
+                listType="picture-card"
+                maxCount={1}
+                beforeUpload={() => false}
+                className="course-thumbnail-upload"
+              >
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              </Upload>
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
     </Modal>
-  );
-};
+  )
+}
 
-export default AddCourseForm;
+AddCourseForm.propTypes = {
+  isModalOpen: PropTypes.bool.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
+  handleAddCourse: PropTypes.func.isRequired,
+}
+
+export default AddCourseForm

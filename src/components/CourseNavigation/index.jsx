@@ -86,7 +86,7 @@ const CourseNavigation = () => {
             title="Back to Courses"
           />
           <Title level={4} className="course-title">
-            React JS Training Course
+            Course
           </Title>
         </div>
 

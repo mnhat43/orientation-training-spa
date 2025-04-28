@@ -1,0 +1,60 @@
+/* Improved scrollbar styling */
+* {
+    /* For WebKit browsers (Chrome, Safari) */
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    /* For Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Ensure modals don't cause layout shifts */
+html.with-modal-open {
+    overflow: hidden;
+    padding-right: 8px; /* Width of the scrollbar */
+}
+
+/* Prevent content shift by ensuring consistent width regardless of scrollbar */
+body {
+    overflow-x: hidden;
+    padding-right: 0 !important; /* Prevents additional padding being added */
+}
+
+/* For any scrollable containers */
+.scrollable-container {
+    overflow-y: auto;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    }
+}

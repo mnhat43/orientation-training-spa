@@ -1,0 +1,61 @@
+.welcome-banner {
+    background: linear-gradient(120deg, #2c3e50 0%, #4ca1af 100%);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+        transform: rotate(30deg);
+    }
+
+    .welcome-content {
+        position: relative;
+        display: flex;
+        align-items: center;
+        color: white;
+        z-index: 2;
+
+        .welcome-icon {
+            font-size: 48px;
+            margin-right: 32px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+                background: rgba(255, 255, 255, 0.25);
+            }
+        }
+
+        .welcome-text {
+            h3 {
+                color: white;
+                margin-bottom: 8px;
+                font-size: 28px;
+                font-weight: 600;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            span {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 18px;
+                display: block;
+                max-width: 600px;
+                line-height: 1.5;
+            }
+        }
+    }
+}

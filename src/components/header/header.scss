@@ -1,86 +1,63 @@
 @import "../../styles/variables.scss";
 
 .header-wrapper {
-  height: $layout-header-height;
+  background-color: #fff;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  z-index: 10;
   position: sticky;
   top: 0;
-  z-index: 100;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  height: $layout-header-height;
+  line-height: $layout-header-height;
 
   .header-content {
-    max-width: $max-width;
-    margin: 0 auto;
-    padding: 0 20px;
-    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    padding: 0 24px;
+    height: $layout-header-height;
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
   &__logo {
+    cursor: pointer;
+    height: 64px;
     display: flex;
     align-items: center;
-    cursor: pointer;
+    margin-right: 40px;
 
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 6px 10px;
-      border-radius: 8px;
-      transition: all 0.3s ease;
 
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        transform: translateY(-1px);
+      .logo-image {
+        height: 36px;
+        width: 36px;
+        margin-right: 8px;
       }
 
-      &:active {
-        transform: translateY(0);
+      .textLogo {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1890ff;
       }
-    }
-
-    .logo-image {
-      height: 36px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .textLogo {
-      font-weight: 600;
-      font-size: 20px;
-      color: white;
-      letter-spacing: 0.5px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
   }
 
   .header-navigation-container {
     flex: 1;
-    display: flex;
-    justify-content: center;
-    max-width: 600px;
-  }
+    overflow: hidden;
 
-  .header-navigation {
-    background: transparent;
+    .header-navigation {
+      border-bottom: none;
 
-    .ant-menu-item {
-      padding: 0 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      color: rgba(255, 255, 255, 0.8);
+      .ant-menu-item,
+      .ant-menu-submenu {
+        padding: 0 16px;
 
-      &:hover {
-        color: white;
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-
-      .anticon {
-        margin-right: 8px;
-        font-size: 16px;
+        .anticon {
+          margin-right: 6px;
+        }
       }
     }
   }
@@ -91,107 +68,52 @@
     gap: 12px;
 
     .header-icon-button {
-      color: rgba(255, 255, 255, 0.8);
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
-      transition: all 0.3s ease;
 
       &:hover {
-        color: white;
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-
-      &.notification-button {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      &.settings-button {
-        background: rgba(255, 255, 255, 0.1);
+        background-color: rgba(0, 0, 0, 0.03);
       }
     }
 
-    .notification-badge {
-      .ant-badge-count {
-        box-shadow: 0 0 0 2px #1a237e;
-        background-color: #f5222d;
-      }
+    .notification-button {
+      font-size: 20px;
     }
 
     .profile-button {
       padding: 0;
-      height: auto;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-
-      &:hover {
-        background: transparent;
-        transform: translateY(-2px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
 
       .user-avatar {
-        background: linear-gradient(135deg, #43cea2, #185a9d);
-        color: white;
-        transition: all 0.3s ease;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-
-        &:hover {
-          border-color: rgba(255, 255, 255, 0.6);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+        background-color: #1890ff;
       }
+    }
+
+    .role-tag {
+      padding: 0 8px;
+      font-weight: 500;
     }
   }
 }
 
 .notification-popover {
-  width: 300px;
+  width: 350px;
+  max-height: 400px;
 
   h3 {
-    margin: 0 0 12px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
   }
 
   .notification-list {
-    max-height: 320px;
-    overflow-y: auto;
-
     .notification-item {
       display: flex;
-      padding: 12px 8px;
+      padding: 12px 0;
       border-bottom: 1px solid #f0f0f0;
-      transition: background-color 0.2s;
-      cursor: pointer;
-      align-items: center;
-
-      &:hover {
-        background-color: #f9f9f9;
-      }
+      position: relative;
 
       &:last-child {
         border-bottom: none;
@@ -204,20 +126,32 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
         margin-right: 12px;
         flex-shrink: 0;
 
         &.course {
-          background: linear-gradient(135deg, #0052d4, #4364f7);
+          background-color: rgba(24, 144, 255, 0.1);
+          color: #1890ff;
         }
 
-        &.team {
-          background: linear-gradient(135deg, #ff512f, #dd2476);
+        &.assignment {
+          background-color: rgba(82, 196, 26, 0.1);
+          color: #52c41a;
         }
 
-        &.resource {
-          background: linear-gradient(135deg, #11998e, #38ef7d);
+        &.certificate {
+          background-color: rgba(250, 173, 20, 0.1);
+          color: #faad14;
+        }
+
+        &.report {
+          background-color: rgba(245, 34, 45, 0.1);
+          color: #ff4d4f;
+        }
+
+        &.evaluation {
+          background-color: rgba(114, 46, 209, 0.1);
+          color: #722ed1;
         }
       }
 
@@ -226,23 +160,28 @@
 
         .notification-title {
           font-weight: 500;
-          color: #333;
-          margin-bottom: 2px;
+          margin-bottom: 4px;
+        }
+
+        .notification-desc {
+          font-size: 13px;
+          margin-bottom: 4px;
         }
 
         .notification-time {
           font-size: 12px;
-          color: #999;
+          color: rgba(0, 0, 0, 0.45);
         }
       }
 
       .notification-badge {
+        position: absolute;
         width: 8px;
         height: 8px;
-        background-color: #1890ff;
+        background-color: #ff4d4f;
         border-radius: 50%;
-        margin-left: 8px;
-        flex-shrink: 0;
+        right: 0;
+        top: 12px;
       }
     }
   }
@@ -251,11 +190,12 @@
     text-align: center;
     padding-top: 8px;
     border-top: 1px solid #f0f0f0;
+    margin-top: 8px;
+  }
+}
 
-    .ant-btn-link {
-      font-size: 14px;
-      padding: 0;
-      height: auto;
-    }
+.ant-dropdown-menu-item {
+  .anticon {
+    margin-right: 8px;
   }
 }

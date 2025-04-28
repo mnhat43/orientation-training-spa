@@ -1,14 +1,17 @@
 import React from 'react'
-import { Card, Button, Tooltip, Tag } from 'antd'
+import { Card, Button, Typography, Popconfirm, Tooltip, Tag } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  BookOutlined,
   TagOutlined,
+  BookOutlined,
 } from '@ant-design/icons'
-import PropTypes from 'prop-types'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
 import './index.scss'
+
+const { Meta } = Card
+const { Paragraph } = Typography
 
 const CourseCard = ({
   CourseID,
@@ -19,30 +22,8 @@ const CourseCard = ({
   onDelete,
   onEdit,
   onClick,
+  onEnroll,
 }) => {
-  // Map course ID to a default category if none is provided
-  const defaultCategories = [
-    // 'Onboarding',
-    'Technical Skills',
-    'Company Policies',
-    'Technical Skills',
-    'Technical Skills',
-    // 'Soft Skills',
-  ]
-  const displayCategory =
-    Category || defaultCategories[CourseID % defaultCategories.length]
-
-  // Category color mapping
-  const categoryColors = {
-    Onboarding: 'blue',
-    'Company Policies': 'red',
-    'Technical Skills': 'green',
-    'Soft Skills': 'purple',
-    Compliance: 'orange',
-  }
-
-  const categoryColor = categoryColors[displayCategory] || 'default'
-
   return (
     <Card
       hoverable
@@ -84,43 +65,62 @@ const CourseCard = ({
             aria-label="Edit course"
           />
         </Tooltip>,
-        <Tooltip key="delete" title="Delete Course">
+        <Tooltip title="Add to training path" key="add-to-path">
           <Button
             type="text"
-            icon={<DeleteOutlined />}
-            className="action-button delete-button"
+            icon={<BookOutlined />}
+            className="action-button"
             onClick={(e) => {
               e.stopPropagation()
-              onDelete(CourseID)
+              onEnroll && onEnroll()
             }}
-            aria-label="Delete course"
           />
         </Tooltip>,
+        <Popconfirm
+          key="delete"
+          title="Delete this course?"
+          description="Are you sure you want to delete this course and all its contents?"
+          onConfirm={(e) => {
+            e.stopPropagation()
+            onDelete(CourseID)
+          }}
+          okText="Yes"
+          cancelText="No"
+          placement="left"
+        >
+          <Button
+            danger
+            type="text"
+            className="action-button"
+            icon={<DeleteOutlined />}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </Popconfirm>,
       ]}
     >
       <div className="course-category">
-        <Tag color={categoryColor} icon={<TagOutlined />}>
-          {displayCategory}
+        <Tag color={CATEGORY_COLORS[Category]} icon={<TagOutlined />}>
+          {CATEGORIES[Category]}
         </Tag>
       </div>
-      <div className="course-title">{Title}</div>
-      <div className="course-description">
-        {Description || 'No description available'}
-      </div>
+      <Meta
+        title={Title}
+        description={
+          <Paragraph
+            ellipsis={{
+              rows: 2,
+              expandable: false,
+              symbol: '...',
+              tooltip: true,
+            }}
+            className="course-description"
+          >
+            {Description || 'No description available'}
+          </Paragraph>
+        }
+      />
     </Card>
   )
-}
-
-CourseCard.propTypes = {
-  CourseID: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
-  Title: PropTypes.string.isRequired,
-  Thumbnail: PropTypes.string,
-  Description: PropTypes.string,
-  Category: PropTypes.string,
-  onDelete: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired,
 }
 
 export default CourseCard

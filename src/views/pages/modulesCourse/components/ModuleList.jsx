@@ -142,19 +142,26 @@ const ModuleList = ({
     setAddItemModalVisible(true)
   }
 
-  const moduleItemsMenu = (
-    <Menu>
-      <Menu.Item key="video" onClick={() => showAddItemModal('video')}>
-        <VideoCameraOutlined /> Add Video
-      </Menu.Item>
-      <Menu.Item key="file" onClick={() => showAddItemModal('file')}>
-        <FileTextOutlined /> Add File
-      </Menu.Item>
-      <Menu.Item key="quiz" onClick={() => showAddItemModal('quiz')}>
-        <QuestionCircleOutlined /> Add Quiz
-      </Menu.Item>
-    </Menu>
-  )
+  const moduleItemsMenuItems = [
+    {
+      key: 'video',
+      icon: <VideoCameraOutlined />,
+      label: 'Add Video',
+      onClick: () => showAddItemModal('video'),
+    },
+    {
+      key: 'file',
+      icon: <FileTextOutlined />,
+      label: 'Add File',
+      onClick: () => showAddItemModal('file'),
+    },
+    {
+      key: 'quiz',
+      icon: <QuestionCircleOutlined />,
+      label: 'Add Quiz',
+      onClick: () => showAddItemModal('quiz'),
+    },
+  ]
 
   return (
     <div>
@@ -200,7 +207,7 @@ const ModuleList = ({
               />
             </Tooltip>
             <Dropdown
-              overlay={moduleItemsMenu}
+              menu={{ items: moduleItemsMenuItems }}
               placement="bottomRight"
               disabled={isLoading}
             >

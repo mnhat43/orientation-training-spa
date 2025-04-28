@@ -19,8 +19,13 @@
             transform: scale(1.08);
         }
 
-        .view-course-overlay {
+        .view-course-overlay,
+        .enroll-button-container {
             opacity: 1;
+        }
+
+        .enroll-button-container {
+            transform: translateY(0);
         }
     }
 
@@ -103,6 +108,30 @@
                 font-size: 64px;
                 color: rgba(255, 255, 255, 0.85);
                 opacity: 0.8;
+            }
+        }
+
+        .enroll-button-container {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            z-index: 4;
+            opacity: 0;
+            transition:
+                opacity 0.3s ease,
+                transform 0.3s ease;
+            transform: translateY(10px);
+
+            .enroll-button {
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+                &:hover {
+                    background-color: #388e3c;
+                }
             }
         }
     }
@@ -232,6 +261,11 @@
 
         .course-title {
             font-size: 16px;
+        }
+
+        .enroll-button-container {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 }

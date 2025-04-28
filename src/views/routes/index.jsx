@@ -9,6 +9,7 @@ import AssessmentCreation from '@views/pages/assessmentCreate/AssessmentCreation
 import Exams from '@views/pages/exams'
 import Login from '@views/pages/login'
 import Home from '@views/pages/home'
+import TraineesPage from '@views/pages/trainee'
 
 function AllRoutes() {
   return (
@@ -58,7 +59,13 @@ function AllRoutes() {
         element={<MainLayout component={Exams} />}
       />
 
-      <Route path="*">404</Route>
+      {/* Routes for trainee management */}
+      <Route
+        path="/trainees"
+        element={<MainLayout component={TraineesPage} />}
+      />
+
+      <Route path="*" element={<div>404</div>} />
     </Routes>
   )
 }

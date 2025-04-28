@@ -5,7 +5,7 @@ import CourseNavigation from '@components/CourseNavigation'
 import HeaderRender from '@components/header'
 import './main-layout.scss'
 
-const { Content } = Layout
+const { Content, Header } = Layout
 
 const MainLayout = ({ component: Component }) => {
   const location = useLocation()
@@ -13,13 +13,12 @@ const MainLayout = ({ component: Component }) => {
 
   return (
     <Layout className="main-layout">
-      <Layout className="main-layout-header">
+      <Header className="main-layout-header">
         {isCourseRoute ? <CourseNavigation /> : <HeaderRender />}
-      </Layout>
-      <Layout className="main-layout-content">
+      </Header>
+      <Content className="main-layout-content">
         <Component />
-      </Layout>
-      {/* <FooterRender /> */}
+      </Content>
     </Layout>
   )
 }

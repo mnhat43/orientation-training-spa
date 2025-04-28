@@ -35,7 +35,7 @@ const ModuleForm = ({
   return (
     <Modal
       title={<Typography.Title level={4}>{title}</Typography.Title>}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       onOk={handleSubmit}
       okText="Submit"
