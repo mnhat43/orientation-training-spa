@@ -14,79 +14,6 @@ import BannerComponent from '@components/Banner/index.jsx'
 
 const { Option } = Select
 
-const mockTrainees = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    department: 'Engineering',
-    position: 'Software Engineer',
-    avatar: null,
-    enrolled: true,
-    progress: 75,
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    department: 'Marketing',
-    position: 'Marketing Specialist',
-    avatar: null,
-    enrolled: false,
-    progress: 0,
-  },
-  {
-    id: '3',
-    name: 'Robert Johnson',
-    email: 'robert.j@example.com',
-    department: 'HR',
-    position: 'HR Coordinator',
-    avatar: null,
-    enrolled: true,
-    progress: 33,
-  },
-  {
-    id: '4',
-    name: 'Emily Wilson',
-    email: 'emily.w@example.com',
-    department: 'Finance',
-    position: 'Financial Analyst',
-    avatar: null,
-    enrolled: false,
-    progress: 0,
-  },
-  {
-    id: '5',
-    name: 'Michael Brown',
-    email: 'michael.b@example.com',
-    department: 'Customer Support',
-    position: 'Support Specialist',
-    avatar: null,
-    enrolled: true,
-    progress: 67,
-  },
-  {
-    id: '6',
-    name: 'Sarah Davis',
-    email: 'sarah.d@example.com',
-    department: 'Engineering',
-    position: 'QA Engineer',
-    avatar: null,
-    enrolled: false,
-    progress: 0,
-  },
-  {
-    id: '7',
-    name: 'David Miller',
-    email: 'david.m@example.com',
-    department: 'Sales',
-    position: 'Sales Representative',
-    avatar: null,
-    enrolled: false,
-    progress: 0,
-  },
-]
-
 const Courses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false)
@@ -100,7 +27,6 @@ const Courses = () => {
 
   useEffect(() => {
     fetchCourses()
-    setTrainees(mockTrainees)
   }, [])
 
   const fetchCourses = async () => {
