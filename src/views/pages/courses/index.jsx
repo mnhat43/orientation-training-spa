@@ -188,15 +188,23 @@ const Courses = () => {
     setIsEnrollModalOpen(true)
   }
 
-  const handleEnrollSubmit = (values) => {
-    const { traineeIds } = values
-
-    console.log('Enrolling trainees:', {
-      courseId: selectedCourse.id,
-      trainees: traineeIds,
-    })
-
-    setIsEnrollModalOpen(false)
+  const handleEnrollSubmit = async (values) => {
+    try {
+      const { traineeIds } = values
+      const response = await userprogress.addListTraineeToCourse({
+        course_id: selectedCourse.id,
+        trainees: traineeIds,
+      })
+      if (response.status === 1) {
+        toast.success('Trainees enrolled successfully!')
+        setIsEnrollModalOpen(false)
+      }
+    } catch (error) {
+      toast.error('Error enrolling trainees:', error)
+    } finally {
+      setLoading(false)
+      setIsEnrollModalOpen(false)
+    }
   }
 
   const filteredCourses = courseList.filter((course) => {
