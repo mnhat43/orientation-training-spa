@@ -199,3 +199,20 @@
     margin-right: 8px;
   }
 }
+
+// Add submenu styling
+.ant-menu-submenu-title {
+  padding: 0 16px !important;
+}
+
+.ant-menu-submenu-popup {
+  .ant-menu-item {
+    padding: 0 16px !important;
+    display: flex !important;
+    align-items: center !important;
+
+    .anticon {
+      margin-right: 8px !important;
+    }
+  }
+}

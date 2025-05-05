@@ -1,0 +1,164 @@
+@import "../../../../../../styles/variables.scss";
+
+// Main container
+.course-draggable-container {
+    .courses-list {
+        margin-top: 16px;
+        max-height: 450px;
+        overflow-y: auto;
+        background-color: #fafafa;
+        border-radius: 4px;
+        padding: 8px;
+
+        &.drag-over {
+            background-color: #f0f7ff;
+            border: 1px dashed #1890ff;
+        }
+    }
+
+    .draggable-wrapper {
+        margin-bottom: 8px;
+        transition:
+            background-color 0.2s,
+            box-shadow 0.2s;
+
+        &.is-dragging {
+            opacity: 0.8;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    .course-item {
+        background-color: white;
+        border: 1px solid #f0f0f0;
+        border-radius: 4px;
+        padding: 12px;
+        display: flex;
+        align-items: flex-start;
+
+        &.dragging {
+            background-color: #f0f7ff;
+            border-color: #1890ff;
+        }
+
+        &.expanded {
+            background-color: #fafafa;
+        }
+
+        .course-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            margin-right: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .course-content {
+            flex: 1;
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .course-title {
+            display: flex;
+            align-items: center;
+
+            .course-name {
+                font-weight: 500;
+            }
+        }
+
+        .course-actions {
+            display: flex;
+            align-items: center;
+
+            .drag-handle {
+                cursor: grab;
+                padding: 4px;
+                color: #999;
+                display: flex;
+                align-items: center;
+                margin-right: 4px;
+                border-radius: 4px;
+                transition: background-color 0.2s;
+
+                &:hover {
+                    background-color: #f0f0f0;
+                    color: #666;
+                }
+
+                &:active {
+                    cursor: grabbing;
+                    background-color: #e0e0e0;
+                }
+            }
+        }
+
+        .course-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .course-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .course-expanded-content {
+            margin-top: 8px;
+        }
+    }
+}
+
+// Improve placeholder styling
+.react-beautiful-dnd-placeholder {
+    background-color: rgba(24, 144, 255, 0.1);
+    border: 1px dashed #1890ff;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+}
+
+// Add styles for when dragging is active
+body.dragging-active {
+    cursor: grabbing;
+
+    * {
+        cursor: grabbing;
+    }
+}
+
+// Loading and error states
+.loading-container {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    margin: 10px 0;
+}
+
+.error-container {
+    padding: 15px;
+    text-align: center;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin: 10px 0;
+}

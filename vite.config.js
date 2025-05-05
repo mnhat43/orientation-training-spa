@@ -21,6 +21,7 @@ export default defineConfig({
   },
   plugins: [react()],
   server: {
+    allowedHosts: ['orientation-training.local'],
     watch: {
       usePolling: true,
     },

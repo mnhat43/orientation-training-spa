@@ -1,0 +1,193 @@
+@import "../../../styles/variables.scss";
+
+.trainee-path-creator {
+    min-width: $min-width;
+    padding: 10px !important;
+    background-color: #f7f9fc;
+    .page-header-container {
+        margin-bottom: 24px;
+
+        h1 {
+            margin-bottom: 8px;
+        }
+    }
+
+    .steps-header {
+        width: 90%;
+        margin: 0 auto;
+        padding: 5px 20px;
+        border-radius: 8px;
+    }
+
+    .steps-action {
+        width: 90%;
+        margin: 24px 0;
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        .steps-action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 100%;
+
+            .prev-button,
+            .next-button {
+                min-width: 120px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .spacer {
+                flex: 1;
+            }
+        }
+    }
+
+    .steps-content {
+        width: 90%;
+        margin: 0 auto;
+        padding: 10px 20px;
+    }
+
+    .template-card {
+        transition: all 0.3s;
+
+        &.selected {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        &:hover {
+            transform: translateY(-4px);
+        }
+    }
+
+    // Timeline styles
+    .ant-timeline-item {
+        padding-bottom: 24px;
+    }
+
+    // Alert customization
+    .ant-alert {
+        margin-bottom: 16px;
+    }
+
+    // Success view styling
+    .success-icon {
+        font-size: 72px;
+        color: #52c41a;
+        margin-bottom: 24px;
+    }
+
+    .success-summary {
+        background: #f7f7f7;
+        padding: 24px;
+        border-radius: 8px;
+        margin: 32px 0;
+        text-align: left;
+    }
+
+    // Template selector
+    .template-selector {
+        .ant-card-hoverable {
+            cursor: pointer;
+        }
+
+        .ant-list-item {
+            margin-bottom: 16px;
+        }
+    }
+}
+
+// Trainee Path Creator Component Styles
+.trainee-selector {
+    .selected-trainees-preview {
+        background-color: #f6f6f6;
+        padding: 12px;
+        border-radius: 6px;
+        margin: 16px 0;
+
+        .trainees-cards {
+            margin-top: 8px;
+        }
+    }
+}
+
+.path-customizer {
+    .courses-container {
+        min-height: 200px;
+        padding: 16px;
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        background-color: #fcfcfc;
+    }
+}
+
+.confirmation-step {
+    .confirmation-section {
+        margin-bottom: 20px;
+    }
+
+    .ant-card {
+        .ant-card-head {
+            min-height: 40px;
+
+            .ant-card-head-title {
+                padding: 8px 0;
+            }
+        }
+    }
+}
+
+// Success View Styling
+.success-view {
+    .success-icon {
+        font-size: 72px;
+        color: #52c41a;
+    }
+
+    .success-summary {
+        background: #fafafa;
+        padding: 24px;
+        border-radius: 8px;
+        margin: 32px 0;
+
+        .ant-card {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+            .ant-card-head {
+                min-height: 48px;
+
+                .ant-card-head-title {
+                    padding: 12px 0;
+                }
+            }
+        }
+    }
+}
+
+// Add this to your existing CSS to make the components responsive
+@media (max-width: 768px) {
+    .trainee-selector,
+    .path-customizer,
+    .confirmation-step {
+        .ant-select,
+        .ant-input {
+            width: 100%;
+        }
+
+        .ant-card {
+            .ant-card-body {
+                padding: 12px;
+            }
+        }
+
+        .ant-tabs-nav .ant-tabs-tab {
+            margin-right: 12px;
+            padding: 8px 10px;
+        }
+    }
+}

@@ -39,6 +39,9 @@ import {
   HistoryOutlined,
   FileSearchOutlined,
   SolutionOutlined,
+  FileTextOutlined,
+  RocketOutlined,
+  PartitionOutlined,
 } from '@ant-design/icons'
 import './header.scss'
 import { useEffect, useState } from 'react'
@@ -53,7 +56,7 @@ const HeaderRender = () => {
   // Common items for both roles - removed Home
   const commonNavigationItems = []
 
-  // Manager-specific navigation items
+  // Manager-specific navigation items with updated structure
   const managerNavigationItems = [
     {
       key: 'dashboard',
@@ -70,10 +73,24 @@ const HeaderRender = () => {
       description: 'Manage training courses and enrollments',
     },
     {
+      key: 'templates',
+      icon: <FileTextOutlined />,
+      label: 'Templates',
+      path: '/templates',
+      description: 'Create and manage training path templates',
+    },
+    {
+      key: 'learningPaths',
+      icon: <PartitionOutlined />,
+      label: 'Learning Paths',
+      path: '/learning-paths/create',
+      description: 'Create personalized learning paths for trainees',
+    },
+    {
       key: 'trainees',
       icon: <TeamOutlined />,
-      label: 'Trainees',
-      path: '/trainees',
+      label: 'Manage Trainees',
+      path: '/manage-trainees',
       description: 'Comprehensive trainee management',
     },
     {
@@ -151,7 +168,18 @@ const HeaderRender = () => {
   useEffect(() => {
     const path = location.pathname
 
-    // Check direct matches
+    // Match specific paths
+    if (path === '/templates') {
+      setActiveKey('templates')
+      return
+    }
+
+    if (path.startsWith('/learning-paths')) {
+      setActiveKey('learningPaths')
+      return
+    }
+
+    // Check direct matches for other items
     const matchedItem = navigationItems.find(
       (item) =>
         path === item.path ||
@@ -163,32 +191,33 @@ const HeaderRender = () => {
       return
     }
 
-    // Check for nested items in dropdown menus
-    for (const item of navigationItems) {
-      if (item.children) {
-        const matchedChild = item.children.find(
-          (child) => path === child.path || path.startsWith(child.path),
-        )
-        if (matchedChild) {
-          setActiveKey(item.key)
-          return
-        }
-      }
-    }
-
-    setActiveKey('dashboard') // Default to dashboard instead of home
+    setActiveKey('dashboard') // Default to dashboard
   }, [location.pathname, userRole])
 
   // Handle menu item click
   const handleMenuClick = ({ key }) => {
-    const allItems = navigationItems.flatMap((item) =>
-      item.children ? item.children : [item],
-    )
+    // Check if this is a submenu item
+    let targetPath
 
-    const selectedItem = allItems.find((item) => item.key === key)
+    // First check top-level items
+    const selectedItem = navigationItems.find((item) => item.key === key)
     if (selectedItem && selectedItem.path) {
-      navigate(selectedItem.path)
-      setActiveKey(key)
+      targetPath = selectedItem.path
+    } else {
+      // Then check children items
+      for (const item of navigationItems) {
+        if (item.children) {
+          const childItem = item.children.find((child) => child.key === key)
+          if (childItem && childItem.path) {
+            targetPath = childItem.path
+            break
+          }
+        }
+      }
+    }
+
+    if (targetPath) {
+      navigate(targetPath)
     }
   }
 
@@ -380,22 +409,6 @@ const HeaderRender = () => {
         </div>
 
         <div className="header-wrapper__right-side">
-          {/* Role indicator */}
-          {/* {userRole === 'manager' ? (
-            <Badge count={0} dot color="#52c41a" className="role-badge">
-              <Tag color="blue" className="role-tag">
-                Manager
-              </Tag>
-            </Badge>
-          ) : (
-            <Badge count={0} dot color="#1890ff" className="role-badge">
-              <Tag color="green" className="role-tag">
-                Employee
-              </Tag>
-            </Badge>
-          )} */}
-
-          {/* Notifications */}
           <Popover
             content={
               userRole === 'manager'
@@ -420,7 +433,6 @@ const HeaderRender = () => {
             </Badge>
           </Popover>
 
-          {/* User menu */}
           <Dropdown
             menu={{ items: userMenuItems }}
             placement="bottomRight"
@@ -433,7 +445,6 @@ const HeaderRender = () => {
         </div>
       </div>
 
-      {/* Role selector modal */}
       <Modal
         title="Switch Role"
         open={showRoleSelector}

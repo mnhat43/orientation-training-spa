@@ -9,13 +9,14 @@ import AssessmentCreation from '@views/pages/assessmentCreate/AssessmentCreation
 import Exams from '@views/pages/exams'
 import Login from '@views/pages/login'
 import Home from '@views/pages/home'
-import TraineesPage from '@views/pages/trainee'
+import ManageTrainees from '@views/pages/manage-trainee'
+import TemplatePage from '@views/pages/template'
+import TraineePathCreator from '@views/pages/trainee-path'
 
 function AllRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-
       <Route path="/dashboard" element={<MainLayout component={Dashboard} />} />
       <Route path="/courses" element={<MainLayout component={Courses} />} />
       <Route path="/" element={<MainLayout component={Home} />} />
@@ -23,7 +24,6 @@ function AllRoutes() {
         path="/course/:courseId/modules"
         element={<MainLayout component={Modules} />}
       />
-
       <Route
         path="/course/:courseId/lectures"
         element={<MainLayout component={Lectures} />}
@@ -32,7 +32,6 @@ function AllRoutes() {
         path="/course/:courseId/lectures/:moduleId/:moduleItemId"
         element={<MainLayout component={Lectures} />}
       />
-
       <Route
         path="/course/:courseId/assignments/create"
         element={
@@ -45,7 +44,6 @@ function AllRoutes() {
         path="/course/:courseId/assignments"
         element={<MainLayout component={Assignments} />}
       />
-
       <Route
         path="/course/:courseId/exams/create"
         element={
@@ -58,13 +56,21 @@ function AllRoutes() {
         path="/course/:courseId/exams"
         element={<MainLayout component={Exams} />}
       />
-
       {/* Routes for trainee management */}
       <Route
-        path="/trainees"
-        element={<MainLayout component={TraineesPage} />}
+        path="/manage-trainees"
+        element={<MainLayout component={ManageTrainees} />}
       />
-
+      {/* Template route */}
+      <Route
+        path="/templates"
+        element={<MainLayout component={TemplatePage} />}
+      />
+      {/* Learning path routes */}
+      <Route
+        path="/learning-paths/create"
+        element={<MainLayout component={TraineePathCreator} />}
+      />
       <Route path="*" element={<div>404</div>} />
     </Routes>
   )
