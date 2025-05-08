@@ -1,96 +1,58 @@
 import React, { useState } from 'react'
-import { Row, Col, Alert, Button, Space } from 'antd'
-import { SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import PathCoursesColumn from './PathCoursesColumn'
-import InfoSummaryColumn from './InfoSummaryColumn'
+import { Button, Space, Divider, Row, Col } from 'antd'
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import TemplateSelector from './TemplateSelectorComponent'
-import CourseSelector from './CourseSelector'
+import CourseDragDropSection from '@components/CourseDragDropSection'
+import './index.scss'
 
 const DesignPath = ({
-  selectedTrainee,
   selectedCourses,
   setSelectedCourses,
   onNext,
   onPrev,
 }) => {
-  // Template-related states
   const [selectedTemplates, setSelectedTemplates] = useState([])
   const [templateDrawerVisible, setTemplateDrawerVisible] = useState(false)
 
-  // Course-related states
-  const [courseDrawerVisible, setCourseDrawerVisible] = useState(false)
-
   return (
-    <>
-      <Alert
-        message="Step 2: Design Learning Path"
-        description="Apply a template and/or customize the learning path by adding, removing, or reordering courses."
-        type="info"
-        showIcon
-      />
-
-      <Row gutter={16}>
-        <Col span={16}>
-          <PathCoursesColumn
+    <div className="design-path-container">
+      <Row>
+        <Col span={22} className="content-section">
+          <CourseDragDropSection
             selectedCourses={selectedCourses}
             setSelectedCourses={setSelectedCourses}
+            isShowTemplate={true}
             setTemplateDrawerVisible={setTemplateDrawerVisible}
-            setCourseDrawerVisible={setCourseDrawerVisible}
+          />
+
+          <TemplateSelector
+            selectedCourses={selectedCourses}
+            setSelectedCourses={setSelectedCourses}
+            selectedTemplates={selectedTemplates}
+            setSelectedTemplates={setSelectedTemplates}
+            templateDrawerVisible={templateDrawerVisible}
+            setTemplateDrawerVisible={setTemplateDrawerVisible}
           />
         </Col>
 
-        <Col span={8}>
-          <InfoSummaryColumn
-            selectedTrainee={selectedTrainee}
-            selectedCourses={selectedCourses}
-          />
-
-          <Space direction="vertical" style={{ width: '100%', marginTop: 16 }}>
-            <Button
-              icon={<ArrowLeftOutlined />}
-              onClick={onPrev}
-              style={{
-                width: '100%',
-                height: '40px',
-                fontSize: '16px',
-              }}
-            >
-              Back to Trainee Selection
+        <Col span={2} className="navigation-buttons">
+          <Space direction="vertical" style={{ width: '100%' }}>
+            <Button icon={<ArrowLeftOutlined />} onClick={onPrev} size="middle">
+              Back
             </Button>
-
             <Button
               type="primary"
-              icon={<SaveOutlined />}
-              style={{
-                width: '100%',
-                height: '40px',
-                fontSize: '16px',
-              }}
+              icon={<ArrowRightOutlined />}
               onClick={onNext}
               disabled={selectedCourses.length === 0}
+              size="middle"
             >
-              Continue to Review
+              Next
             </Button>
           </Space>
         </Col>
       </Row>
-
-      <TemplateSelector
-        selectedCourses={selectedCourses}
-        setSelectedCourses={setSelectedCourses}
-        selectedTemplates={selectedTemplates}
-        setSelectedTemplates={setSelectedTemplates}
-        templateDrawerVisible={templateDrawerVisible}
-        setTemplateDrawerVisible={setTemplateDrawerVisible}
-      />
-
-      <CourseSelector
-        selectedCourses={selectedCourses}
-        setSelectedCourses={setSelectedCourses}
-        courseDrawerVisible={courseDrawerVisible}
-        setCourseDrawerVisible={setCourseDrawerVisible}
-      />
-    </>
+    </div>
   )
 }
 

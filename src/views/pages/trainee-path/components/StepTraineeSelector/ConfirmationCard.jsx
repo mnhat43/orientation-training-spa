@@ -1,106 +1,139 @@
 import React from 'react'
+import { Card, Avatar, Typography, Row, Col, Tag, Divider } from 'antd'
 import {
-  Card,
-  Button,
-  Avatar,
-  Typography,
-  Divider,
-  Space,
-  Row,
-  Col,
-  Tag,
-} from 'antd'
-import {
-  LeftOutlined,
-  RightOutlined,
+  UserOutlined,
   MailOutlined,
   PhoneOutlined,
+  TeamOutlined,
   CalendarOutlined,
-  GiftOutlined,
-  CheckCircleOutlined,
-  UserOutlined,
+  IdcardOutlined,
 } from '@ant-design/icons'
-import { DEPARTMENT_COLORS } from '@constants/userprofile'
+import DefaultAvatar from '@assets/images/default-avatar.svg'
+import './ConfirmationCard.scss'
 
-const { Text, Title } = Typography
+const { Title, Text } = Typography
 
-const ConfirmationCard = ({ trainee, setSelectedTrainee, onNext }) => {
+const ConfirmationCard = ({ selectedTrainee }) => {
   return (
-    <div className="trainee-confirmation compact">
-      <Card className="confirmation-card">
-        <div className="confirmation-header">
-          <div className="header-title">
-            <CheckCircleOutlined className="confirmation-check-icon" />
-            <Text strong>Confirm selection</Text>
+    <Card
+      className="trainee-confirmation-card"
+      variant="borderless"
+      size="small"
+    >
+      <Row gutter={[8, 8]} className="card-wrapper">
+        {/* Avatar Column */}
+        <Col xs={24} sm={5} md={4} className="avatar-column">
+          <div className="avatar-container">
+            <Avatar
+              size={100}
+              icon={<UserOutlined />}
+              src={selectedTrainee.avatar || DefaultAvatar}
+              className="trainee-avatar"
+            />
+            <Title level={5} className="trainee-name">
+              {selectedTrainee.fullname}
+            </Title>
           </div>
-          <Button
-            icon={<LeftOutlined />}
-            onClick={() => setSelectedTrainee({})}
-            type="text"
-            size="small"
-          >
-            Back
-          </Button>
-        </div>
+        </Col>
 
-        <Divider style={{ margin: '12px 0 16px' }} />
+        {/* Info Column */}
+        <Col xs={24} sm={19} md={20} className="info-column">
+          {/* Trainee Information Section */}
+          <div className="info-section">
+            <div className="section-header">
+              <Text strong>Trainee Information</Text>
+            </div>
+            <Row gutter={[8, 8]} className="info-grid">
+              <Col xs={24} sm={12} md={6}>
+                <div className="info-item">
+                  <MailOutlined className="info-icon" />
+                  <div className="info-content">
+                    <Text type="secondary" className="info-label">
+                      Email
+                    </Text>
+                    <Text className="info-value">{selectedTrainee.email}</Text>
+                  </div>
+                </div>
+              </Col>
 
-        <div className="confirmation-content">
-          <Row gutter={[16, 16]} align="middle">
-            <Col xs={24} sm={6} md={4} className="avatar-col">
-              {trainee.avatar ? (
-                <Avatar
-                  size={80}
-                  src={trainee.avatar}
-                  className="trainee-avatar"
-                />
-              ) : (
-                <Avatar
-                  size={80}
-                  icon={<UserOutlined />}
-                  className="trainee-avatar"
-                  style={{ backgroundColor: '#1890ff' }}
-                />
-              )}
-            </Col>
+              <Col xs={24} sm={12} md={6}>
+                <div className="info-item">
+                  <PhoneOutlined className="info-icon" />
+                  <div className="info-content">
+                    <Text type="secondary" className="info-label">
+                      Phone
+                    </Text>
+                    <Text className="info-value">{selectedTrainee.phone}</Text>
+                  </div>
+                </div>
+              </Col>
 
-            <Col xs={24} sm={18} md={14} className="info-col">
-              <Title level={4} className="trainee-name">
-                {trainee.fullname}
-              </Title>
+              <Col xs={24} sm={12} md={6}>
+                <div className="info-item">
+                  <IdcardOutlined className="info-icon" />
+                  <div className="info-content">
+                    <Text type="secondary" className="info-label">
+                      Gender
+                    </Text>
+                    <Text className="info-value">{selectedTrainee.gender}</Text>
+                  </div>
+                </div>
+              </Col>
 
-              <Space size={[0, 8]} wrap className="trainee-tags">
-                <Tag color={DEPARTMENT_COLORS[trainee.department]}>
-                  {trainee.department}
-                </Tag>
-                <Tag icon={<GiftOutlined />}>{trainee.birthday}</Tag>
-                <Tag icon={<CalendarOutlined />}>{trainee.joinDate}</Tag>
-              </Space>
+              <Col xs={24} sm={12} md={6}>
+                <div className="info-item">
+                  <CalendarOutlined className="info-icon" />
+                  <div className="info-content">
+                    <Text type="secondary" className="info-label">
+                      Birthday
+                    </Text>
+                    <Text className="info-value">
+                      {selectedTrainee.birthday}
+                    </Text>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
 
-              <div className="trainee-contact">
-                <Text type="secondary">
-                  <MailOutlined /> {trainee.email}
-                </Text>
-                <Text type="secondary" style={{ marginLeft: 16 }}>
-                  <PhoneOutlined /> {trainee.phone}
-                </Text>
-              </div>
-            </Col>
+          {/* Employment Details Section */}
+          <div className="info-section">
+            <div className="section-header">
+              <Text strong>Employment Details</Text>
+            </div>
+            <Row gutter={[8, 8]} className="info-grid">
+              <Col xs={24} sm={12} md={6}>
+                <div className="info-item">
+                  <TeamOutlined className="info-icon" />
+                  <div className="info-content">
+                    <Text type="secondary" className="info-label">
+                      Department
+                    </Text>
+                    <Text className="info-value">
+                      {selectedTrainee.department}
+                    </Text>
+                  </div>
+                </div>
+              </Col>
 
-            <Col xs={24} sm={24} md={6} className="action-col">
-              <Button
-                type="primary"
-                onClick={onNext}
-                icon={<RightOutlined />}
-                className="confirm-button"
-              >
-                Confirm
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </Card>
-    </div>
+              <Col xs={24} sm={12} md={6}>
+                <div className="info-item">
+                  <CalendarOutlined className="info-icon" />
+                  <div className="info-content">
+                    <Text type="secondary" className="info-label">
+                      Join Date
+                    </Text>
+                    <Text className="info-value">
+                      {selectedTrainee.joinDate}
+                    </Text>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+      </Row>
+    </Card>
   )
 }
 

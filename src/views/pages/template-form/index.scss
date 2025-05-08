@@ -1,0 +1,64 @@
+// Import all component styles
+@import "./components/TemplateFormHeader.scss";
+
+// Main container styles
+.template-form-wrapper {
+    background-color: #f5f8fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .template-form-content {
+        flex: 1;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px;
+        width: 100%;
+
+        .template-form {
+            // Course Selection Section
+            .course-section {
+                margin-bottom: 32px;
+
+                .section-title {
+                    margin-bottom: 8px;
+
+                    .anticon {
+                        margin-right: 8px;
+                        color: #1890ff;
+                    }
+                }
+
+                .section-description {
+                    display: block;
+                    margin-bottom: 16px;
+                }
+            }
+
+            .template-course-selection {
+                margin-bottom: 24px;
+
+                .selection-panel-col,
+                .selected-courses-col {
+                    margin-bottom: 24px;
+                }
+            }
+        }
+    }
+
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+    }
+}
+
+// Empty state customization
+.ant-empty {
+    padding: 32px 0;
+
+    .ant-empty-description {
+        color: rgba(0, 0, 0, 0.45);
+    }
+}

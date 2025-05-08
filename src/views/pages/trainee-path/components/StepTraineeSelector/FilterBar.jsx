@@ -28,7 +28,7 @@ const FilterBar = ({
             value={searchText}
             onChange={(e) => onSearch(e.target.value)}
             allowClear
-            size="large"
+            size="middle"
           />
         </div>
 
@@ -38,12 +38,12 @@ const FilterBar = ({
           <Space align="center" className="department-filter">
             <span className="filter-label">Department:</span>
             <Select
-              placeholder={`All Departments`}
+              placeholder="All Departments"
               onChange={(value) => setDepartmentFilter(value)}
               value={departmentFilter}
               style={{ width: 200 }}
               allowClear
-              size="large"
+              size="middle"
               suffixIcon={<FilterOutlined />}
               popupMatchSelectWidth={false}
             >
@@ -64,7 +64,7 @@ const FilterBar = ({
             disabled={!hasActiveFilters}
             icon={<ClearOutlined />}
             type={hasActiveFilters ? 'primary' : 'default'}
-            size="large"
+            size="middle"
           >
             Reset
           </Button>

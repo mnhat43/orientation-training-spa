@@ -12,6 +12,7 @@ import Home from '@views/pages/home'
 import ManageTrainees from '@views/pages/manage-trainee'
 import TemplatePage from '@views/pages/template'
 import TraineePathCreator from '@views/pages/trainee-path'
+import TemplateFormPage from '@views/pages/template-form'
 
 function AllRoutes() {
   return (
@@ -61,10 +62,18 @@ function AllRoutes() {
         path="/manage-trainees"
         element={<MainLayout component={ManageTrainees} />}
       />
-      {/* Template route */}
+      {/* Template routes */}
       <Route
         path="/templates"
         element={<MainLayout component={TemplatePage} />}
+      />
+      <Route
+        path="/templates/new"
+        element={<MainLayout component={TemplateFormPage} />}
+      />
+      <Route
+        path="/templates/:id/edit"
+        element={<MainLayout component={TemplateFormPage} />}
       />
       {/* Learning path routes */}
       <Route

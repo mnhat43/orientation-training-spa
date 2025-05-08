@@ -1,0 +1,28 @@
+.design-path-container {
+    display: flex;
+    flex-direction: column;
+    .navigation-buttons {
+        padding: 12px 8px;
+    }
+
+    .content-section {
+        padding-right: 16px;
+    }
+
+    @media (max-width: 576px) {
+        .navigation-buttons {
+            .ant-col {
+                margin-bottom: 12px;
+            }
+        }
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .design-path-layout {
+        .design-path-content {
+            padding: 0;
+        }
+    }
+}

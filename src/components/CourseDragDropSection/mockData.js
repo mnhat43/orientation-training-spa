@@ -1,0 +1,58 @@
+export const MOCK_AVAILABLE_COURSES = [
+  {
+    id: 1,
+    title: 'Introduction to Web Development',
+    description: 'Learn the basics of HTML, CSS, and JavaScript',
+    category: 'Web Development',
+    duration: 2,
+  },
+  {
+    id: 2,
+    title: 'React Fundamentals',
+    description: 'Build interactive UIs with React',
+    category: 'Web Development',
+    duration: 3,
+  },
+  {
+    id: 3,
+    title: 'Node.js Backend Development',
+    description: 'Create scalable backend services with Node.js',
+    category: 'Web Development',
+    duration: 4,
+  },
+  {
+    id: 4,
+    title: 'DevOps Essentials',
+    description: 'Learn CI/CD, Docker, and deployment strategies',
+    category: 'DevOps',
+    duration: 3,
+  },
+  {
+    id: 5,
+    title: 'Data Structures and Algorithms',
+    description: 'Master fundamental programming concepts',
+    category: 'Computer Science',
+    duration: 6,
+  },
+  {
+    id: 6,
+    title: 'UX/UI Design Principles',
+    description: 'Create intuitive and engaging user interfaces',
+    category: 'UI/UX Design',
+    duration: 3,
+  },
+  {
+    id: 7,
+    title: 'Mobile App Development with React Native',
+    description: 'Build cross-platform mobile applications',
+    category: 'Mobile Development',
+    duration: 4,
+  },
+  {
+    id: 8,
+    title: 'Cloud Computing with AWS',
+    description: 'Deploy and scale applications in the cloud',
+    category: 'Cloud Computing',
+    duration: 5,
+  },
+]

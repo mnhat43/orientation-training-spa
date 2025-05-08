@@ -1,0 +1,139 @@
+.trainee-table-container {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    padding-bottom: 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    overflow-x: auto; // Add horizontal scrolling if needed
+
+    .compact-trainee-table {
+        width: 100%; // Ensure table takes exactly 100% of container width
+        table-layout: fixed; // Fixed table layout prevents expansion
+
+        .ant-table-container {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .ant-table-thead > tr > th {
+            padding: 6px 8px;
+            background-color: #fafafa;
+            font-weight: 600;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ant-table-tbody > tr > td {
+            padding: 4px 8px;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ant-table-row {
+            line-height: 1.1;
+
+            &:hover {
+                background-color: #f0f7ff;
+            }
+        }
+
+        // Override the last column (action column) to prevent button overflow
+        td:last-child {
+            white-space: nowrap;
+            width: 110px; // Fixed width for action column
+            min-width: 110px;
+        }
+
+        .select-trainee-btn {
+            transition: all 0.3s;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            height: 32px;
+            padding: 0 12px;
+            width: 100px; // Fixed width for the button
+
+            .anticon {
+                font-size: 12px;
+                margin-right: 6px;
+            }
+
+            &:hover {
+                transform: scale(1.05);
+            }
+
+            &.selected-trainee-btn {
+                background-color: #f6ffed;
+                border-color: #b7eb8f;
+                color: #52c41a;
+
+                &:hover {
+                    background-color: #eaffdc;
+                    border-color: #95de64;
+                    color: #389e0d;
+                }
+            }
+
+            &:not(.selected-trainee-btn) {
+                &:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+                }
+            }
+        }
+
+        .trainee-name-with-avatar {
+            display: flex;
+            align-items: center;
+
+            .trainee-avatar-small {
+                margin-right: 8px;
+            }
+
+            .trainee-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        // Pagination controls
+        .ant-pagination {
+            margin: 16px 0;
+
+            .ant-pagination-item-active {
+                border-color: #1890ff;
+                font-weight: 500;
+            }
+        }
+    }
+
+    // Prevent the table from expanding horizontally
+    .ant-spin-nested-loading,
+    .ant-spin-container,
+    .ant-table,
+    .ant-table-container {
+        width: 100%;
+    }
+}
+
+// Add styles for responsive behavior
+@media (max-width: 768px) {
+    .trainee-table-container {
+        padding: 8px;
+
+        .compact-trainee-table {
+            .select-trainee-btn {
+                width: 90px;
+                padding: 0 8px;
+                font-size: 12px;
+            }
+        }
+    }
+}

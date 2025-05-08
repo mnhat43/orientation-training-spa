@@ -1,0 +1,106 @@
+.template-details-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    .card-header {
+        margin-bottom: 24px;
+
+        h4 {
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+    }
+
+    .form-fields {
+        .ant-form-item {
+            margin-bottom: 20px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            .ant-form-item-label {
+                label {
+                    height: auto;
+                    font-weight: 500;
+
+                    .help-icon {
+                        color: #bfbfbf;
+                        font-size: 14px;
+                        cursor: help;
+
+                        &:hover {
+                            color: #1890ff;
+                        }
+                    }
+
+                    .optional-text {
+                        margin-left: 4px;
+                        font-weight: normal;
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+
+        .template-name-input {
+            font-size: 15px;
+        }
+
+        .ant-input-textarea {
+            .ant-input {
+                font-size: 14px;
+                resize: vertical;
+            }
+
+            .ant-input-data-count {
+                color: rgba(0, 0, 0, 0.45);
+            }
+        }
+
+        // Make form items in each column have the same height
+        .ant-row {
+            .ant-col {
+                display: flex;
+                flex-direction: column;
+
+                .ant-form-item {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+
+                    .ant-form-item-control {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+
+                        .ant-form-item-control-input {
+                            flex: 1;
+
+                            .ant-form-item-control-input-content {
+                                height: 100%;
+
+                                .ant-input-textarea {
+                                    height: 100%;
+
+                                    textarea {
+                                        height: 100% !important;
+                                        min-height: 102px; // Match the height of the name input
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Responsive adjustments
+        @media (max-width: 767px) {
+            .ant-row .ant-col .ant-form-item {
+                margin-bottom: 16px;
+            }
+        }
+    }
+}

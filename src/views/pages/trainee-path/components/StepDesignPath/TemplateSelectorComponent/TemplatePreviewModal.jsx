@@ -1,35 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Modal, Button, Typography, Tag, List, Badge, Tooltip } from 'antd'
 import {
-  Modal,
-  Button,
-  Typography,
-  Tag,
-  List,
-  Space,
-  Alert,
-  Badge,
-  Tooltip,
-} from 'antd'
-import {
-  FileTextOutlined,
   ClockCircleOutlined,
   CheckOutlined,
-  WarningOutlined,
-  InfoCircleOutlined,
   BookOutlined,
+  InfoCircleOutlined,
 } from '@ant-design/icons'
 import { CATEGORY_COLORS } from '@constants/categories'
 import './TemplatePreviewModal.scss'
+import CourseList from '@components/CourseList'
 
-const { Text, Paragraph, Title } = Typography
+const { Text, Title, Paragraph } = Typography
 
-const TemplatePreviewModal = ({
-  visible,
-  template,
-  onCancel,
-  onApply,
-  isSelected,
-}) => {
+const TemplatePreviewModal = ({ visible, template, onCancel, isSelected }) => {
+  const [showDesc, setShowDesc] = useState(false)
+
   if (!template) return null
 
   // Calculate total duration
@@ -40,129 +25,70 @@ const TemplatePreviewModal = ({
 
   return (
     <Modal
-      title={
-        <div className="template-title">
-          <FileTextOutlined className="title-icon" />
-          <Tooltip title={template.title}>
-            <div className="title-text">{template.title}</div>
-          </Tooltip>
-          {isSelected && (
-            <Badge
-              className="applied-badge"
-              count="Applied"
-              style={{ backgroundColor: '#52c41a' }}
-            />
-          )}
-        </div>
-      }
+      title={null}
       open={visible}
       onCancel={onCancel}
-      width={550} // Reduced width
+      width={650}
       centered
-      bodyStyle={{
-        padding: '12px', // Reduced padding
-        maxHeight: '70vh',
-        overflow: 'hidden',
+      styles={{
+        body: { padding: 0, overflow: 'hidden', borderRadius: '6px' },
       }}
-      footer={[
-        <Button key="cancel" size="middle" onClick={onCancel}>
-          {' '}
-          {/* Reduced button size */}
-          Cancel
-        </Button>,
-        isSelected ? (
-          <Button
-            key="applied"
-            size="middle" // Reduced button size
-            type="primary"
-            disabled
-            style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
-          >
-            Already Applied
-          </Button>
-        ) : (
-          <Button
-            key="apply"
-            size="middle" // Reduced button size
-            type="primary"
-            onClick={() => onApply(template)}
-            icon={<CheckOutlined />}
-          >
-            Apply
-          </Button>
-        ),
-      ]}
-      className="template-preview-modal-simple"
+      footer={null}
+      className="template-preview-modal-compact"
     >
-      <div className="template-info">
-        <div className="template-summary-compact">
-          <div className="template-meta-row">
-            <div className="meta-item category">
-              <Tag color={CATEGORY_COLORS[template.category] || 'blue'}>
-                {template.category}
-              </Tag>
+      <div className="template-container">
+        {/* Header */}
+        <div className="template-header-redesign">
+          <div className="header-top">
+            <div className="title-section">
+              <Title level={4} className="template-title">
+                {template.title}
+              </Title>
+              {isSelected && (
+                <Badge
+                  count="Applied"
+                  style={{ backgroundColor: '#52c41a' }}
+                  className="applied-badge"
+                />
+              )}
             </div>
-            <span className="meta-dot"></span>
-            <div className="meta-item">
-              <BookOutlined className="meta-icon" />
-              <span className="meta-text">
-                {template.courses.length} courses
-              </span>
-            </div>
-            <span className="meta-dot"></span>
-            <div className="meta-item">
-              <ClockCircleOutlined className="meta-icon" />
-              <span className="meta-text">{totalDuration} hours</span>
+            <div className="stats-section">
+              <div className="stat-item">
+                <BookOutlined className="stat-icon" />
+                <span className="stat-value">{template.courses.length}</span>
+                <span className="stat-label">Courses</span>
+              </div>
+              <div className="stat-item">
+                <ClockCircleOutlined className="stat-icon" />
+                <span className="stat-value">{totalDuration}</span>
+                <span className="stat-label">Hours</span>
+              </div>
             </div>
           </div>
 
           {template.description && (
-            <Text
-              type="secondary"
-              className="compact-description"
-              ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
-            >
-              {template.description}
-            </Text>
+            <div className="description-section">
+              <div className="description-header">
+                <InfoCircleOutlined className="description-icon" />
+                <Text className="description-label">Overview</Text>
+              </div>
+              <div className="description-content">
+                <Paragraph className="template-description">
+                  {template.description}
+                </Paragraph>
+              </div>
+            </div>
           )}
         </div>
 
-        <div className="course-list-container-compact">
-          <List
-            size="small" // Set list to small size
-            className="scrollable-course-list"
-            itemLayout="horizontal"
-            dataSource={template.courses}
-            renderItem={(course, index) => (
-              <List.Item key={course.id} className="course-item-compact">
-                <span className="course-number">{index + 1}</span>
-                <div className="course-content">
-                  <div className="course-main-row">
-                    <Text strong ellipsis={{ tooltip: course.title }}>
-                      {course.title}
-                    </Text>
-                    <Space size={2} className="course-meta">
-                      <Tag
-                        size="small"
-                        color={CATEGORY_COLORS[course.category]}
-                      >
-                        {course.category}
-                      </Tag>
-                      <Text type="secondary" className="duration">
-                        <ClockCircleOutlined /> {course.duration}
-                      </Text>
-                    </Space>
-                  </div>
+        <div className="courses-section">
+          <div className="section-title">
+            <BookOutlined /> Courses
+          </div>
 
-                  {course.description && (
-                    <Text type="secondary" className="course-desc" ellipsis>
-                      {course.description}
-                    </Text>
-                  )}
-                </div>
-              </List.Item>
-            )}
-          />
+          <div className="course-list">
+            <CourseList courses={template.courses} />
+          </div>
         </div>
       </div>
     </Modal>

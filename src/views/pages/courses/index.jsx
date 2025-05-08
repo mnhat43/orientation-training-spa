@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Button, Row, Col, Spin, Input, Empty, Select, Typography } from 'antd'
-import { SearchOutlined, PlusOutlined, TeamOutlined } from '@ant-design/icons'
+import { Button, Row, Col, Spin, Input, Empty, Select } from 'antd'
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import course from '@api/course'
 import userprogress from '@api/userprogress'
@@ -10,7 +10,6 @@ import EnrollTraineesModal from './components/EnrollTraineesModal'
 import './index.scss'
 import { toast } from 'react-toastify'
 import { convertFileToBase64 } from '@helpers/common.js'
-import BannerComponent from '@components/Banner/index.jsx'
 
 const { Option } = Select
 
@@ -146,11 +145,6 @@ const Courses = () => {
 
   return (
     <div className="courses-container">
-      <BannerComponent
-        title="Manage Courses"
-        description="Create, manage, and assign training courses for new employees"
-      />
-
       <div className="courses-filters">
         <Input
           placeholder="Search training courses..."
@@ -226,7 +220,6 @@ const Courses = () => {
               onClick={() => setIsModalOpen(true)}
               className="create-course-btn"
               size="large"
-              style={{ marginTop: 24 }}
             >
               Create Course
             </Button>

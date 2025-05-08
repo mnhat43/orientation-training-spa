@@ -2,7 +2,6 @@
     .trainee-search-section {
         display: flex;
         align-items: center;
-        margin-bottom: 24px;
 
         .trainee-search-input {
             flex: 1;
@@ -278,9 +277,8 @@
     }
 }
 
-// New advanced filter bar
 .advanced-filter-bar {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
     background-color: #fff;
@@ -289,14 +287,13 @@
     .filter-content {
         display: flex;
         align-items: center;
-        padding: 16px;
+        padding: 10px;
         flex-wrap: wrap;
         gap: 8px;
 
         .search-box {
+            max-width: 300px;
             flex: 2;
-            min-width: 250px;
-
             .search-icon {
                 color: #bfbfbf;
             }
@@ -312,12 +309,7 @@
         }
 
         .filter-box {
-            flex: 1;
-            min-width: 200px;
-
             .department-filter {
-                width: 100%;
-
                 .filter-label {
                     white-space: nowrap;
                     color: rgba(0, 0, 0, 0.65);
@@ -381,49 +373,71 @@
     }
 
     .trainee-table-container {
+        background-color: #fff;
         margin-bottom: 20px;
-
-        .ant-table {
-            .selected-row {
-                background-color: rgba(24, 144, 255, 0.1);
-
-                &:hover > td {
-                    background-color: rgba(24, 144, 255, 0.2) !important;
-                }
-            }
-
-            tbody tr {
-                cursor: pointer;
-
-                &:hover {
-                    background-color: rgba(0, 0, 0, 0.02);
-                }
-            }
-        }
     }
 
     .selection-confirmation {
         margin-top: 24px;
 
         .confirmation-card {
-            border-radius: 8px;
-            background-color: #f8f8f8;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
-            .confirmation-icon {
-                font-size: 24px;
-                color: #52c41a;
-            }
+            .trainee-avatar-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
 
-            .confirmation-text {
-                flex: 1;
+                .trainee-avatar {
+                    border: 4px solid #f0f0f0;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    margin-bottom: 16px;
+                }
 
-                h5.ant-typography {
-                    margin-bottom: 4px;
+                .trainee-name-mobile {
+                    display: none;
+                    margin-top: 8px;
+                    text-align: center;
+
+                    h4 {
+                        margin-bottom: 8px;
+                    }
                 }
             }
 
-            .confirm-button {
-                margin-left: auto;
+            .trainee-info-header {
+                margin-bottom: 16px;
+
+                .trainee-name-desktop {
+                    h3 {
+                        margin-bottom: 8px;
+                    }
+                }
+            }
+
+            .trainee-divider {
+                margin: 16px 0;
+            }
+
+            .info-item {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 8px;
+
+                .info-icon {
+                    font-size: 18px;
+                    color: #1890ff;
+                    margin-right: 12px;
+                    margin-top: 2px;
+                }
+            }
+
+            .trainee-details-section {
+                h5 {
+                    margin-bottom: 16px;
+                }
             }
         }
     }
@@ -453,25 +467,6 @@
         display: flex;
         justify-content: flex-end;
         margin-bottom: 24px;
-    }
-
-    // Table styles
-    .trainee-table-container {
-        margin-bottom: 20px;
-
-        .ant-table {
-            .selected-row {
-                background-color: #f0f7ff;
-
-                &:hover > td {
-                    background-color: #e6f1ff !important;
-                }
-            }
-
-            tbody tr {
-                cursor: pointer;
-            }
-        }
     }
 
     // Confirmation drawer styles
@@ -530,10 +525,7 @@
         }
     }
 
-    // New confirmation section that replaces the table
     .trainee-confirmation {
-        margin-top: 16px;
-
         .confirmation-card {
             background-color: #ffffff;
             border-radius: 8px;
@@ -683,6 +675,21 @@
                 }
             }
         }
+    }
+
+    .filter-results-info {
+        margin: -8px 0 8px;
+        padding: 0 8px;
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.6);
+    }
+
+    .content-section {
+        padding-right: 12px;
+    }
+
+    .navigation-buttons {
+        padding: 12px 8px;
     }
 }
 
@@ -836,6 +843,22 @@
                             }
                         }
                     }
+                }
+            }
+        }
+
+        .selection-confirmation {
+            .confirmation-card {
+                .trainee-avatar-container {
+                    margin-bottom: 20px;
+
+                    .trainee-name-mobile {
+                        display: block;
+                    }
+                }
+
+                .trainee-name-desktop {
+                    display: none;
                 }
             }
         }

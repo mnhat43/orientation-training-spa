@@ -30,52 +30,25 @@ const ReviewPath = ({
 
   return (
     <>
-      <Alert
-        message={<Text strong>Step 3: Review and Confirm</Text>}
-        description="Review the learning path before assigning it to the trainee."
-        type="info"
-        showIcon
-        className="review-path-alert"
-      />
+      <Row gutter={24}>
+        <Col span={16}>
+          <CourseTimeline
+            courses={selectedCourses}
+            totalDuration={getTotalDuration()}
+          />
+        </Col>
 
-      <Card
-        title={
-          <div className="review-path-title">
-            <RocketOutlined className="review-path-title-icon" />
-            <span>Review Learning Path</span>
-          </div>
-        }
-        className="step-card review-path-card"
-        variant="borderless"
-        extra={
-          <Button
-            icon={<ArrowLeftOutlined />}
-            onClick={onPrev}
-            className="review-path-navigation-back-btn"
-          >
-            Back
-          </Button>
-        }
-      >
-        <Row gutter={24}>
-          <Col span={16}>
-            <CourseTimeline
-              courses={selectedCourses}
-              totalDuration={getTotalDuration()}
-            />
-          </Col>
-
-          <Col span={8}>
-            <AssignmentDetails
-              trainee={selectedTrainee}
-              coursesCount={selectedCourses.length}
-              totalDuration={getTotalDuration()}
-              onSubmitPath={onSubmitPath}
-              submitting={submitting}
-            />
-          </Col>
-        </Row>
-      </Card>
+        <Col span={8}>
+          <AssignmentDetails
+            trainee={selectedTrainee}
+            coursesCount={selectedCourses.length}
+            totalDuration={getTotalDuration()}
+            onSubmitPath={onSubmitPath}
+            submitting={submitting}
+            onPrev={onPrev}
+          />
+        </Col>
+      </Row>
     </>
   )
 }

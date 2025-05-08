@@ -21,6 +21,7 @@ import {
   TeamOutlined,
   ManOutlined,
   WomanOutlined,
+  ArrowLeftOutlined,
 } from '@ant-design/icons'
 import './index.scss'
 
@@ -32,6 +33,7 @@ const AssignmentDetails = ({
   totalDuration,
   onSubmitPath,
   submitting,
+  onPrev,
 }) => {
   if (!trainee) return null
 
@@ -67,7 +69,7 @@ const AssignmentDetails = ({
 
         <div className="enhanced-assignment-trainee-info">
           <Text strong className="enhanced-assignment-name">
-            {trainee.fullname || trainee.name}
+            {trainee.fullname}
           </Text>
 
           {trainee.department && (
@@ -143,38 +145,17 @@ const AssignmentDetails = ({
 
       <Divider className="enhanced-assignment-divider" />
 
-      {/* Course summary section */}
-      <div className="enhanced-assignment-summary">
-        <div className="enhanced-assignment-course-count">
-          <BookOutlined className="enhanced-assignment-summary-icon" />
-          <div className="enhanced-assignment-summary-content">
-            <Text className="enhanced-assignment-summary-title">Courses</Text>
-            <Text strong className="enhanced-assignment-summary-value">
-              {coursesCount}
-            </Text>
-          </div>
-        </div>
-
-        <div className="enhanced-assignment-duration">
-          <ClockCircleOutlined className="enhanced-assignment-summary-icon" />
-          <div className="enhanced-assignment-summary-content">
-            <Text className="enhanced-assignment-summary-title">Duration</Text>
-            <Text strong className="enhanced-assignment-summary-value">
-              {totalDuration}
-            </Text>
-          </div>
-        </div>
-      </div>
-
       {/* Status and action section */}
       <div className="enhanced-assignment-status">
-        <div className="enhanced-assignment-ready">
-          <CheckCircleOutlined className="enhanced-assignment-ready-icon" />
-          <Text className="enhanced-assignment-ready-text">
-            Ready to assign
-          </Text>
-        </div>
-
+        <Button
+          icon={<ArrowLeftOutlined />}
+          onClick={onPrev}
+          className="back-btn"
+          size="middle"
+          block
+        >
+          Back to Design
+        </Button>
         <Button
           type="primary"
           icon={<SendOutlined />}

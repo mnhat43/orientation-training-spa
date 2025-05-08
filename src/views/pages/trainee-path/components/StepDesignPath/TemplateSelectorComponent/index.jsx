@@ -1,37 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import {
   Card,
-  List,
-  Tag,
   Button,
   Typography,
   Input,
   Empty,
   Spin,
-  Select,
-  Pagination,
-  Row,
-  Col,
-  Tabs,
-  Badge,
-  Tooltip,
   Drawer,
+  List,
+  Badge,
+  Space,
+  Tooltip,
 } from 'antd'
 import {
   BookOutlined,
-  SearchOutlined,
-  FileTextOutlined,
+  ClockCircleOutlined,
   CheckOutlined,
-  ScheduleOutlined,
-  FilterOutlined,
-  CloseCircleFilled,
+  CloseOutlined,
+  SearchOutlined,
+  EyeOutlined,
 } from '@ant-design/icons'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
-import './index.scss'
 import TemplatePreviewModal from './TemplatePreviewModal'
+import './index.scss'
 
-const { Text, Paragraph } = Typography
-const { Option } = Select
+const { Title, Text, Paragraph } = Typography
+const { Search } = Input
 
 const TemplateSelector = ({
   selectedCourses,
@@ -43,85 +36,73 @@ const TemplateSelector = ({
 }) => {
   const [templates, setTemplates] = useState([])
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState('all')
-
-  // State for filtering
   const [searchText, setSearchText] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState(null)
-
-  // State for pagination
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(6)
-
-  // State for template preview
-  const [previewVisible, setPreviewVisible] = useState(false)
+  const [previewModalVisible, setPreviewModalVisible] = useState(false)
   const [previewTemplate, setPreviewTemplate] = useState(null)
 
   // Fetch templates
   useEffect(() => {
     if (templateDrawerVisible) {
-      const fetchTemplates = async () => {
-        setLoading(true)
-        try {
-          setTimeout(() => {
-            // Generate a larger set of mock templates
-            const categories = [
-              'Engineering',
-              'Marketing',
-              'Sales',
-              'HR',
-              'Design',
-              'Product',
-              'Leadership',
-            ]
-
-            const mockTemplates = Array(20)
-              .fill()
-              .map((_, i) => {
-                const randomCategory =
-                  categories[Math.floor(Math.random() * categories.length)]
-                const courseCount = Math.floor(Math.random() * 8) + 3 // 3-10 courses
-
-                return {
-                  id: `template-${i + 1}`,
-                  title: `${randomCategory} ${['Onboarding', 'Training', 'Fundamentals', 'Advanced', 'Essentials'][Math.floor(Math.random() * 5)]} ${i + 1}`,
-                  description: `${['Standard', 'Core', 'Essential', 'Comprehensive', 'Basic'][Math.floor(Math.random() * 5)]} ${randomCategory.toLowerCase()} training for ${['new hires', 'experienced staff', 'managers', 'team members', 'specialists'][Math.floor(Math.random() * 5)]}.`,
-                  category: randomCategory,
-                  createdAt: new Date(
-                    Date.now() - Math.floor(Math.random() * 10000000000),
-                  ),
-                  popularity: Math.floor(Math.random() * 100),
-                  courses: Array(courseCount)
-                    .fill()
-                    .map((_, j) => ({
-                      id: Number(j + 1),
-                      title: `${randomCategory} Course ${j + 1}`,
-                      description: `Description for ${randomCategory} Course ${j + 1}`,
-                      category: randomCategory,
-                      duration: `${Math.floor(Math.random() * 5) + 1} hours`,
-                      position: j,
-                    })),
-                }
-              })
-
-            setTemplates(mockTemplates)
-            setLoading(false)
-          }, 1000)
-        } catch (error) {
-          console.error('Failed to load templates:', error)
-          setLoading(false)
-        }
-      }
-
       fetchTemplates()
-      setCurrentPage(1)
     }
   }, [templateDrawerVisible])
 
+  const fetchTemplates = async () => {
+    setLoading(true)
+    try {
+      setTimeout(() => {
+        const mockTemplates = Array(20)
+          .fill()
+          .map((_, i) => {
+            const courseCount = Math.floor(Math.random() * 5) + 2
+
+            return {
+              id: `template-${i + 1}`,
+              title: `Training Template ${i + 1}`,
+              description: `This template contains essential training materials for new employees. It covers fundamental skills and knowledge required for onboarding.`,
+              courses: Array(courseCount)
+                .fill()
+                .map((_, j) => ({
+                  id: `course-${i}-${j}`,
+                  title: `Course ${j + 1}`,
+                  description: `Description for Course ${j + 1}`,
+                  category: `Development`,
+                  duration: `${Math.floor(Math.random() * 5) + 1} hours`,
+                  position: j,
+                })),
+            }
+          })
+
+        setTemplates(mockTemplates)
+        setLoading(false)
+      }, 800)
+    } catch (error) {
+      console.error('Failed to load templates:', error)
+      setLoading(false)
+    }
+  }
+
+  const filteredTemplates = templates.filter(
+    (template) =>
+      searchText === '' ||
+      template.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchText.toLowerCase()),
+  )
+
+  // Check if a template is selected
   const isTemplateSelected = (templateId) => {
     return selectedTemplates.some((template) => template.id === templateId)
   }
 
+  // Calculate total hours from all courses
+  const calculateTotalHours = (courses) => {
+    return courses.reduce((total, course) => {
+      const match = course.duration?.match(/(\d+)/)
+      return total + (match ? parseInt(match[1], 10) : 0)
+    }, 0)
+  }
+
+  // Handle selecting a template
   const handleSelectTemplate = (template) => {
     if (!isTemplateSelected(template.id)) {
       setSelectedTemplates([...selectedTemplates, template])
@@ -137,6 +118,7 @@ const TemplateSelector = ({
     }
   }
 
+  // Handle removing a template
   const handleRemoveTemplate = (templateId) => {
     const templateToRemove = selectedTemplates.find((t) => t.id === templateId)
 
@@ -150,277 +132,162 @@ const TemplateSelector = ({
     }
   }
 
-  const showPreview = (template) => {
+  // Preview template details
+  const showTemplatePreview = (template) => {
     setPreviewTemplate(template)
-    setPreviewVisible(true)
+    setPreviewModalVisible(true)
   }
-
-  const closePreview = () => {
-    setPreviewVisible(false)
-  }
-
-  const getFilteredTemplates = () => {
-    let filtered = [...templates]
-
-    if (activeTab === 'applied') {
-      filtered = filtered.filter((t) => isTemplateSelected(t.id))
-    }
-
-    if (searchText) {
-      const lowerSearch = searchText.toLowerCase()
-      filtered = filtered.filter(
-        (t) =>
-          t.title.toLowerCase().includes(lowerSearch) ||
-          t.description.toLowerCase().includes(lowerSearch),
-      )
-    }
-
-    if (categoryFilter) {
-      filtered = filtered.filter((t) => t.category === categoryFilter)
-    }
-
-    return filtered
-  }
-
-  const getCategories = () => {
-    const categories = [...new Set(templates.map((t) => t.category))]
-    return categories
-  }
-
-  const filteredTemplates = getFilteredTemplates()
-  const paginatedTemplates = filteredTemplates.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  )
-
-  const tabItems = [
-    {
-      key: 'all',
-      label: 'All Templates',
-    },
-    {
-      key: 'applied',
-      label: (
-        <Badge count={selectedTemplates.length} size="small" offset={[10, 0]}>
-          Applied Templates
-        </Badge>
-      ),
-    },
-  ]
 
   return (
     <Drawer
-      title="Apply Template to Learning Path"
+      title={
+        <div className="drawer-title">
+          <span>Template Library</span>
+          {selectedTemplates.length > 0 && (
+            <Badge count={selectedTemplates.length} style={{ marginLeft: 8 }} />
+          )}
+        </div>
+      }
       placement="right"
       onClose={() => setTemplateDrawerVisible(false)}
       open={templateDrawerVisible}
-      width={800}
-      styles={{
-        body: {
-          paddingTop: 0,
-        },
-      }}
+      width={650}
+      footer={
+        <div className="drawer-footer">
+          <Button onClick={() => setTemplateDrawerVisible(false)}>
+            Cancel
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => setTemplateDrawerVisible(false)}
+            disabled={selectedTemplates.length === 0}
+          >
+            Apply Templates ({selectedTemplates.length})
+          </Button>
+        </div>
+      }
     >
-      <div className="template-selector">
-        {/* Search and Filter Controls */}
-        <div className="filter-controls">
-          <Row gutter={[16, 16]} align="middle">
-            <Col flex="auto">
-              <Input
-                placeholder="Search templates..."
-                prefix={<SearchOutlined />}
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                allowClear
-              />
-            </Col>
-
-            <Col>
-              <Select
-                placeholder="Filter by category"
-                style={{ width: '100%' }}
-                onChange={setCategoryFilter}
-                value={categoryFilter}
-                allowClear
-                suffixIcon={<FilterOutlined />}
-              >
-                {getCategories().map((category) => (
-                  <Option key={category} value={category}>
-                    {category}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-          </Row>
+      <div className="simplified-template-selector">
+        {/* Search box */}
+        <div className="template-search-container">
+          <Search
+            placeholder="Search templates..."
+            allowClear
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="template-search"
+            prefix={<SearchOutlined />}
+          />
         </div>
 
-        {/* Tabs Navigation - Updated to use items prop */}
-        <Tabs
-          activeKey={activeTab}
-          onChange={setActiveTab}
-          className="template-tabs"
-          items={tabItems}
-        />
-
-        {/* Template List */}
-        {loading ? (
-          <div className="template-loading">
-            <Spin size="large" />
-            <Text style={{ marginTop: 16 }}>Loading templates...</Text>
-          </div>
-        ) : (
-          <div className="template-list-wrapper">
+        {/* Templates List */}
+        <div className="templates-list-container">
+          {loading ? (
+            <div className="templates-loading">
+              <Spin size="large" />
+            </div>
+          ) : filteredTemplates.length === 0 ? (
+            <Empty description="No templates match your search" />
+          ) : (
             <List
-              className="template-scrollable-list"
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 1,
-                md: 2,
-                lg: 2,
-                xl: 2,
-                xxl: 2,
-              }}
-              dataSource={paginatedTemplates}
+              className="templates-list"
+              dataSource={filteredTemplates}
               renderItem={(template) => {
-                const selected = isTemplateSelected(template.id)
+                const isSelected = isTemplateSelected(template.id)
+                const totalHours = calculateTotalHours(template.courses)
 
                 return (
-                  <List.Item>
+                  <List.Item className="template-list-item">
                     <Card
-                      hoverable
-                      className={`template-card ${selected ? 'selected' : ''}`}
-                      onClick={() => showPreview(template)}
+                      className={`template-card ${isSelected ? 'selected' : ''}`}
+                      bodyStyle={{ padding: '12px 16px' }}
                     >
-                      {selected && (
-                        <div className="selected-badge">
-                          <CheckOutlined /> Applied
-                        </div>
-                      )}
-
-                      <div className="template-header">
-                        <div className="title-container">
-                          <FileTextOutlined className="template-icon" />
-                          <Tooltip title={template.title}>
-                            <div className="single-line-title">
+                      <div className="template-card-content">
+                        <div className="template-info">
+                          <div className="template-title-container">
+                            <Title level={5} className="template-title">
                               {template.title}
+                            </Title>
+
+                            <div className="template-actions">
+                              <Space>
+                                <Tooltip title="View Details">
+                                  <Button
+                                    type="text"
+                                    icon={<EyeOutlined />}
+                                    onClick={() =>
+                                      showTemplatePreview(template)
+                                    }
+                                    className="preview-btn"
+                                    size="small"
+                                  />
+                                </Tooltip>
+
+                                {isSelected ? (
+                                  <Button
+                                    danger
+                                    type="primary"
+                                    icon={<CloseOutlined />}
+                                    onClick={() =>
+                                      handleRemoveTemplate(template.id)
+                                    }
+                                    size="small"
+                                  >
+                                    Remove
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    type="primary"
+                                    icon={<CheckOutlined />}
+                                    onClick={() =>
+                                      handleSelectTemplate(template)
+                                    }
+                                    size="small"
+                                  >
+                                    Apply
+                                  </Button>
+                                )}
+                              </Space>
                             </div>
-                          </Tooltip>
+                          </div>
+
+                          <Paragraph
+                            ellipsis={{ rows: 2 }}
+                            className="template-description"
+                          >
+                            {template.description}
+                          </Paragraph>
+
+                          <div className="template-meta">
+                            <Space size="large">
+                              <div className="meta-item">
+                                <BookOutlined /> {template.courses.length}{' '}
+                                courses
+                              </div>
+                              <div className="meta-item">
+                                <ClockCircleOutlined /> {totalHours} hours
+                              </div>
+                            </Space>
+                          </div>
                         </div>
-                        <Tag
-                          color={CATEGORY_COLORS[template.category] || 'blue'}
-                          className="template-category"
-                        >
-                          {template.category}
-                        </Tag>
-                      </div>
-
-                      <Paragraph
-                        ellipsis={{
-                          rows: 2,
-                          expandable: false,
-                          tooltip: template.description,
-                        }}
-                        className="template-description"
-                      >
-                        {template.description}
-                      </Paragraph>
-
-                      <div className="template-meta">
-                        <Text type="secondary">
-                          <BookOutlined /> {template.courses.length} courses
-                        </Text>
-                        <Text type="secondary">
-                          <ScheduleOutlined />
-                          {template.courses.reduce((sum, course) => {
-                            const durationMatch =
-                              course.duration?.match(/(\d+)/)
-                            return (
-                              sum +
-                              (durationMatch
-                                ? parseInt(durationMatch[1], 10)
-                                : 0)
-                            )
-                          }, 0)}{' '}
-                          hours
-                        </Text>
-                      </div>
-
-                      <div className="template-actions">
-                        {selected ? (
-                          <Button
-                            danger
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleRemoveTemplate(template.id)
-                            }}
-                            icon={<CloseCircleFilled />}
-                          >
-                            Remove
-                          </Button>
-                        ) : (
-                          <Button
-                            type="primary"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleSelectTemplate(template)
-                            }}
-                            icon={<CheckOutlined />}
-                          >
-                            Apply
-                          </Button>
-                        )}
                       </div>
                     </Card>
                   </List.Item>
                 )
               }}
-              locale={{
-                emptyText: (
-                  <Empty
-                    description={
-                      <span>
-                        {activeTab === 'applied' &&
-                        selectedTemplates.length === 0
-                          ? 'No templates have been applied yet'
-                          : 'No templates found matching your criteria'}
-                      </span>
-                    }
-                  />
-                ),
-              }}
             />
-
-            {filteredTemplates.length > pageSize && (
-              <div className="template-pagination">
-                <Pagination
-                  current={currentPage}
-                  pageSize={pageSize}
-                  total={filteredTemplates.length}
-                  onChange={(page) => setCurrentPage(page)}
-                  showSizeChanger
-                  pageSizeOptions={['6', '12', '24']}
-                  onShowSizeChange={(current, size) => {
-                    setPageSize(size)
-                    setCurrentPage(1)
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Template Preview Modal */}
-        <TemplatePreviewModal
-          visible={previewVisible}
-          template={previewTemplate}
-          onCancel={closePreview}
-          onApply={handleSelectTemplate}
-          isSelected={
-            previewTemplate ? isTemplateSelected(previewTemplate.id) : false
-          }
-        />
+          )}
+        </div>
       </div>
+
+      <TemplatePreviewModal
+        visible={previewModalVisible}
+        template={previewTemplate}
+        onCancel={() => setPreviewModalVisible(false)}
+        isSelected={
+          previewTemplate ? isTemplateSelected(previewTemplate.id) : false
+        }
+      />
     </Drawer>
   )
 }

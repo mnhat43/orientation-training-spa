@@ -11,7 +11,6 @@ import {
   Row,
   Col,
   Statistic,
-  Progress,
   Empty,
   Space,
 } from 'antd'
@@ -32,7 +31,6 @@ const { Title, Text, Paragraph } = Typography
 const CourseDetailModal = ({ visible, course, onClose }) => {
   const [activeModuleIndex, setActiveModuleIndex] = useState(0)
 
-  // Generate sample modules if not provided
   const modules = course?.modules || [
     {
       id: 1,
@@ -229,12 +227,6 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
                   <Title level={5} className="course-modal-module-title">
                     {activeModuleIndex + 1}. {modules[activeModuleIndex].title}
                   </Title>
-                  <Progress
-                    percent={0}
-                    size="small"
-                    showInfo={false}
-                    className="course-modal-module-progress"
-                  />
                 </div>
 
                 <List

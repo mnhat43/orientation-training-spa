@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { Steps, Button, message, Alert, Modal } from 'antd'
+import React, { useState } from 'react'
+import { Steps, message, Modal, Row, Col, Tooltip } from 'antd'
 import {
   UserOutlined,
   FileSearchOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
   CheckCircleOutlined,
-  LeftOutlined,
-  RightOutlined,
 } from '@ant-design/icons'
-import BannerComponent from '@components/Banner'
 import './index.scss'
 import TraineeSelector from './components/StepTraineeSelector'
 import DesignPath from './components/StepDesignPath'
@@ -25,7 +22,6 @@ const TraineePathCreator = () => {
 
   const [submitting, setSubmitting] = useState(false)
 
-  // Handle path submission
   const handleSubmitPath = () => {
     if (!selectedTrainee) {
       message.error('Please select a trainee')
@@ -55,7 +51,6 @@ const TraineePathCreator = () => {
       onOk() {
         setSubmitting(true)
 
-        // In a real application, this would be an API call
         setTimeout(() => {
           setSubmitting(false)
           setCurrentStep(3)
@@ -76,7 +71,6 @@ const TraineePathCreator = () => {
     setSubmitting(false)
   }
 
-  // Step navigation
   const handleNext = () => {
     if (currentStep === 0 && !selectedTrainee) {
       message.warning('Please select a trainee first')
@@ -95,7 +89,26 @@ const TraineePathCreator = () => {
     setCurrentStep(currentStep - 1)
   }
 
-  // Render steps
+  const handleStepClick = (step) => {
+    if (step < currentStep || step === currentStep + 1) {
+      if (step === 1 && !selectedTrainee.id) {
+        message.warning('Please select a trainee first')
+        return
+      }
+
+      if (step === 2 && selectedCourses.length === 0) {
+        message.warning('Please add at least one course to the learning path')
+        return
+      }
+
+      if (step === 3 && currentStep !== 3) {
+        return
+      }
+
+      setCurrentStep(step)
+    }
+  }
+
   const renderTraineeSelector = () => {
     return (
       <TraineeSelector
@@ -109,7 +122,6 @@ const TraineePathCreator = () => {
   const renderDesignPath = () => {
     return (
       <DesignPath
-        selectedTrainee={selectedTrainee}
         selectedCourses={selectedCourses}
         setSelectedCourses={setSelectedCourses}
         onNext={handleNext}
@@ -167,19 +179,40 @@ const TraineePathCreator = () => {
 
   return (
     <div className="trainee-path-creator">
-      <div className="page-header-container">
-        <BannerComponent
-          title="Create Trainee Learning Path"
-          description="Design a personalized learning path for a trainee by applying a template and customizing the courses."
-        />
-      </div>
-
-      <div className="steps-header">
-        <Steps current={currentStep}>
-          {steps.map((item) => (
-            <Step key={item.title} title={item.title} icon={item.icon} />
-          ))}
-        </Steps>
+      <div className="steps-header-container">
+        <div className="steps-header">
+          <Row align="middle" justify="center">
+            <Col span={24}>
+              <Steps
+                current={currentStep}
+                onChange={handleStepClick}
+                className="custom-steps"
+                responsive={true}
+              >
+                {steps.map((item, index) => (
+                  <Step
+                    key={item.title}
+                    title={item.title}
+                    icon={item.icon}
+                    className={`step-item ${index < currentStep ? 'step-completed' : ''} ${index === currentStep ? 'step-active' : ''}`}
+                    description={
+                      index === 0 && selectedTrainee.name ? (
+                        <span className="step-description">
+                          {selectedTrainee.name}
+                        </span>
+                      ) : index === 1 && selectedCourses.length > 0 ? (
+                        <span className="step-description">
+                          {selectedCourses.length} courses
+                        </span>
+                      ) : null
+                    }
+                    disabled={index > currentStep + 1 || index === 3}
+                  />
+                ))}
+              </Steps>
+            </Col>
+          </Row>
+        </div>
       </div>
 
       <div className="steps-content">{steps[currentStep].content()}</div>

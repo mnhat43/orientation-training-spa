@@ -21,7 +21,7 @@
     &-content {
         max-width: $max-width;
         min-width: $min-width;
-        padding: 10px 15px 0 15px;
+        padding: 10px 15px 10px 15px;
         margin: 0 auto;
         margin-top: $layout-header-height; /* Add space for fixed header */
         min-height: calc(100vh - $layout-header-height) !important;

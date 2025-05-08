@@ -4,7 +4,7 @@
     min-width: $min-width;
     min-height: 100%;
     overflow-x: hidden;
-    padding: 10px;
+    // padding: 10px;
     background-color: #f7f9fc;
     box-sizing: border-box;
     margin: 0;
@@ -12,12 +12,10 @@
 
     .create-course-btn {
         background-color: #4caf50;
-        border-color: #4caf50;
         border-radius: 8px;
-        font-weight: 500;
         font-size: 16px;
-        height: 48px;
-        padding: 0 30px;
+        height: 36px;
+        padding: 0 18px;
         box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 
         &:hover {
@@ -30,11 +28,6 @@
         &:active {
             transform: translateY(0);
         }
-
-        &.header-btn {
-            height: 44px;
-            font-size: 15px;
-        }
     }
 
     .courses-filters {
@@ -44,15 +37,15 @@
         flex-wrap: wrap;
         gap: 12px;
         background: white;
-        padding: 20px;
+        padding: 10px;
         border-radius: 12px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 
         .search-input {
             flex: 1;
             min-width: 200px;
-            max-width: 500px;
-            height: 44px;
+            max-width: 400px;
+            height: 36px;
             font-size: 15px;
             border-radius: 8px;
 
@@ -64,16 +57,16 @@
         .category-filter {
             min-width: 180px;
             width: 220px;
-            height: 44px;
+            height: 36px;
             font-size: 15px;
             border-radius: 8px;
 
             .ant-select-selector {
-                height: 44px !important;
+                height: 36px !important;
                 padding: 0 16px !important;
 
                 .ant-select-selection-item {
-                    line-height: 42px !important;
+                    line-height: 36px !important;
                 }
             }
         }
@@ -117,10 +110,6 @@
                 p {
                     color: #8c8c8c;
                 }
-            }
-
-            .create-course-btn {
-                margin-top: 24px;
             }
         }
     }
