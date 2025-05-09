@@ -1,6 +1,10 @@
 import API from './axios.config'
 
 const trainee = {
+  getListTrainee: () => {
+    return API.post(`/user/list-trainee`)
+  },
+
   getTraineesByCourse: (courseId) => {
     return API.get(`/trainee/course/${courseId}`)
   },

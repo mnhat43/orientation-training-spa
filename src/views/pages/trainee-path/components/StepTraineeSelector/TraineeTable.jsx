@@ -43,8 +43,8 @@ const TraineeTable = ({ trainees, loading, setSelectedTrainee }) => {
     },
     {
       title: 'Join Date',
-      dataIndex: 'joinDate',
-      key: 'joinDate',
+      dataIndex: 'joinedDate',
+      key: 'joinedDate',
       width: '15%',
       ellipsis: true,
     },

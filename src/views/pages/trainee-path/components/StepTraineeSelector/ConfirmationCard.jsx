@@ -14,6 +14,16 @@ import './ConfirmationCard.scss'
 const { Title, Text } = Typography
 
 const ConfirmationCard = ({ selectedTrainee }) => {
+  const {
+    avatar,
+    fullname,
+    email,
+    phoneNumber,
+    birthday,
+    department,
+    gender,
+    joinedDate,
+  } = selectedTrainee
   return (
     <Card
       className="trainee-confirmation-card"
@@ -27,11 +37,11 @@ const ConfirmationCard = ({ selectedTrainee }) => {
             <Avatar
               size={100}
               icon={<UserOutlined />}
-              src={selectedTrainee.avatar || DefaultAvatar}
+              src={avatar || DefaultAvatar}
               className="trainee-avatar"
             />
             <Title level={5} className="trainee-name">
-              {selectedTrainee.fullname}
+              {fullname}
             </Title>
           </div>
         </Col>
@@ -51,7 +61,7 @@ const ConfirmationCard = ({ selectedTrainee }) => {
                     <Text type="secondary" className="info-label">
                       Email
                     </Text>
-                    <Text className="info-value">{selectedTrainee.email}</Text>
+                    <Text className="info-value">{email}</Text>
                   </div>
                 </div>
               </Col>
@@ -63,7 +73,7 @@ const ConfirmationCard = ({ selectedTrainee }) => {
                     <Text type="secondary" className="info-label">
                       Phone
                     </Text>
-                    <Text className="info-value">{selectedTrainee.phone}</Text>
+                    <Text className="info-value">{phoneNumber}</Text>
                   </div>
                 </div>
               </Col>
@@ -75,7 +85,7 @@ const ConfirmationCard = ({ selectedTrainee }) => {
                     <Text type="secondary" className="info-label">
                       Gender
                     </Text>
-                    <Text className="info-value">{selectedTrainee.gender}</Text>
+                    <Text className="info-value">{gender}</Text>
                   </div>
                 </div>
               </Col>
@@ -87,9 +97,7 @@ const ConfirmationCard = ({ selectedTrainee }) => {
                     <Text type="secondary" className="info-label">
                       Birthday
                     </Text>
-                    <Text className="info-value">
-                      {selectedTrainee.birthday}
-                    </Text>
+                    <Text className="info-value">{birthday}</Text>
                   </div>
                 </div>
               </Col>
@@ -109,9 +117,7 @@ const ConfirmationCard = ({ selectedTrainee }) => {
                     <Text type="secondary" className="info-label">
                       Department
                     </Text>
-                    <Text className="info-value">
-                      {selectedTrainee.department}
-                    </Text>
+                    <Text className="info-value">{department}</Text>
                   </div>
                 </div>
               </Col>
@@ -123,9 +129,7 @@ const ConfirmationCard = ({ selectedTrainee }) => {
                     <Text type="secondary" className="info-label">
                       Join Date
                     </Text>
-                    <Text className="info-value">
-                      {selectedTrainee.joinDate}
-                    </Text>
+                    <Text className="info-value">{joinedDate}</Text>
                   </div>
                 </div>
               </Col>
