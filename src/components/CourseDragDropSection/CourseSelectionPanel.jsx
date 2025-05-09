@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Card,
   Input,
@@ -9,6 +9,8 @@ import {
   Badge,
   Typography,
   Divider,
+  message,
+  List,
 } from 'antd'
 import {
   SearchOutlined,
@@ -17,11 +19,13 @@ import {
   ClockCircleOutlined,
   CheckCircleOutlined,
   MinusOutlined,
-  AppstoreOutlined,
   FileTextOutlined,
+  TagOutlined,
 } from '@ant-design/icons'
-import { MOCK_AVAILABLE_COURSES } from './mockData'
 import './CourseSelectionPanel.scss'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import courseApi from '@api/course'
+import { formatTime } from '@helpers/common'
 
 const { Option } = Select
 const { Paragraph } = Typography
@@ -34,14 +38,34 @@ const CourseSelectionPanel = ({
 }) => {
   const [searchText, setSearchText] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [availableCourses, setAvailableCourses] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const availableCourses = MOCK_AVAILABLE_COURSES
+  useEffect(() => {
+    fetchCourses()
+  }, [])
+
+  const fetchCourses = () => {
+    setLoading(true)
+    courseApi
+      .getListCourse()
+      .then((response) => {
+        if (response && response.data) {
+          setAvailableCourses(response.data.courses)
+        } else {
+          setAvailableCourses([])
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Error fetching courses:', error)
+        message.error('Failed to load courses')
+        setAvailableCourses([])
+        setLoading(false)
+      })
+  }
+
   const selectedCourseIds = selectedCourses.map((course) => course.id)
-
-  const categories = [
-    'all',
-    ...new Set(availableCourses.map((course) => course.category)),
-  ]
 
   const filteredCourses = availableCourses.filter((course) => {
     const matchesSearch =
@@ -103,31 +127,50 @@ const CourseSelectionPanel = ({
           />
 
           <Select
+            defaultValue="all"
             value={categoryFilter}
-            onChange={setCategoryFilter}
-            placeholder="Category"
+            onChange={(value) => setCategoryFilter(value)}
             className="filter-select"
             suffixIcon={<FilterOutlined />}
             size="middle"
           >
-            {categories.map((category) => (
-              <Option key={category} value={category}>
-                {category === 'all' ? 'All Categories' : category}
-              </Option>
-            ))}
+            <Option value="all">All Categories</Option>
+            <Option value="Onboarding">Onboarding Essentials</Option>
+            <Option value="Company">Company Policies</Option>
+            <Option value="Technical">Technical Skills</Option>
+            <Option value="Soft">Soft Skills</Option>
+            <Option value="Compliance">Compliance</Option>
           </Select>
         </div>
       </div>
 
       <div className="courses-list">
-        {filteredCourses.length > 0 ? (
-          <div className="course-grid">
-            {filteredCourses.map((course) => {
-              const isSelected = selectedCourseIds.includes(course.id)
+        <List
+          loading={loading}
+          dataSource={filteredCourses}
+          locale={{
+            emptyText: (
+              <Empty
+                description="No courses match your filters"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ),
+          }}
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 1,
+            md: 1,
+            lg: 1,
+            xl: 1,
+            xxl: 1,
+          }}
+          renderItem={(course) => {
+            const isSelected = selectedCourseIds.includes(course.id)
 
-              return (
+            return (
+              <List.Item>
                 <div
-                  key={course.id}
                   className={`course-item ${isSelected ? 'is-selected' : ''}`}
                 >
                   <div className="course-content">
@@ -151,12 +194,18 @@ const CourseSelectionPanel = ({
 
                     <div className="course-footer">
                       <div className="course-metadata">
-                        <Tag color="blue" className="category-tag">
-                          <AppstoreOutlined /> {course.category}
-                        </Tag>
-                        <span className="course-duration">
-                          <ClockCircleOutlined /> {course.duration} hours
-                        </span>
+                        <div className="course-category">
+                          <Tag
+                            color={CATEGORY_COLORS[course.category]}
+                            icon={<TagOutlined />}
+                          >
+                            {CATEGORIES[course.category]}
+                          </Tag>
+                        </div>
+                        <div className="course-duration">
+                          <ClockCircleOutlined />
+                          <span>{formatTime(course.duration)}</span>
+                        </div>
                       </div>
 
                       <Button
@@ -172,15 +221,10 @@ const CourseSelectionPanel = ({
                     </div>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        ) : (
-          <Empty
-            description="No courses match your filters"
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-          />
-        )}
+              </List.Item>
+            )
+          }}
+        />
       </div>
     </Card>
   )

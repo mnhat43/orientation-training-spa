@@ -8,7 +8,7 @@ import BasicInfoTemplate from './components/BasicInfoTemplate'
 import CourseDragDropSection from '@components/CourseDragDropSection'
 import './index.scss'
 
-import { MOCK_AVAILABLE_COURSES } from './mockData'
+import templatepath from '@api/templatepath'
 
 const { Content } = Layout
 
@@ -26,40 +26,28 @@ const TemplateFormPage = () => {
   useEffect(() => {
     if (isEditing) {
       setInitialLoading(true)
-      // Mock API call - replace with actual API
-      setTimeout(() => {
-        try {
-          // Mock template data
-          const templateData = {
-            id: parseInt(id),
-            name: 'Frontend Developer',
-            description: 'Learning path for frontend developers',
-            category: 'Web Development',
-            courses: 5,
-            duration: '8',
-            createdAt: '2023-05-15',
-            updatedAt: '2023-06-01',
-            createdBy: 'Admin User',
+      templatepath
+        .getTemplatePath({ id: parseInt(id) })
+        .then((response) => {
+          if (response && response.data && response.status == 1) {
+            const templateData = response.data
+
+            form.setFieldsValue({
+              name: templateData.name,
+              description: templateData.description,
+              category: templateData.category,
+            })
+
+            setSelectedCourses(templateData.course_list)
+            setInitialLoading(false)
+          } else {
+            throw new Error('Failed to load template data')
           }
-
-          // Set form values
-          form.setFieldsValue({
-            name: templateData.name,
-            description: templateData.description,
-            category: templateData.category,
-          })
-
-          // Set selected courses
-          setSelectedCourses(
-            MOCK_AVAILABLE_COURSES.slice(0, templateData.courses),
-          )
-
-          setInitialLoading(false)
-        } catch (err) {
+        })
+        .catch((err) => {
           setError('Failed to load template data. Please try again.')
           setInitialLoading(false)
-        }
-      }, 1000)
+        })
     }
   }, [id, isEditing, form])
 
@@ -73,7 +61,6 @@ const TemplateFormPage = () => {
     form
       .validateFields(['name', 'description', 'courseIds'])
       .then((values) => {
-        console.log('Form values:', values)
         if (selectedCourses.length === 0) {
           message.error('Please add at least one course to the template')
           return
@@ -81,31 +68,36 @@ const TemplateFormPage = () => {
 
         setLoading(true)
 
-        // Calculate duration based on courses
-        const totalWeeks = selectedCourses.reduce((total, course) => {
-          const weeks = parseInt(course.duration.split(' ')[0]) || 0
-          return total + weeks
-        }, 0)
-
-        // Prepare the complete form data
         const formData = {
-          ...values,
-          courses: selectedCourses.length,
-          courseData: selectedCourses,
-          id: isEditing ? parseInt(id) : undefined,
+          name: values.name,
+          description: values.description,
+          course_ids: selectedCourses.map((course) => course.id),
         }
 
-        // Simulate API call
-        setTimeout(() => {
-          if (isEditing) {
-            message.success('Template updated successfully')
-          } else {
-            message.success('Template created successfully')
-          }
+        const apiRequest = isEditing
+          ? templatepath.updateTemplatePath({ ...formData, id: parseInt(id) })
+          : templatepath.createTemplatePath(formData)
 
-          setLoading(false)
-          navigate('/templates')
-        }, 1000)
+        apiRequest
+          .then((response) => {
+            if (response && response.data && response.status == 1) {
+              if (isEditing) {
+                message.success('Template updated successfully')
+              } else {
+                message.success('Template created successfully')
+              }
+              navigate('/templates')
+            } else {
+              throw new Error('Failed to save template')
+            }
+          })
+          .catch((error) => {
+            console.error('Error saving template:', error)
+            message.error('Failed to save template. Please try again.')
+          })
+          .finally(() => {
+            setLoading(false)
+          })
       })
       .catch(() => {
         message.error('Please check all fields and try again')

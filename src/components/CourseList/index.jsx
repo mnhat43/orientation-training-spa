@@ -1,7 +1,9 @@
 import React from 'react'
 import { List, Card, Badge, Typography, Tag } from 'antd'
 import { ClockCircleOutlined } from '@ant-design/icons'
+import { formatTime } from '@helpers/common'
 import './index.scss'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
 
 const { Text, Paragraph } = Typography
 
@@ -43,13 +45,16 @@ const CourseList = ({ courses }) => {
 
             <div className="card-meta">
               <div className="meta-item">
-                <Tag color="blue" className="category-tag">
-                  {course.category}
+                <Tag
+                  color={CATEGORY_COLORS[course.category]}
+                  className="category-tag"
+                >
+                  {CATEGORIES[course.category]}
                 </Tag>
               </div>
               <div className="meta-item">
                 <ClockCircleOutlined />
-                <span>{course.duration}</span>
+                <span>{formatTime(course.duration)}</span>
               </div>
             </div>
           </div>

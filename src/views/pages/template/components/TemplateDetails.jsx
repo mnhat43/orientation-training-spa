@@ -1,48 +1,41 @@
-import React from 'react'
-import { Typography, Tag, Divider, Drawer } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Typography, Divider, Drawer, Spin, message } from 'antd'
 import { BookOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import CourseList from '@components/CourseList'
+import templatepath from '@api/templatepath'
 import './TemplateDetails.scss'
 
 const { Title, Paragraph } = Typography
 
-const mockCourses = [
-  {
-    id: 1,
-    title: 'Introduction to HTML & CSS',
-    description:
-      'Learn the fundamentals of HTML5 and CSS3 for web development.',
-    category: 'Web Development',
-    duration: '12 hours',
-  },
-  {
-    id: 2,
-    title: 'JavaScript Basics',
-    description:
-      'Understanding JavaScript syntax, variables, functions and control structures.',
-    category: 'Web Development',
-    duration: '16 hours',
-  },
-  {
-    id: 3,
-    title: 'React Fundamentals',
-    description: 'Learn component-based UI development with React.',
-    category: 'Web Development',
-    duration: '20 hours',
-  },
-  {
-    id: 4,
-    title: 'Responsive Web Design',
-    description: 'Create websites that look great on any device.',
-    category: 'Web Development',
-    duration: '8 hours',
-  },
-]
-
 const TemplateDetails = ({ template, drawerVisible, setDrawerVisible }) => {
-  if (!template) return null
+  const [detailedTemplate, setDetailedTemplate] = useState(null)
+  const [coursesList, setCoursesList] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  const courses = mockCourses
+  useEffect(() => {
+    if (template && drawerVisible) {
+      fetchTemplateDetails(template.id)
+    }
+  }, [template, drawerVisible])
+
+  const fetchTemplateDetails = (id) => {
+    setLoading(true)
+    templatepath
+      .getTemplatePath({ id })
+      .then((response) => {
+        if (response && response.data) {
+          setCoursesList(response.data.course_list)
+          setDetailedTemplate(response.data)
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Error fetching template details:', error)
+        setLoading(false)
+      })
+  }
+
+  if (!template) return null
 
   return (
     <Drawer
@@ -77,12 +70,19 @@ const TemplateDetails = ({ template, drawerVisible, setDrawerVisible }) => {
           <div className="content-section courses-section">
             <div className="section-header">
               <Title level={5}>
-                <BookOutlined /> Courses ({courses.length})
+                <BookOutlined /> Courses{' '}
+                {coursesList ? `(${coursesList.length})` : ''}
               </Title>
             </div>
 
             <div className="courses-list-container">
-              <CourseList courses={courses} />
+              {loading ? (
+                <div className="loading-container">
+                  <Spin tip="Loading courses..." />
+                </div>
+              ) : (
+                <CourseList courses={coursesList || []} />
+              )}
             </div>
           </div>
         </div>

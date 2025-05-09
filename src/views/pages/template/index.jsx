@@ -10,9 +10,6 @@ import {
   Tooltip,
   Tag,
   Modal,
-  Dropdown,
-  Menu,
-  Divider,
 } from 'antd'
 import {
   PlusOutlined,
@@ -24,7 +21,9 @@ import {
   FileTextOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
+import templatepath from '@api/templatepath'
 import TemplateDetails from './components/TemplateDetails'
+import { formatTime } from '@helpers/common'
 import './index.scss'
 
 const { Title, Text } = Typography
@@ -52,91 +51,21 @@ const TemplatePage = () => {
 
   const fetchTemplates = () => {
     setLoading(true)
-    setTimeout(() => {
-      setTemplates([
-        {
-          id: 1,
-          name: 'Frontend Developer',
-          description:
-            'Comprehensive learning path for frontend developers covering HTML, CSS, JavaScript, and modern frameworks.',
-          courses: 5,
-          duration: 8,
-        },
-        {
-          id: 2,
-          name: 'Backend Developer',
-          description:
-            'Complete training for backend development skills including APIs, databases, and server architecture.',
-          courses: 7,
-          duration: 10,
-        },
-        {
-          id: 3,
-          name: 'Full Stack Developer',
-          description:
-            'End-to-end web development training covering both frontend and backend technologies.',
-          courses: 12,
-          duration: 16,
-        },
-        {
-          id: 4,
-          name: 'DevOps Engineer',
-          description:
-            'Training for DevOps practices, CI/CD pipelines, and cloud infrastructure management.',
-          courses: 8,
-          duration: 12,
-        },
-        {
-          id: 5,
-          name: 'Data Scientist',
-          description:
-            'Comprehensive data science curriculum covering statistics, machine learning, and data visualization.',
-          courses: 10,
-          duration: 14,
-        },
-        {
-          id: 6,
-          name: 'Mobile App Developer',
-          description:
-            'Training for iOS and Android application development using React Native.',
-          courses: 6,
-          duration: 9,
-        },
-        {
-          id: 7,
-          name: 'UI/UX Designer',
-          description:
-            'Design principles, user research, wireframing, and prototyping for creating effective user interfaces.',
-          courses: 9,
-          duration: 11,
-        },
-        {
-          id: 8,
-          name: 'QA Engineer',
-          description:
-            'Quality assurance methodologies, test planning, and automation frameworks.',
-          courses: 7,
-          duration: 9,
-        },
-        {
-          id: 9,
-          name: 'Project Manager',
-          description:
-            'Project management methodologies, team leadership, and resource planning.',
-          courses: 8,
-          duration: 10,
-        },
-        {
-          id: 10,
-          name: 'Cybersecurity Specialist',
-          description:
-            'Network security, penetration testing, and security compliance.',
-          courses: 11,
-          duration: 14,
-        },
-      ])
-      setLoading(false)
-    }, 1000)
+    templatepath
+      .getTemplatePathList()
+      .then((response) => {
+        if (response && response.data) {
+          setTemplates(response.data)
+        } else {
+          setTemplates([])
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Error fetching templates:', error)
+        setTemplates([])
+        setLoading(false)
+      })
   }
 
   const filteredTemplates = templates.filter(
@@ -169,11 +98,26 @@ const TemplatePage = () => {
       cancelText: 'Cancel',
       onOk() {
         setLoading(true)
-        setTimeout(() => {
-          setTemplates(templates.filter((item) => item.id !== id))
-          message.success('Template deleted successfully')
-          setLoading(false)
-        }, 500)
+        templatepath
+          .deleteTemplatePath({ id: parseInt(id) })
+          .then((response) => {
+            if (response && response.status === 1) {
+              setTemplates(templates.filter((item) => item.id !== id))
+              message.success('Template deleted successfully')
+            } else {
+              message.error(
+                'Failed to delete template: ' +
+                  (response?.message || 'Unknown error'),
+              )
+            }
+          })
+          .catch((error) => {
+            console.error('Error deleting template:', error)
+            message.error('Failed to delete template')
+          })
+          .finally(() => {
+            setLoading(false)
+          })
       },
     })
   }
@@ -189,8 +133,9 @@ const TemplatePage = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 300,
+      width: 350,
       ellipsis: true,
+      align: 'left',
       render: (text, record) => (
         <a className="template-name-link" onClick={() => handleView(record)}>
           {text}
@@ -202,15 +147,17 @@ const TemplatePage = () => {
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
+      align: 'left',
     },
     {
       title: 'Courses',
-      dataIndex: 'courses',
-      key: 'courses',
+      dataIndex: 'course_ids',
+      key: 'course_ids',
       width: 100,
-      render: (text) => (
+      align: 'center',
+      render: (course_ids) => (
         <Tag color="blue" className="courses-tag">
-          <BookOutlined /> {text}
+          <BookOutlined /> {course_ids.length}
         </Tag>
       ),
     },
@@ -219,9 +166,10 @@ const TemplatePage = () => {
       dataIndex: 'duration',
       key: 'duration',
       width: 100,
-      render: (text) => (
+      align: 'center',
+      render: (duration) => (
         <span className="duration-text">
-          <ClockCircleOutlined /> {text} hours
+          <ClockCircleOutlined /> {formatTime(duration)}
         </span>
       ),
     },

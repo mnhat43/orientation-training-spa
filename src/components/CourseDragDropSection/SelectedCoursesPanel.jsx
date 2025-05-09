@@ -6,14 +6,16 @@ import {
   DragOutlined,
   BookOutlined,
   ClockCircleOutlined,
+  TagOutlined,
 } from '@ant-design/icons'
 import { Draggable, DragDropContext } from 'react-beautiful-dnd'
 import StrictModeDroppable from './StrictModeDroppable'
 import { calculateTotalHours } from '@helpers/common'
 import './SelectedCoursesPanel.scss'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import { formatTime } from '@helpers/common'
 
 const SelectedCoursesPanel = ({ selectedCourses, setSelectedCourses }) => {
-  console.log('SelectedCoursesPanel', selectedCourses)
   const totalHours = calculateTotalHours(selectedCourses)
 
   const handleRemoveCourse = (courseId) => {
@@ -88,12 +90,20 @@ const SelectedCoursesPanel = ({ selectedCourses, setSelectedCourses }) => {
                           >
                             <div className="course-order">{index + 1}</div>
                             <div className="course-content">
-                              <div className="course-title">
-                                <span>{course.title}</span>
-                                <Tag color="blue">{course.category}</Tag>
-                              </div>
-                              <div className="course-duration">
-                                <ClockCircleOutlined /> {course.duration} hours
+                              <div className="course-title">{course.title}</div>
+                              <div className="course-metadata">
+                                <div className="course-category">
+                                  <Tag
+                                    color={CATEGORY_COLORS[course.category]}
+                                    icon={<TagOutlined />}
+                                  >
+                                    {CATEGORIES[course.category]}
+                                  </Tag>
+                                </div>
+                                <div className="course-duration">
+                                  <ClockCircleOutlined />
+                                  <span>{formatTime(course.duration)}</span>
+                                </div>
                               </div>
                             </div>
                             <Button
@@ -131,7 +141,9 @@ const SelectedCoursesPanel = ({ selectedCourses, setSelectedCourses }) => {
                 <div className="summary-item">
                   <ClockCircleOutlined className="summary-icon" />
                   <span className="summary-text">
-                    {totalHours > 0 ? `${totalHours} hours` : 'No duration'}
+                    {totalHours > 0
+                      ? `${formatTime(totalHours)}`
+                      : 'No duration'}
                   </span>
                 </div>
               </Space>
