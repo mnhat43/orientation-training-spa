@@ -43,33 +43,31 @@ const TemplateSelector = ({
   const [previewTemplate, setPreviewTemplate] = useState(null)
   const [previewLoading, setPreviewLoading] = useState(false)
 
-  // Fetch templates
   useEffect(() => {
+    const fetchTemplates = () => {
+      setLoading(true)
+
+      apiTemplatepath
+        .getTemplatePathList()
+        .then((response) => {
+          if (response && response.data && response.status == 1) {
+            setTemplates(response.data)
+          } else {
+            setTemplates([])
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to load templates:', error)
+          setTemplates([])
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
     if (templateDrawerVisible) {
       fetchTemplates()
     }
   }, [templateDrawerVisible])
-
-  const fetchTemplates = () => {
-    setLoading(true)
-
-    apiTemplatepath
-      .getTemplatePathList()
-      .then((response) => {
-        if (response && response.data && response.status == 1) {
-          setTemplates(response.data)
-        } else {
-          setTemplates([])
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to load templates:', error)
-        setTemplates([])
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
 
   const filteredTemplates = templates.filter(
     (template) =>
@@ -86,23 +84,35 @@ const TemplateSelector = ({
     if (!isTemplateSelected(template.id)) {
       setSelectedTemplates([...selectedTemplates, template])
 
-      const newCourses = template.course_ids.map((courseId, index) => ({
-        id: courseId,
-        title: `Course ${courseId}`,
-        description: `Description for Course ${courseId}`,
-        category: 'Development',
-        duration: Math.floor(Math.random() * 3600) + 1800,
-        position: index,
-      }))
+      apiTemplatepath
+        .getTemplatePath({ id: template.id })
+        .then((response) => {
+          if (
+            response &&
+            response.status === 1 &&
+            response.data &&
+            response.data.course_list
+          ) {
+            const templateCourses = response.data.course_list
 
-      const filteredNewCourses = newCourses.filter(
-        (newCourse) =>
-          !selectedCourses.some((course) => course.id === newCourse.id),
-      )
+            const filteredNewCourses = templateCourses.filter(
+              (newCourse) =>
+                !selectedCourses.some((course) => course.id === newCourse.id),
+            )
 
-      if (filteredNewCourses.length > 0) {
-        setSelectedCourses([...selectedCourses, ...filteredNewCourses])
-      }
+            if (filteredNewCourses.length > 0) {
+              setSelectedCourses([...selectedCourses, ...filteredNewCourses])
+            }
+          } else {
+            console.error(
+              'Failed to get template courses:',
+              response?.message || 'Unknown error',
+            )
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching template courses:', error)
+        })
     }
   }
 
@@ -119,7 +129,6 @@ const TemplateSelector = ({
     }
   }
 
-  // Preview template details with API call
   const showTemplatePreview = (template) => {
     setPreviewLoading(true)
     setPreviewModalVisible(true)
@@ -130,7 +139,6 @@ const TemplateSelector = ({
         if (response && response.status === 1 && response.data) {
           setPreviewTemplate(response.data)
         } else {
-          // Fallback to basic template data if full data can't be loaded
           setPreviewTemplate(template)
           console.error(
             'Failed to load template details:',
@@ -140,7 +148,7 @@ const TemplateSelector = ({
       })
       .catch((error) => {
         console.error('Error fetching template details:', error)
-        setPreviewTemplate(template) // Fallback to basic data
+        setPreviewTemplate(template)
       })
       .finally(() => {
         setPreviewLoading(false)
@@ -177,7 +185,6 @@ const TemplateSelector = ({
       }
     >
       <div className="simplified-template-selector">
-        {/* Search box */}
         <div className="template-search-container">
           <Search
             placeholder="Search templates..."
@@ -189,7 +196,6 @@ const TemplateSelector = ({
           />
         </div>
 
-        {/* Templates List */}
         <div className="templates-list-container">
           {loading ? (
             <div className="templates-loading">
