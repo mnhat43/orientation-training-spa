@@ -1,12 +1,12 @@
 import React, { memo } from 'react'
 import PropTypes from 'prop-types'
-import { Card, Row, Col, Alert, Typography, Button } from 'antd'
-import { RocketOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { Row, Col, Typography, Card } from 'antd'
 import CourseTimeline from './components/CourseTimeline'
 import AssignmentDetails from './components/AssignmentDetails'
 import './index.scss'
+import CourseList from '@components/CourseList'
 
-const { Text } = Typography
+const { Title } = Typography
 
 const ReviewPath = ({
   selectedTrainee,
@@ -29,27 +29,27 @@ const ReviewPath = ({
   }
 
   return (
-    <>
-      <Row gutter={24}>
-        <Col span={16}>
-          <CourseTimeline
-            courses={selectedCourses}
-            totalDuration={getTotalDuration()}
-          />
-        </Col>
+    <Row gutter={24}>
+      <Col span={16}>
+        <Card className="review-card">
+          <Title level={4} className="timeline-title">
+            Learning Path Overview
+          </Title>
+          <CourseList courses={selectedCourses} />
+        </Card>
+      </Col>
 
-        <Col span={8}>
-          <AssignmentDetails
-            trainee={selectedTrainee}
-            coursesCount={selectedCourses.length}
-            totalDuration={getTotalDuration()}
-            onSubmitPath={onSubmitPath}
-            submitting={submitting}
-            onPrev={onPrev}
-          />
-        </Col>
-      </Row>
-    </>
+      <Col span={8}>
+        <AssignmentDetails
+          trainee={selectedTrainee}
+          coursesCount={selectedCourses.length}
+          totalDuration={getTotalDuration()}
+          onSubmitPath={onSubmitPath}
+          submitting={submitting}
+          onPrev={onPrev}
+        />
+      </Col>
+    </Row>
   )
 }
 

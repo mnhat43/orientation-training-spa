@@ -9,11 +9,14 @@ const course = {
     const url = '/course/get-course-list'
     return API.post(url, params)
   },
+  getCourseDetail: (id) => {
+    const url = '/course/get-course-detail'
+    return API.post(url, id)
+  },
   deleteCourse: (id) => {
     const url = '/course/delete-course'
     return API.post(url, id)
-  }
+  },
 }
-
 
 export default course

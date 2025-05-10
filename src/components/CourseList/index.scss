@@ -61,6 +61,9 @@
 
             .card-header {
                 margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
 
                 .course-title {
                     font-size: 14px;

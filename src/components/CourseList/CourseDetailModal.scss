@@ -1,0 +1,210 @@
+.course-detail-modal {
+    .ant-modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-modal-body {
+        padding: 0;
+    }
+
+    .course-detail-content {
+        display: flex;
+        flex-direction: column;
+        height: 85vh; // Increased from 80vh
+        max-height: 750px; // Increased from 700px
+    }
+
+    .course-header {
+        background: linear-gradient(135deg, #1890ff10, #1890ff05);
+        padding: 14px 24px 12px; // Further reduced padding
+        border-bottom: 1px solid #f0f0f0;
+        flex-shrink: 0;
+
+        .course-title {
+            margin-bottom: 12px; // Reduced margin
+            color: #333;
+            font-weight: 600;
+            font-size: 20px; // Smaller font size
+        }
+
+        .course-meta-info {
+            margin-bottom: 0;
+            flex-wrap: wrap;
+
+            .category-tag {
+                font-weight: 500;
+                border: none;
+                padding: 2px 10px;
+            }
+
+            .meta-icon {
+                margin-right: 4px;
+            }
+
+            .duration-info,
+            .modules-info,
+            .items-info {
+                color: #666;
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+            }
+        }
+    }
+
+    .course-description {
+        padding: 8px 24px 0; // Further reduced padding
+        flex-shrink: 0; // Prevent description from shrinking
+        max-height: 120px; // Limit description height
+
+        .divider-title {
+            font-size: 15px; // Smaller font
+            font-weight: 500;
+            color: #555;
+        }
+
+        .description-text {
+            font-size: 13px; // Smaller font
+            color: #666;
+            line-height: 1.5; // Tighter line height
+            margin-bottom: 4px; // Reduced margin
+        }
+    }
+
+    // Container for the scrollable modules section - giving it even more space
+    .course-modules-container {
+        display: flex;
+        flex-direction: column;
+        padding: 0 24px;
+        flex: 3; // Increased from 2 to give even more weight to this section
+        flex-shrink: 1;
+        overflow: hidden;
+
+        .divider-title {
+            font-size: 15px; // Smaller font
+            font-weight: 500;
+            color: #555;
+        }
+    }
+
+    // This is the scrollable area
+    .course-modules {
+        overflow-y: auto;
+        padding-right: 4px; // Space for scrollbar
+        flex: 1;
+
+        .modules-collapse {
+            background: transparent;
+
+            .module-panel {
+                border: 1px solid #f0f0f0;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                background: white;
+                overflow: hidden;
+
+                .ant-collapse-header {
+                    padding: 10px 16px; // Slightly reduced padding
+                    background: #fafafa;
+                }
+
+                .module-header {
+                    .module-title {
+                        font-size: 15px;
+                        color: #333;
+                    }
+
+                    .module-meta {
+                        font-size: 13px;
+                    }
+                }
+            }
+
+            .ant-collapse-content-box {
+                padding: 0;
+            }
+        }
+
+        .module-item {
+            padding: 14px 16px; // Increased vertical padding slightly
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #f9f9f9;
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .item-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start; // Changed from center to allow for more content
+
+                .item-name {
+                    font-size: 14px;
+                    color: #333; // Darker color for better readability
+                    font-weight: 500; // Slightly bolder
+                    margin-right: 10px; // Space for duration
+                    line-height: 1.4; // Better line height for readability
+                }
+
+                .item-duration {
+                    font-size: 12px;
+                    white-space: nowrap;
+                    background: #f0f0f0;
+                    padding: 2px 8px;
+                    border-radius: 10px;
+                    color: #555;
+                }
+            }
+
+            .item-meta {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 6px; // Increased from 4px
+
+                .item-type-icon {
+                    margin-right: 4px;
+                }
+
+                .item-type-tag {
+                    text-transform: capitalize;
+                    border-radius: 4px;
+                    padding: 0 8px;
+                    height: 22px;
+                    line-height: 22px;
+                    font-size: 12px;
+                }
+
+                .item-status {
+                    margin-left: auto;
+                    font-size: 12px;
+                }
+            }
+
+            .item-progress {
+                margin-top: 8px;
+                height: 4px;
+            }
+        }
+    }
+
+    .ant-divider {
+        margin: 12px 0; // Reduced margins
+    }
+
+    .modal-footer {
+        padding: 12px 24px; // Reduced padding
+        border-top: 1px solid #f0f0f0;
+        text-align: right;
+        background: #fafafa;
+        flex-shrink: 0; // Prevent footer from shrinking
+    }
+}
