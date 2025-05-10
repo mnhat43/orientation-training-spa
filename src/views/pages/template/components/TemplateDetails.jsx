@@ -39,52 +39,39 @@ const TemplateDetails = ({ template, drawerVisible, setDrawerVisible }) => {
 
   return (
     <Drawer
-      title={null}
+      title={<Title level={4}>{template.name}</Title>}
       placement="right"
-      closable={true}
+      closable={false}
       onClose={() => setDrawerVisible(false)}
       visible={drawerVisible}
       width={450}
       className="template-drawer"
-      styles={{ header: { display: 'none' } }}
     >
-      <div className="template-details-container">
-        <div className="detail-header">
-          <Title level={4}>{template.name}</Title>
-        </div>
+      <div className="description-section">
+        <Title level={5}>
+          <InfoCircleOutlined /> Description
+        </Title>
+        <Paragraph className="description-text">
+          {template.description || 'No description provided.'}
+        </Paragraph>
+      </div>
 
-        <div className="detail-content">
-          <div className="content-section description-section">
-            <div className="section-header">
-              <Title level={5}>
-                <InfoCircleOutlined /> Description
-              </Title>
+      <Divider style={{ margin: '12px 0' }} />
+
+      <div className="courses-section">
+        <Title level={5} className="section-header">
+          <BookOutlined /> Courses{' '}
+          {coursesList ? `(${coursesList.length})` : ''}
+        </Title>
+
+        <div className="courses-list-container">
+          {loading ? (
+            <div className="loading-container">
+              <Spin tip="Loading courses..." />
             </div>
-            <Paragraph className="description-text">
-              {template.description || 'No description provided.'}
-            </Paragraph>
-          </div>
-
-          <Divider style={{ margin: '12px 0' }} />
-
-          <div className="content-section courses-section">
-            <div className="section-header">
-              <Title level={5}>
-                <BookOutlined /> Courses{' '}
-                {coursesList ? `(${coursesList.length})` : ''}
-              </Title>
-            </div>
-
-            <div className="courses-list-container">
-              {loading ? (
-                <div className="loading-container">
-                  <Spin tip="Loading courses..." />
-                </div>
-              ) : (
-                <CourseList courses={coursesList || []} />
-              )}
-            </div>
-          </div>
+          ) : (
+            <CourseList courses={coursesList || []} />
+          )}
         </div>
       </div>
     </Drawer>

@@ -20,10 +20,12 @@ import {
   SearchOutlined,
   EyeOutlined,
 } from '@ant-design/icons'
+import { formatTime } from '@helpers/common'
+import apiTemplatepath from '@api/templatepath'
 import TemplatePreviewModal from './TemplatePreviewModal'
 import './index.scss'
 
-const { Title, Text, Paragraph } = Typography
+const { Title, Paragraph } = Typography
 const { Search } = Input
 
 const TemplateSelector = ({
@@ -39,6 +41,7 @@ const TemplateSelector = ({
   const [searchText, setSearchText] = useState('')
   const [previewModalVisible, setPreviewModalVisible] = useState(false)
   const [previewTemplate, setPreviewTemplate] = useState(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
 
   // Fetch templates
   useEffect(() => {
@@ -47,95 +50,101 @@ const TemplateSelector = ({
     }
   }, [templateDrawerVisible])
 
-  const fetchTemplates = async () => {
+  const fetchTemplates = () => {
     setLoading(true)
-    try {
-      setTimeout(() => {
-        const mockTemplates = Array(20)
-          .fill()
-          .map((_, i) => {
-            const courseCount = Math.floor(Math.random() * 5) + 2
 
-            return {
-              id: `template-${i + 1}`,
-              title: `Training Template ${i + 1}`,
-              description: `This template contains essential training materials for new employees. It covers fundamental skills and knowledge required for onboarding.`,
-              courses: Array(courseCount)
-                .fill()
-                .map((_, j) => ({
-                  id: `course-${i}-${j}`,
-                  title: `Course ${j + 1}`,
-                  description: `Description for Course ${j + 1}`,
-                  category: `Development`,
-                  duration: `${Math.floor(Math.random() * 5) + 1} hours`,
-                  position: j,
-                })),
-            }
-          })
-
-        setTemplates(mockTemplates)
+    apiTemplatepath
+      .getTemplatePathList()
+      .then((response) => {
+        if (response && response.data && response.status == 1) {
+          setTemplates(response.data)
+        } else {
+          setTemplates([])
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to load templates:', error)
+        setTemplates([])
+      })
+      .finally(() => {
         setLoading(false)
-      }, 800)
-    } catch (error) {
-      console.error('Failed to load templates:', error)
-      setLoading(false)
-    }
+      })
   }
 
   const filteredTemplates = templates.filter(
     (template) =>
       searchText === '' ||
-      template.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      template.name.toLowerCase().includes(searchText.toLowerCase()) ||
       template.description.toLowerCase().includes(searchText.toLowerCase()),
   )
 
-  // Check if a template is selected
   const isTemplateSelected = (templateId) => {
     return selectedTemplates.some((template) => template.id === templateId)
   }
 
-  // Calculate total hours from all courses
-  const calculateTotalHours = (courses) => {
-    return courses.reduce((total, course) => {
-      const match = course.duration?.match(/(\d+)/)
-      return total + (match ? parseInt(match[1], 10) : 0)
-    }, 0)
-  }
-
-  // Handle selecting a template
   const handleSelectTemplate = (template) => {
     if (!isTemplateSelected(template.id)) {
       setSelectedTemplates([...selectedTemplates, template])
 
-      const newCourses = template.courses.filter(
-        (templateCourse) =>
-          !selectedCourses.some((course) => course.id === templateCourse.id),
+      const newCourses = template.course_ids.map((courseId, index) => ({
+        id: courseId,
+        title: `Course ${courseId}`,
+        description: `Description for Course ${courseId}`,
+        category: 'Development',
+        duration: Math.floor(Math.random() * 3600) + 1800,
+        position: index,
+      }))
+
+      const filteredNewCourses = newCourses.filter(
+        (newCourse) =>
+          !selectedCourses.some((course) => course.id === newCourse.id),
       )
 
-      if (newCourses.length > 0) {
-        setSelectedCourses([...selectedCourses, ...newCourses])
+      if (filteredNewCourses.length > 0) {
+        setSelectedCourses([...selectedCourses, ...filteredNewCourses])
       }
     }
   }
 
-  // Handle removing a template
   const handleRemoveTemplate = (templateId) => {
     const templateToRemove = selectedTemplates.find((t) => t.id === templateId)
 
     if (templateToRemove) {
       setSelectedTemplates(selectedTemplates.filter((t) => t.id !== templateId))
 
-      const courseIdsToRemove = templateToRemove.courses.map((c) => c.id)
+      const courseIdsToRemove = templateToRemove.course_ids
       setSelectedCourses(
         selectedCourses.filter((c) => !courseIdsToRemove.includes(c.id)),
       )
     }
   }
 
-  // Preview template details
+  // Preview template details with API call
   const showTemplatePreview = (template) => {
-    setPreviewTemplate(template)
+    setPreviewLoading(true)
     setPreviewModalVisible(true)
+
+    apiTemplatepath
+      .getTemplatePath({ id: template.id })
+      .then((response) => {
+        if (response && response.status === 1 && response.data) {
+          setPreviewTemplate(response.data)
+        } else {
+          // Fallback to basic template data if full data can't be loaded
+          setPreviewTemplate(template)
+          console.error(
+            'Failed to load template details:',
+            response?.message || 'Unknown error',
+          )
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching template details:', error)
+        setPreviewTemplate(template) // Fallback to basic data
+      })
+      .finally(() => {
+        setPreviewLoading(false)
+      })
   }
 
   return (
@@ -194,7 +203,6 @@ const TemplateSelector = ({
               dataSource={filteredTemplates}
               renderItem={(template) => {
                 const isSelected = isTemplateSelected(template.id)
-                const totalHours = calculateTotalHours(template.courses)
 
                 return (
                   <List.Item className="template-list-item">
@@ -206,7 +214,7 @@ const TemplateSelector = ({
                         <div className="template-info">
                           <div className="template-title-container">
                             <Title level={5} className="template-title">
-                              {template.title}
+                              {template.name}
                             </Title>
 
                             <div className="template-actions">
@@ -261,11 +269,12 @@ const TemplateSelector = ({
                           <div className="template-meta">
                             <Space size="large">
                               <div className="meta-item">
-                                <BookOutlined /> {template.courses.length}{' '}
+                                <BookOutlined /> {template.course_ids.length}{' '}
                                 courses
                               </div>
                               <div className="meta-item">
-                                <ClockCircleOutlined /> {totalHours} hours
+                                <ClockCircleOutlined />{' '}
+                                {formatTime(template.duration)}
                               </div>
                             </Space>
                           </div>
@@ -283,10 +292,15 @@ const TemplateSelector = ({
       <TemplatePreviewModal
         visible={previewModalVisible}
         template={previewTemplate}
-        onCancel={() => setPreviewModalVisible(false)}
+        onCancel={() => {
+          setPreviewModalVisible(false)
+          setPreviewTemplate(null)
+        }}
         isSelected={
           previewTemplate ? isTemplateSelected(previewTemplate.id) : false
         }
+        formatTime={formatTime}
+        loading={previewLoading}
       />
     </Drawer>
   )

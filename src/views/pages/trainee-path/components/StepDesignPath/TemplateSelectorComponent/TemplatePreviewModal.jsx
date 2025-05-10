@@ -1,48 +1,52 @@
-import React, { useState } from 'react'
-import { Modal, Button, Typography, Tag, List, Badge, Tooltip } from 'antd'
+import React, { useEffect } from 'react'
+import { Modal, Typography, Badge, Spin, Empty, Row, Col } from 'antd'
 import {
   ClockCircleOutlined,
-  CheckOutlined,
   BookOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons'
-import { CATEGORY_COLORS } from '@constants/categories'
 import './TemplatePreviewModal.scss'
 import CourseList from '@components/CourseList'
 
-const { Text, Title, Paragraph } = Typography
+const { Title, Paragraph } = Typography
 
-const TemplatePreviewModal = ({ visible, template, onCancel, isSelected }) => {
-  const [showDesc, setShowDesc] = useState(false)
-
+const TemplatePreviewModal = ({
+  visible,
+  template,
+  onCancel,
+  isSelected,
+  formatTime,
+  loading,
+}) => {
   if (!template) return null
 
-  // Calculate total duration
-  const totalDuration = template.courses.reduce((sum, course) => {
-    const durationMatch = course.duration?.match(/(\d+)/)
-    return sum + (durationMatch ? parseInt(durationMatch[1], 10) : 0)
-  }, 0)
+  const hasDetailedData = !!template.course_list
 
   return (
     <Modal
       title={null}
       open={visible}
       onCancel={onCancel}
-      width={650}
+      width={550}
       centered
-      styles={{
-        body: { padding: 0, overflow: 'hidden', borderRadius: '6px' },
-      }}
       footer={null}
-      className="template-preview-modal-compact"
+      className="template-preview-modal"
     >
-      <div className="template-container">
-        {/* Header */}
-        <div className="template-header-redesign">
-          <div className="header-top">
-            <div className="title-section">
-              <Title level={4} className="template-title">
-                {template.title}
+      {loading ? (
+        <div className="loading-container">
+          <Spin size="large" />
+          <div style={{ marginTop: '16px' }}>Loading template details...</div>
+        </div>
+      ) : (
+        <>
+          <div className="template-content">
+            <div className="template-title">
+              <Title
+                level={4}
+                className="template-title"
+                style={{ margin: '0 0 4px 0' }}
+              >
+                {template.name}
               </Title>
               {isSelected && (
                 <Badge
@@ -52,45 +56,56 @@ const TemplatePreviewModal = ({ visible, template, onCancel, isSelected }) => {
                 />
               )}
             </div>
-            <div className="stats-section">
-              <div className="stat-item">
-                <BookOutlined className="stat-icon" />
-                <span className="stat-value">{template.courses.length}</span>
-                <span className="stat-label">Courses</span>
-              </div>
-              <div className="stat-item">
-                <ClockCircleOutlined className="stat-icon" />
-                <span className="stat-value">{totalDuration}</span>
-                <span className="stat-label">Hours</span>
-              </div>
+
+            <div className="template-detail">
+              <Row gutter={24}>
+                <Col span={18} className="overview-section">
+                  <div className="overview-title">
+                    <InfoCircleOutlined /> Overview
+                  </div>
+                  <Paragraph className="description-content">
+                    {template.description
+                      ? template.description
+                      : 'No description provided.'}
+                  </Paragraph>
+                </Col>
+                <Col span={6} className="meta-info">
+                  <div className="meta-item">
+                    <BookOutlined />
+                    <span className="meta-text">
+                      {template.course_ids.length} Courses
+                    </span>
+                  </div>
+
+                  <div className="meta-item">
+                    <ClockCircleOutlined />
+                    <span className="meta-text">
+                      {formatTime(template.duration)}
+                    </span>
+                  </div>
+                </Col>
+              </Row>
             </div>
           </div>
 
-          {template.description && (
-            <div className="description-section">
-              <div className="description-header">
-                <InfoCircleOutlined className="description-icon" />
-                <Text className="description-label">Overview</Text>
-              </div>
-              <div className="description-content">
-                <Paragraph className="template-description">
-                  {template.description}
-                </Paragraph>
-              </div>
+          <div className="courses-content">
+            <div className="courses-header">
+              <BookOutlined /> Courses
             </div>
-          )}
-        </div>
 
-        <div className="courses-section">
-          <div className="section-title">
-            <BookOutlined /> Courses
+            <div className="scrollable-course-list">
+              {hasDetailedData ? (
+                <CourseList courses={template.course_list} />
+              ) : (
+                <Empty
+                  description="No courses in this template"
+                  className="empty-course-message"
+                />
+              )}
+            </div>
           </div>
-
-          <div className="course-list">
-            <CourseList courses={template.courses} />
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </Modal>
   )
 }

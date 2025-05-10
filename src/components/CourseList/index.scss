@@ -1,25 +1,7 @@
 .courses-list {
-    overflow-y: auto;
-    max-height: calc(100vh - 200px);
+    overflow-y: visible; // Changed from auto to visible
+    max-height: none; // Remove the max-height constraint
     padding-right: 8px;
-
-    &::-webkit-scrollbar {
-        width: 5px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(24, 144, 255, 0.3);
-        border-radius: 3px;
-
-        &:hover {
-            background-color: rgba(24, 144, 255, 0.5);
-        }
-    }
-
-    &::-webkit-scrollbar-track {
-        background-color: rgba(0, 0, 0, 0.03);
-        border-radius: 3px;
-    }
 
     .course-card-material {
         margin-bottom: 10px !important;
@@ -50,7 +32,7 @@
         }
 
         .card-left {
-            width: 50px;
+            width: 35px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -59,38 +41,22 @@
             position: relative;
             transition: background-color 0.2s ease;
 
-            &:after {
-                content: "";
-                position: absolute;
-                right: 0;
-                top: 20%;
-                height: 60%;
-                width: 1px;
-                background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.06), transparent);
-            }
-
-            .course-number-badge {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                .ant-badge-count {
-                    background: linear-gradient(135deg, #1890ff, #096dd9);
-                    box-shadow: 0 2px 4px rgba(24, 144, 255, 0.25);
-                    font-weight: 600;
-                    font-size: 13px;
-                    height: 22px;
-                    line-height: 22px;
-                    padding: 0 8px;
-                    border-radius: 11px;
-                    transition: transform 0.2s ease;
-                }
+            .ant-badge-count {
+                background: linear-gradient(135deg, #1890ff, #096dd9);
+                box-shadow: 0 2px 4px rgba(24, 144, 255, 0.25);
+                font-weight: 600;
+                font-size: 13px;
+                height: 22px;
+                line-height: 22px;
+                padding: 0 8px;
+                border-radius: 11px;
+                transition: transform 0.2s ease;
             }
         }
 
         .card-content {
             flex: 1;
-            padding: 12px 14px;
+            padding: 8px 10px;
             background-color: white;
 
             .card-header {
@@ -157,22 +123,6 @@
 
                     &:first-child {
                         margin-right: auto;
-                    }
-
-                    .category-tag {
-                        .ant-tag {
-                            margin-right: 0;
-                            font-size: 12px;
-                            padding: 2px 8px;
-                            border-radius: 4px;
-                            display: inline-flex;
-                            align-items: center;
-
-                            .anticon {
-                                margin-right: 4px;
-                                font-size: 12px;
-                            }
-                        }
                     }
                 }
             }
