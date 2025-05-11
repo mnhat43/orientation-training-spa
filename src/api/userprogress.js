@@ -1,6 +1,10 @@
 import API from './axios.config'
 
 const userprogress = {
+  addUserProgress: (data) => {
+    const url = '/user-progress/add-user-progress'
+    return API.post(url, data)
+  },
   updateUserProgress: (progressData) => {
     const url = '/user-progress/update-user-progress'
     return API.post(url, progressData)

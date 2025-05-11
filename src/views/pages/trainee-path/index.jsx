@@ -12,6 +12,7 @@ import TraineeSelector from './components/StepTraineeSelector'
 import DesignPath from './components/StepDesignPath'
 import ReviewPath from './components/StepReviewPath'
 import SuccessView from './components/StepSuccessView'
+import userprogress from '@api/userprogress'
 
 const { Step } = Steps
 
@@ -23,7 +24,7 @@ const TraineePathCreator = () => {
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmitPath = () => {
-    if (!selectedTrainee) {
+    if (!selectedTrainee || !selectedTrainee.userID) {
       message.error('Please select a trainee')
       return
     }
@@ -40,7 +41,7 @@ const TraineePathCreator = () => {
         <div>
           <p>
             Are you sure you want to assign this learning path to{' '}
-            {selectedTrainee.name}?
+            {selectedTrainee.fullname || selectedTrainee.name}?
           </p>
           <p>
             This will create a training schedule with {selectedCourses.length}{' '}
@@ -51,15 +52,30 @@ const TraineePathCreator = () => {
       onOk() {
         setSubmitting(true)
 
-        setTimeout(() => {
-          setSubmitting(false)
-          setCurrentStep(3)
+        const payload = {
+          user_id: selectedTrainee.userID,
+          course_ids: selectedCourses.map((course) => course.id),
+        }
 
-          // In a real app, reset would happen on component unmount or when starting a new path
-          // setTimeout(() => {
-          //   resetState()
-          // }, 5000)
-        }, 2000)
+        userprogress
+          .addUserProgress(payload)
+          .then((response) => {
+            setSubmitting(false)
+            if (response && response.status == 1) {
+              message.success('Learning path assigned successfully!')
+              setCurrentStep(3)
+            } else {
+              message.error('Failed to assign learning path. Please try again.')
+            }
+          })
+          .catch((error) => {
+            setSubmitting(false)
+            console.error('Error assigning learning path:', error)
+            message.error(
+              'An error occurred while assigning the learning path: ' +
+                (error.message || 'Please try again.'),
+            )
+          })
       },
     })
   }
@@ -137,7 +153,6 @@ const TraineePathCreator = () => {
         selectedCourses={selectedCourses}
         submitting={submitting}
         onSubmitPath={handleSubmitPath}
-        onNext={handleNext}
         onPrev={handlePrev}
       />
     )

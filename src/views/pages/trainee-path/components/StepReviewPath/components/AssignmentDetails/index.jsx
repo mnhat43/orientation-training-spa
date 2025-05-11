@@ -1,194 +1,177 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import {
-  Card,
-  Typography,
-  Button,
-  Avatar,
-  Divider,
-  Tooltip,
-  Row,
-  Col,
-} from 'antd'
+import { Typography, Button, Avatar, Row, Col, Tag, Divider, Card } from 'antd'
 import {
   SendOutlined,
-  ClockCircleOutlined,
-  BookOutlined,
-  CheckCircleOutlined,
   MailOutlined,
   PhoneOutlined,
   CalendarOutlined,
   TeamOutlined,
-  ManOutlined,
-  WomanOutlined,
+  UserOutlined,
   ArrowLeftOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons'
 import './index.scss'
 
-const { Text } = Typography
+const { Title, Text, Paragraph } = Typography
 
-const AssignmentDetails = ({
-  trainee,
-  coursesCount,
-  totalDuration,
-  onSubmitPath,
-  submitting,
-  onPrev,
-}) => {
+const AssignmentDetails = ({ trainee, onSubmitPath, submitting, onPrev }) => {
   if (!trainee) return null
 
   const getInitials = () => {
-    const name = trainee.fullname || trainee.name
+    const name = trainee.fullname
     if (!name) return ''
     const parts = name.split(' ')
     if (parts.length === 1) return parts[0][0].toUpperCase()
     return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
   }
 
-  const getGenderIcon = () => {
-    if (!trainee.gender) return null
-    const gender = trainee.gender.toLowerCase()
-    return gender === 'male' ? (
-      <ManOutlined className="enhanced-assignment-icon male" />
-    ) : gender === 'female' ? (
-      <WomanOutlined className="enhanced-assignment-icon female" />
-    ) : null
+  const formatDate = (dateString) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return dateString
+
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(date)
   }
 
   return (
-    <Card className="enhanced-assignment-card">
-      {/* Trainee header with profile */}
-      <div className="enhanced-assignment-profile">
-        <Avatar
-          size={60}
-          src={trainee.avatar}
-          className="enhanced-assignment-avatar"
-        >
-          {!trainee.avatar && getInitials()}
-        </Avatar>
+    <div className="trainee-card-container">
+      <Card className="trainee-info-card">
+        <div className="card-header">
+          <div className="avatar-wrapper">
+            <Avatar
+              size={80}
+              src={trainee.avatar}
+              icon={!trainee.avatar && <UserOutlined />}
+              className="trainee-avatar"
+            >
+              {!trainee.avatar && getInitials()}
+            </Avatar>
+            {trainee.gender && (
+              <div
+                className={`gender-indicator ${trainee.gender.toLowerCase()}`}
+              >
+                {trainee.gender === 'Male' ? '♂' : '♀'}
+              </div>
+            )}
+          </div>
 
-        <div className="enhanced-assignment-trainee-info">
-          <Text strong className="enhanced-assignment-name">
-            {trainee.fullname}
-          </Text>
-
-          {trainee.department && (
-            <div className="enhanced-assignment-department">
-              <TeamOutlined className="enhanced-assignment-department-icon" />
-              <Text>{trainee.department}</Text>
-            </div>
-          )}
+          <div className="trainee-header-info">
+            <Title level={3} className="trainee-name">
+              {trainee.fullname}
+            </Title>
+            {trainee.department && (
+              <Tag
+                color="processing"
+                icon={<TeamOutlined />}
+                className="department-tag"
+              >
+                {trainee.department}
+              </Tag>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Trainee details section */}
-      <div className="enhanced-assignment-details">
-        <Row gutter={[16, 8]}>
-          {trainee.email && (
-            <Col span={24}>
-              <div className="enhanced-assignment-detail-item">
-                <MailOutlined className="enhanced-assignment-icon primary" />
-                <Tooltip title="Email">
-                  <Text className="enhanced-assignment-detail-value">
-                    {trainee.email}
+        <Divider className="custom-divider" />
+
+        <div className="trainee-details">
+          <Row gutter={[0, 16]}>
+            <Col xs={24}>
+              <div className="detail-item">
+                <div className="detail-icon">
+                  <MailOutlined />
+                </div>
+                <div className="detail-content">
+                  <Text type="secondary">Email</Text>
+                  <Paragraph ellipsis={{ rows: 1 }} className="detail-value">
+                    {trainee.email || 'Not provided'}
+                  </Paragraph>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={24}>
+              <div className="detail-item">
+                <div className="detail-icon">
+                  <PhoneOutlined />
+                </div>
+                <div className="detail-content">
+                  <Text type="secondary">Phone Number</Text>
+                  <Text className="detail-value">
+                    {trainee.phoneNumber || 'Not provided'}
                   </Text>
-                </Tooltip>
+                </div>
               </div>
             </Col>
-          )}
 
-          {trainee.phone && (
-            <Col span={trainee.birthday || trainee.gender ? 12 : 24}>
-              <div className="enhanced-assignment-detail-item">
-                <PhoneOutlined className="enhanced-assignment-icon primary" />
-                <Text className="enhanced-assignment-detail-value">
-                  {trainee.phone}
-                </Text>
+            <Col xs={24}>
+              <div className="detail-item">
+                <div className="detail-icon">
+                  <ClockCircleOutlined />
+                </div>
+                <div className="detail-content">
+                  <Text type="secondary">Joined Date</Text>
+                  <Text className="detail-value">
+                    {trainee.joinedDate
+                      ? formatDate(trainee.joinedDate)
+                      : 'Not provided'}
+                  </Text>
+                </div>
               </div>
             </Col>
-          )}
 
-          {trainee.gender && (
-            <Col span={12}>
-              <div className="enhanced-assignment-detail-item">
-                {getGenderIcon()}
-                <Text className="enhanced-assignment-detail-value">
-                  {trainee.gender}
-                </Text>
+            <Col xs={24}>
+              <div className="detail-item">
+                <div className="detail-icon">
+                  <CalendarOutlined />
+                </div>
+                <div className="detail-content">
+                  <Text type="secondary">Birthday</Text>
+                  <Text className="detail-value">
+                    {trainee.birthday
+                      ? formatDate(trainee.birthday)
+                      : 'Not provided'}
+                  </Text>
+                </div>
               </div>
             </Col>
-          )}
+          </Row>
+        </div>
 
-          {trainee.birthday && (
-            <Col span={trainee.phone ? 12 : 24}>
-              <div className="enhanced-assignment-detail-item">
-                <CalendarOutlined className="enhanced-assignment-icon primary" />
-                <Text className="enhanced-assignment-detail-value">
-                  {trainee.birthday}
-                </Text>
-              </div>
+        <div className="action-area">
+          <Row gutter={16}>
+            <Col xs={24} sm={12}>
+              <Button
+                icon={<ArrowLeftOutlined />}
+                onClick={onPrev}
+                className="back-button"
+                size="large"
+                block
+              >
+                Back to Design
+              </Button>
             </Col>
-          )}
-
-          {trainee.joinedDate && (
-            <Col span={24}>
-              <div className="enhanced-assignment-detail-item">
-                <CalendarOutlined className="enhanced-assignment-icon secondary" />
-                <Text className="enhanced-assignment-detail-value">
-                  Joined: {trainee.joinedDate}
-                </Text>
-              </div>
+            <Col xs={24} sm={12}>
+              <Button
+                type="primary"
+                icon={<SendOutlined />}
+                loading={submitting}
+                onClick={onSubmitPath}
+                className="submit-button"
+                size="large"
+                block
+              >
+                Assign Path
+              </Button>
             </Col>
-          )}
-        </Row>
-      </div>
-
-      <Divider className="enhanced-assignment-divider" />
-
-      {/* Status and action section */}
-      <div className="enhanced-assignment-status">
-        <Button
-          icon={<ArrowLeftOutlined />}
-          onClick={onPrev}
-          className="back-btn"
-          size="middle"
-          block
-        >
-          Back to Design
-        </Button>
-        <Button
-          type="primary"
-          icon={<SendOutlined />}
-          loading={submitting}
-          onClick={onSubmitPath}
-          className="enhanced-assignment-button"
-          size="middle"
-          block
-        >
-          Assign Learning Path
-        </Button>
-      </div>
-    </Card>
+          </Row>
+        </div>
+      </Card>
+    </div>
   )
-}
-
-AssignmentDetails.propTypes = {
-  trainee: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    name: PropTypes.string,
-    fullname: PropTypes.string,
-    department: PropTypes.string,
-    email: PropTypes.string,
-    phone: PropTypes.string,
-    avatar: PropTypes.string,
-    gender: PropTypes.string,
-    birthday: PropTypes.string,
-    joinedDate: PropTypes.string,
-  }),
-  coursesCount: PropTypes.number.isRequired,
-  totalDuration: PropTypes.string.isRequired,
-  onSubmitPath: PropTypes.func.isRequired,
-  submitting: PropTypes.bool,
 }
 
 export default AssignmentDetails
