@@ -9,6 +9,7 @@ import {
   Typography,
   Row,
   Col,
+  InputNumber,
 } from 'antd'
 import { PlusOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import PropTypes from 'prop-types'
@@ -134,6 +135,32 @@ const AddCourseForm = ({ isModalOpen, setIsModalOpen, handleAddCourse }) => {
                   <div style={{ marginTop: 8 }}>Upload</div>
                 </div>
               </Upload>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={14}>
+            <Form.Item
+              name="duration"
+              label="Duration (minutes)"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input the course duration!',
+                },
+              ]}
+              tooltip={{
+                title: 'Estimated time in minutes to complete this course',
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <InputNumber
+                min={1}
+                max={1440}
+                style={{ width: '100%' }}
+                placeholder="Enter estimated completion time in minutes"
+              />
             </Form.Item>
           </Col>
         </Row>

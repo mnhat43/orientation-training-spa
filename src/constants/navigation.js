@@ -36,7 +36,7 @@ export const ROLE_NAVIGATION = {
     },
     {
       key: 'courses',
-      label: 'Manager Courses',
+      label: 'Manage Courses',
       path: '/courses',
     },
     {
@@ -46,7 +46,7 @@ export const ROLE_NAVIGATION = {
     },
     {
       key: 'templates',
-      label: 'Manager Templates',
+      label: 'Manage Templates',
       path: '/templates',
     },
     {
