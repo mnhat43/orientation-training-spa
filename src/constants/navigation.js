@@ -1,6 +1,5 @@
 import { ROLES } from './roles'
 
-// Navigation items for each role
 export const ROLE_NAVIGATION = {
   [ROLES.ADMIN]: [
     {
@@ -37,7 +36,7 @@ export const ROLE_NAVIGATION = {
     },
     {
       key: 'courses',
-      label: 'Courses',
+      label: 'Manager Courses',
       path: '/courses',
     },
     {
@@ -47,12 +46,12 @@ export const ROLE_NAVIGATION = {
     },
     {
       key: 'templates',
-      label: 'Templates',
+      label: 'Manager Templates',
       path: '/templates',
     },
     {
       key: 'learning-paths',
-      label: 'Learning Paths',
+      label: 'Create Learning Paths',
       path: '/learning-paths/create',
     },
   ],
@@ -70,7 +69,6 @@ export const ROLE_NAVIGATION = {
   ],
 }
 
-// Default navigation for unauthenticated users
 export const DEFAULT_NAVIGATION = [
   {
     key: 'home',
