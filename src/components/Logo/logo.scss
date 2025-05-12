@@ -1,0 +1,52 @@
+.app-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+
+        .logo-icon {
+            font-size: 24px;
+            color: #1890ff;
+            margin-right: 8px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1890ff;
+            letter-spacing: -0.5px;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+            .highlight {
+                color: #0050b3;
+                font-weight: 800;
+            }
+        }
+    }
+
+    &.logo-small {
+        .logo-icon {
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 16px;
+        }
+    }
+
+    // Responsive adjustments
+    @media (max-width: 390px) {
+        &.logo-default {
+            .logo-icon {
+                font-size: 20px;
+            }
+
+            .logo-text {
+                font-size: 18px;
+            }
+        }
+    }
+}

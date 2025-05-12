@@ -1,8 +1,7 @@
 import API from './axios.config'
 
 const user = {
-  getProfile: () => {
-    // Fix syntax error (missing 'const')
+  getUserInfo: () => {
     const url = '/user/profile'
     return API.get(url)
   },

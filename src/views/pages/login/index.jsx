@@ -4,34 +4,24 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import './login.scss'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import auth from '@api/auth'
-// import UserContext from '@context/UserContext';
 import useAuth from '@hooks/useAuth'
 
-function Login() {
+function LoginPage() {
   const navigate = useNavigate()
+  const { handleLogin } = useAuth()
 
-  const { setUserInfo } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
-  const handleSubmit = async (values) => {
+  const onFinish = async (values) => {
+    setIsLoading(true)
     try {
-      const formData = new FormData()
-      formData.append('email', values.email)
-      formData.append('password', values.password)
+      await handleLogin(values.email, values.password)
 
-      const response = await auth.login(formData)
-      if (response.status === 1) {
-        setUserInfo(response.data.token)
-        toast.success('Đăng nhập thành công')
-        navigate('/courses')
-      }
+      navigate('/courses')
     } catch (error) {
-      toast.error(
-        'Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin đăng nhập.',
-      )
+      toast.error('Login failed! Please check your credentials.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -53,45 +43,45 @@ function Login() {
             layout="vertical"
             name="login"
             className="login-container__sub__content__form"
-            initialValues={{ email, password, remember: true }}
-            onFinish={handleSubmit}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
           >
             <div className="login-container__sub__content__form__header">
               <h3 className="login-container__sub__content__form__header__title">
-                Đăng nhập
+                Login
               </h3>
               <hr />
             </div>
 
             <Form.Item
-              label="Địa chỉ email"
+              label="Email Address"
               name="email"
               rules={[
                 {
                   required: true,
-                  message: 'Vui lòng nhập email!',
+                  message: 'Please enter your email!',
+                },
+                {
+                  type: 'email',
+                  message: 'Invalid email format!',
                 },
               ]}
             >
               <Input
-                value={email}
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Email"
               />
             </Form.Item>
 
             <Form.Item
-              label="Mật khẩu"
+              label="Password"
               name="password"
-              rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
+              rules={[
+                { required: true, message: 'Please enter your password!' },
+              ]}
             >
               <Input.Password
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
                 placeholder="Password"
               />
             </Form.Item>
@@ -99,11 +89,11 @@ function Login() {
             <Form.Item>
               <div className="remember-forgot">
                 <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Lưu mật khẩu</Checkbox>
+                  <Checkbox>Remember me</Checkbox>
                 </Form.Item>
 
                 <div className="login-form-forgot" style={{ color: '#09C4AE' }}>
-                  Quên mật khẩu?
+                  Forgot password?
                 </div>
               </div>
             </Form.Item>
@@ -113,13 +103,14 @@ function Login() {
               htmlType="submit"
               className="login-form-button"
               style={{ background: '#209EA6', height: '38px' }}
+              loading={isLoading}
             >
-              Đăng nhập
+              Login
             </Button>
           </Form>
           <div className="register">
-            Chưa có tài khoản?
-            <span className="register-link">Đăng ký tại đây</span>
+            Don't have an account?
+            <span className="register-link">Register here</span>
           </div>
         </div>
       </div>
@@ -127,4 +118,4 @@ function Login() {
   )
 }
 
-export default Login
+export default LoginPage

@@ -7,81 +7,108 @@ import Lectures from '@views/pages/lectures'
 import Assignments from '@views/pages/assignments'
 import AssessmentCreation from '@views/pages/assessmentCreate/AssessmentCreation'
 import Exams from '@views/pages/exams'
-import Login from '@views/pages/login'
+import LoginPage from '@views/pages/login'
 import Home from '@views/pages/home'
 import ManageEmployees from '@views/pages/manage-employee'
 import TemplatePage from '@views/pages/template'
 import TraineePathCreator from '@views/pages/trainee-path'
 import TemplateFormPage from '@views/pages/template-form'
+import ProtectedRoute from './ProtectedRoute'
+import PublicRoute from './PublicRoute'
+import { ROLES } from '@constants/roles'
 
 function AllRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/dashboard" element={<MainLayout component={Dashboard} />} />
-      <Route path="/courses" element={<MainLayout component={Courses} />} />
-      <Route path="/" element={<MainLayout component={Home} />} />
+      {/* Public routes - accessible only when not logged in */}
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<MainLayout component={Home} />} />
+      </Route>
+
+      {/* Routes accessible by all authenticated users */}
       <Route
-        path="/course/:courseId/modules"
-        element={<MainLayout component={Modules} />}
-      />
-      <Route
-        path="/course/:courseId/lectures"
-        element={<MainLayout component={Lectures} />}
-      />
-      <Route
-        path="/course/:courseId/lectures/:moduleId/:moduleItemId"
-        element={<MainLayout component={Lectures} />}
-      />
-      <Route
-        path="/course/:courseId/assignments/create"
         element={
-          <MainLayout
-            component={() => <AssessmentCreation assessmentType="Assignment" />}
+          <ProtectedRoute
+            allowedRoles={[ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE]}
           />
         }
-      />
-      <Route
-        path="/course/:courseId/assignments"
-        element={<MainLayout component={Assignments} />}
-      />
-      <Route
-        path="/course/:courseId/exams/create"
-        element={
-          <MainLayout
-            component={() => <AssessmentCreation assessmentType="Exam" />}
-          />
-        }
-      />
-      <Route
-        path="/course/:courseId/exams"
-        element={<MainLayout component={Exams} />}
-      />
+      >
+        <Route
+          path="/dashboard"
+          element={<MainLayout component={Dashboard} />}
+        />
+        <Route path="/courses" element={<MainLayout component={Courses} />} />
+        <Route
+          path="/course/:courseId/modules"
+          element={<MainLayout component={Modules} />}
+        />
+        <Route
+          path="/course/:courseId/lectures"
+          element={<MainLayout component={Lectures} />}
+        />
+        <Route
+          path="/course/:courseId/lectures/:moduleId/:moduleItemId"
+          element={<MainLayout component={Lectures} />}
+        />
+      </Route>
 
-      {/* Routes for employee management - Updated to handle nested routes */}
+      {/* Routes accessible only by Admin and Manager */}
       <Route
-        path="/manage-employee/*"
-        element={<MainLayout component={ManageEmployees} />}
-      />
+        element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MANAGER]} />}
+      >
+        <Route
+          path="/course/:courseId/assignments/create"
+          element={
+            <MainLayout
+              component={() => (
+                <AssessmentCreation assessmentType="Assignment" />
+              )}
+            />
+          }
+        />
+        <Route
+          path="/course/:courseId/assignments"
+          element={<MainLayout component={Assignments} />}
+        />
+        <Route
+          path="/course/:courseId/exams/create"
+          element={
+            <MainLayout
+              component={() => <AssessmentCreation assessmentType="Exam" />}
+            />
+          }
+        />
+        <Route
+          path="/course/:courseId/exams"
+          element={<MainLayout component={Exams} />}
+        />
+      </Route>
 
-      {/* Template routes */}
-      <Route
-        path="/templates"
-        element={<MainLayout component={TemplatePage} />}
-      />
-      <Route
-        path="/templates/new"
-        element={<MainLayout component={TemplateFormPage} />}
-      />
-      <Route
-        path="/templates/:id/edit"
-        element={<MainLayout component={TemplateFormPage} />}
-      />
-      {/* Learning path routes */}
-      <Route
-        path="/learning-paths/create"
-        element={<MainLayout component={TraineePathCreator} />}
-      />
+      {/* Routes accessible only by MANAGER */}
+      <Route element={<ProtectedRoute allowedRoles={[ROLES.MANAGER]} />}>
+        <Route
+          path="/manage-employee/*"
+          element={<MainLayout component={ManageEmployees} />}
+        />
+        <Route
+          path="/templates"
+          element={<MainLayout component={TemplatePage} />}
+        />
+        <Route
+          path="/templates/new"
+          element={<MainLayout component={TemplateFormPage} />}
+        />
+        <Route
+          path="/templates/:id/edit"
+          element={<MainLayout component={TemplateFormPage} />}
+        />
+        <Route
+          path="/learning-paths/create"
+          element={<MainLayout component={TraineePathCreator} />}
+        />
+      </Route>
+
       <Route path="*" element={<div>404</div>} />
     </Routes>
   )

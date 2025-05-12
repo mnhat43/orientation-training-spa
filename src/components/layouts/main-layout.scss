@@ -12,25 +12,34 @@
         right: 0;
         z-index: 1000;
         padding: 0;
-        height: $layout-header-height;
-        line-height: $layout-header-height;
-        background: #fff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        height: $layout-header-height; // Match with header-wrapper height
+        background: transparent;
+        box-shadow: none; // Remove shadow as header-wrapper has it
+
+        @media (max-width: $mobile-breakpoint) {
+            height: $header-mobile-height;
+        }
     }
 
     &-content {
         max-width: $max-width;
-        min-width: $min-width;
-        padding: 10px 15px 10px 15px;
+        width: 100%; // Make it fluid
+        padding: 15px;
         margin: 0 auto;
         margin-top: $layout-header-height; /* Add space for fixed header */
-        min-height: calc(100vh - $layout-header-height) !important;
+        min-height: calc(100vh - $layout-header-height);
         scrollbar-gutter: stable both-edges;
+
+        @media (max-width: $mobile-breakpoint) {
+            margin-top: $header-mobile-height;
+            min-height: calc(100vh - $header-mobile-height);
+            padding: 10px;
+        }
     }
 }
 
 body {
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-gutter: stable;
 }
 
