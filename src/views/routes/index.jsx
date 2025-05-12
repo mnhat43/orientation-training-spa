@@ -9,7 +9,7 @@ import AssessmentCreation from '@views/pages/assessmentCreate/AssessmentCreation
 import Exams from '@views/pages/exams'
 import Login from '@views/pages/login'
 import Home from '@views/pages/home'
-import ManageTrainees from '@views/pages/manage-trainee'
+import ManageEmployees from '@views/pages/manage-employee'
 import TemplatePage from '@views/pages/template'
 import TraineePathCreator from '@views/pages/trainee-path'
 import TemplateFormPage from '@views/pages/template-form'
@@ -57,11 +57,13 @@ function AllRoutes() {
         path="/course/:courseId/exams"
         element={<MainLayout component={Exams} />}
       />
-      {/* Routes for trainee management */}
+
+      {/* Routes for employee management - Updated to handle nested routes */}
       <Route
-        path="/manage-trainees"
-        element={<MainLayout component={ManageTrainees} />}
+        path="/manage-employee/*"
+        element={<MainLayout component={ManageEmployees} />}
       />
+
       {/* Template routes */}
       <Route
         path="/templates"

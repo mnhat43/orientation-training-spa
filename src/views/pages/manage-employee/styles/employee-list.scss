@@ -1,0 +1,47 @@
+.employee-list-container {
+    .employee-list-header {
+        margin-bottom: 24px;
+
+        .ant-typography {
+            margin-bottom: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+
+            @media (max-width: 768px) {
+                justify-content: flex-start;
+            }
+        }
+
+        .filter-row {
+            margin-top: 16px;
+        }
+    }
+
+    .employee-table {
+        background: #fff;
+        border-radius: 4px;
+
+        .ant-progress {
+            margin-right: 0;
+            margin-top: 5px;
+            width: 90%;
+        }
+
+        .ant-tag {
+            text-transform: uppercase;
+            font-size: 11px;
+            padding: 0 6px;
+            margin-right: 0;
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .filter-row .ant-col {
+        margin-bottom: 8px;
+    }
+}

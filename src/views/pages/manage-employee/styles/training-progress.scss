@@ -1,0 +1,145 @@
+.training-progress-container {
+  .training-progress-stats {
+    margin-bottom: 16px;
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      
+      .ant-badge {
+        margin-bottom: 8px;
+        
+        .ant-badge-count {
+          font-size: 18px;
+          height: 32px;
+          width: 32px;
+          line-height: 32px;
+          border-radius: 16px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+      }
+      
+      .stat-label {
+        color: rgba(0, 0, 0, 0.65);
+        font-size: 14px;
+        
+        .anticon {
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+  
+  .course-item {
+    background-color: #fafafa;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+    
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .course-score {
+      .ant-badge-count {
+        background-color: #52c41a;
+        font-weight: bold;
+        padding: 0 8px;
+      }
+    }
+    
+    .course-review-section {
+      margin-top: 16px;
+      
+      .review-content {
+        background-color: #f6ffed;
+        border: 1px solid #b7eb8f;
+        border-radius: 4px;
+        padding: 12px;
+        
+        .review-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+        }
+      }
+      
+      .no-review {
+        .review-form {
+          margin-top: 16px;
+          border: 1px solid #d9d9d9;
+          border-radius: 4px;
+          padding: 16px;
+          background-color: #fafafa;
+          
+          .rating-container {
+            margin-bottom: 12px;
+          }
+          
+          .review-textarea {
+            margin-bottom: 16px;
+          }
+          
+          .review-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+          }
+        }
+      }
+    }
+  }
+  
+  .in-progress-item, .upcoming-item {
+    background-color: #fafafa;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+    
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .ant-list-empty-text {
+    padding: 16px;
+  }
+  
+  .ant-tag {
+    font-size: 11px;
+    padding: 0 6px;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .training-progress-container {
+    .training-progress-stats {
+      .stat-row {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  }
+}

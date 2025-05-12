@@ -63,7 +63,7 @@ const HeaderRender = () => {
       icon: <DashboardOutlined />,
       label: 'Dashboard',
       path: '/dashboard',
-      description: 'Overview of trainee statistics and progress',
+      description: 'Overview of employee statistics and progress',
     },
     {
       key: 'courses',
@@ -84,21 +84,21 @@ const HeaderRender = () => {
       icon: <PartitionOutlined />,
       label: 'Learning Paths',
       path: '/learning-paths/create',
-      description: 'Create personalized learning paths for trainees',
+      description: 'Create personalized learning paths for employees',
     },
     {
-      key: 'trainees',
+      key: 'employees',
       icon: <TeamOutlined />,
-      label: 'Manage Trainees',
-      path: '/manage-trainees',
-      description: 'Comprehensive trainee management',
+      label: 'Manage Employees',
+      path: '/manage-employee',
+      description: 'Comprehensive employee management',
     },
     {
       key: 'reports',
       icon: <BarChartOutlined />,
       label: 'Reports',
       path: '/reports',
-      description: 'View and manage trainee submitted reports',
+      description: 'View and manage employee submitted reports',
     },
   ]
 
@@ -282,7 +282,7 @@ const HeaderRender = () => {
           <div className="notification-content">
             <div className="notification-title">Evaluation needed</div>
             <div className="notification-desc">
-              3 trainees pending skills evaluation
+              3 employees pending skills evaluation
             </div>
             <div className="notification-time">3 days ago</div>
           </div>
