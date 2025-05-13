@@ -14,7 +14,7 @@ import ConfirmationModal from '@components/ConfirmationModal'
 import module from '@api/module'
 import moduleItem from '@api/moduleItem'
 import { toast } from 'react-toastify'
-import './modulesCourse.scss'
+import './index.scss'
 
 const Modules = () => {
   const { Title } = Typography
@@ -291,12 +291,8 @@ const Modules = () => {
           <div className="modules-container">{renderContent()}</div>
         </div>
 
-        <div className="modules-sidebar">
+        <aside className="modules-sidebar">
           <div className="modules-actions">
-            <div className="actions-header">
-              <Typography.Title level={4}>Module Actions</Typography.Title>
-            </div>
-
             <div className="action-card">
               <div className="action-card-icon">
                 <PlusOutlined />
@@ -318,7 +314,7 @@ const Modules = () => {
               </div>
             </div>
           </div>
-        </div>
+        </aside>
       </div>
 
       <ModuleForm

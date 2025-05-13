@@ -8,7 +8,6 @@ import {
   Tooltip,
   Tag,
   Divider,
-  Empty,
 } from 'antd'
 import {
   EditOutlined,
@@ -24,7 +23,7 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons'
 import ModuleForm from './ModuleForm'
-import ModuleItemForm from './ModuleItemForm'
+import ContentDrawer from './ContentDrawer'
 import PropTypes from 'prop-types'
 import './moduleList.scss'
 
@@ -44,8 +43,7 @@ const ModuleList = ({
   isLast,
 }) => {
   const [editModalVisible, setEditModalVisible] = useState(false)
-  const [addItemModalVisible, setAddItemModalVisible] = useState(false)
-  const [itemType, setItemType] = useState(null)
+  const [contentDrawerVisible, setContentDrawerVisible] = useState(false)
 
   const handleEditModule = (values) => {
     editModule(values)
@@ -55,10 +53,9 @@ const ModuleList = ({
   const handleAddItem = (values) => {
     addModuleItem({
       ...values,
-      item_type: itemType,
       position: (module.module_items?.length || 0) + 1,
     })
-    setAddItemModalVisible(false)
+    setContentDrawerVisible(false)
   }
 
   const getItemLabel = (type) => {
@@ -93,30 +90,13 @@ const ModuleList = ({
     }
   }
 
-  const showAddItemModal = (type) => {
-    setItemType(type)
-    setAddItemModalVisible(true)
-  }
-
   const moduleItemsMenu = {
     items: [
       {
-        key: 'video',
-        icon: <VideoCameraOutlined />,
-        label: 'Add Video',
-        onClick: () => showAddItemModal('video'),
-      },
-      {
-        key: 'file',
-        icon: <FileTextOutlined />,
-        label: 'Add File',
-        onClick: () => showAddItemModal('file'),
-      },
-      {
-        key: 'quiz',
-        icon: <QuestionCircleOutlined />,
-        label: 'Add Quiz',
-        onClick: () => showAddItemModal('quiz'),
+        key: 'addContent',
+        icon: <PlusOutlined />,
+        label: 'Add Content',
+        onClick: () => setContentDrawerVisible(true),
       },
     ],
   }
@@ -201,16 +181,14 @@ const ModuleList = ({
         </div>
 
         <div className="module-card__actions">
-          <Dropdown
-            menu={moduleItemsMenu}
-            placement="bottomLeft"
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
             disabled={isLoading}
-            trigger={['click']}
+            onClick={() => setContentDrawerVisible(true)}
           >
-            <Button type="primary" icon={<PlusOutlined />} disabled={isLoading}>
-              Add Content
-            </Button>
-          </Dropdown>
+            Add Content
+          </Button>
 
           <Dropdown
             menu={moreMenu}
@@ -285,15 +263,13 @@ const ModuleList = ({
             <p className="module-empty-state__description">
               Add videos, files, or quizzes to this module to get started
             </p>
-            <Dropdown
-              menu={moduleItemsMenu}
-              placement="bottom"
-              trigger={['click']}
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setContentDrawerVisible(true)}
             >
-              <Button type="primary" icon={<PlusOutlined />}>
-                Add Content
-              </Button>
-            </Dropdown>
+              Add Content
+            </Button>
           </div>
         )}
       </div>
@@ -306,11 +282,11 @@ const ModuleList = ({
         title="Edit Module"
       />
 
-      <ModuleItemForm
-        visible={addItemModalVisible}
-        onCancel={() => setAddItemModalVisible(false)}
+      <ContentDrawer
+        visible={contentDrawerVisible}
+        onClose={() => setContentDrawerVisible(false)}
         onSubmit={handleAddItem}
-        itemType={itemType}
+        moduleId={module.id}
       />
     </Card>
   )

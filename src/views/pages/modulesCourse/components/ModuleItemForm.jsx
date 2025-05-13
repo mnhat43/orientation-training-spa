@@ -1,395 +1,284 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Modal, Form, Input, Typography, Button, Alert } from 'antd'
+import React, { useState } from 'react'
 import {
-  LinkOutlined,
-  VideoCameraOutlined,
-  FileTextOutlined,
-  QuestionCircleOutlined,
-  DeleteOutlined,
+  Form,
+  Input,
+  Modal,
+  Button,
+  Upload,
+  Typography,
+  Alert,
+  InputNumber,
+} from 'antd'
+import {
   UploadOutlined,
+  LinkOutlined,
+  ClockCircleOutlined,
+  InfoCircleOutlined,
+  InboxOutlined,
 } from '@ant-design/icons'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
 
-const FileUploadContainer = styled.div`
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  padding: 16px;
-  text-align: center;
-  background-color: #fafafa;
-  cursor: pointer;
-  transition: border-color 0.3s;
-
-  &:hover {
-    border-color: #1890ff;
-  }
-
-  &.has-file {
-    border-color: #52c41a;
-    background-color: #f6ffed;
-  }
-`
-
-const FileInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-color: #f6ffed;
-  border: 1px solid #b7eb8f;
-
-  .file-name {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-`
+const { Title, Text } = Typography
+const { Dragger } = Upload
 
 const ModuleItemForm = ({
   visible,
   onCancel,
   onSubmit,
   itemType,
-  initialValues,
+  form: propForm,
+  isInDrawer = false,
 }) => {
-  const [form] = Form.useForm()
-  const [fileBase64, setFileBase64] = useState(null)
-  const [fileName, setFileName] = useState('')
-  const fileInputRef = useRef(null)
+  const [form] = isInDrawer ? [propForm] : Form.useForm()
+  const [fileToBase64Loading, setFileToBase64Loading] = useState(false)
 
-  useEffect(() => {
-    if (visible) {
+  const handleSubmit = (values) => {
+    onSubmit(values)
+    if (!isInDrawer) {
       form.resetFields()
-      setFileBase64(null)
-      setFileName('')
-      if (initialValues) {
-        form.setFieldsValue(initialValues)
-      }
-    }
-  }, [visible, initialValues, form])
-
-  const getFormTitle = () => {
-    switch (itemType?.toLowerCase()) {
-      case 'video':
-        return 'Add Video'
-      case 'file':
-        return 'Add File'
-      case 'quiz':
-        return 'Add Quiz'
-      default:
-        return 'Add Item'
     }
   }
 
-  const getIcon = () => {
-    switch (itemType?.toLowerCase()) {
-      case 'video':
-        return <VideoCameraOutlined />
-      case 'file':
-        return <FileTextOutlined />
-      case 'quiz':
-        return <QuestionCircleOutlined />
-      default:
-        return null
-    }
-  }
-
-  const handleSubmit = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        // Convert required_time from minutes to seconds for file type
-        if (itemType?.toLowerCase() === 'file' && values.required_time) {
-          // Convert minutes to seconds and ensure it's an integer
-          values.required_time = parseInt(values.required_time) * 60
-        }
-
-        // Set the item_type to "file" instead of "document"
-        const payload = { ...values, item_type: itemType }
-
-        onSubmit(payload)
-        form.resetFields()
-        setFileBase64(null)
-        setFileName('')
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info)
-      })
-  }
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-
-    try {
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      setFileToBase64Loading(true)
       const reader = new FileReader()
-      reader.onload = (event) => {
-        const base64 = event.target.result
-        setFileBase64(base64)
-        setFileName(file.name)
-        form.setFieldsValue({ resource: base64 })
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        setFileToBase64Loading(false)
+        resolve(reader.result)
       }
       reader.onerror = (error) => {
-        console.error('FileReader error:', error)
+        setFileToBase64Loading(false)
+        reject(error)
       }
-      reader.readAsDataURL(file)
+    })
+  }
+
+  const normFile = async (e) => {
+    try {
+      if (Array.isArray(e)) {
+        return e
+      }
+
+      if (e?.file?.originFileObj) {
+        const base64 = await getBase64(e.file.originFileObj)
+        return base64
+      }
+
+      if (e?.fileList && e.fileList.length > 0) {
+        const lastFile = e.fileList[e.fileList.length - 1]
+        if (lastFile.originFileObj) {
+          const base64 = await getBase64(lastFile.originFileObj)
+          return base64
+        }
+      }
+
+      return undefined
     } catch (error) {
-      console.error('File reading error:', error)
+      console.error('Error converting file to base64:', error)
+      return undefined
     }
   }
 
-  const clearFileSelection = () => {
-    setFileBase64(null)
-    setFileName('')
-    form.setFieldsValue({ resource: null })
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
+  const renderFormContent = () => (
+    <>
+      <div className="form-content__compact-section">
+        <div className="form-content__section-header">
+          <div className="form-content__section-icon">
+            <InfoCircleOutlined />
+          </div>
+          <div className="form-content__section-title">
+            {itemType === 'video' ? 'Video Information' : 'File Information'}
+          </div>
+        </div>
 
-  const handleFileUploadClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click()
-    }
-  }
-
-  // File upload with better UI
-  const renderFileUpload = () => {
-    return (
-      <>
-        <Form.Item
-          name="title"
-          label="File Title"
-          rules={[{ required: true, message: 'Please enter a title' }]}
-        >
-          <Input placeholder="Enter file title" />
-        </Form.Item>
-
-        <Form.Item
-          label="Upload File"
-          required
-          tooltip="File will be converted to base64"
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-          />
-
-          <FileUploadContainer
-            onClick={handleFileUploadClick}
-            className={fileName ? 'has-file' : ''}
-          >
-            {!fileName ? (
-              <>
-                <p>
-                  <UploadOutlined style={{ fontSize: 24, marginBottom: 8 }} />
-                </p>
-                <p>Click to select a file</p>
-                <p style={{ color: '#8c8c8c', fontSize: 12 }}>
-                  Allowed file types: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT
-                </p>
-              </>
-            ) : (
-              <p style={{ color: '#52c41a' }}>
-                File selected (click to change)
-              </p>
-            )}
-          </FileUploadContainer>
-
-          {fileName && (
-            <FileInfo>
-              <div className="file-name">
-                <FileTextOutlined style={{ color: '#52c41a' }} />
-                <span>{fileName}</span>
-              </div>
-              <Button
-                type="text"
-                icon={<DeleteOutlined />}
-                danger
-                onClick={(e) => {
-                  e.stopPropagation()
-                  clearFileSelection()
-                }}
+        {itemType === 'file' ? (
+          <div className="form-content__grid form-content__grid--2">
+            <Form.Item
+              name="title"
+              label="Title"
+              rules={[{ required: true, message: 'Please enter a title' }]}
+              className="form-content__form-item"
+            >
+              <Input
+                placeholder="Enter title"
+                className="form-content__input"
               />
-            </FileInfo>
-          )}
-        </Form.Item>
+            </Form.Item>
 
-        <Form.Item
-          name="resource"
-          hidden
-          rules={[{ required: true, message: 'Please upload a file' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="required_time"
-          label="Required Time (minutes)"
-          rules={[
-            { required: true, message: 'Please enter the required time' },
-            {
-              type: 'integer',
-              transform: (value) => parseInt(value),
-              message: 'Please enter a valid number',
-            },
-          ]}
-          tooltip="Time needed to view/read file (will be stored as seconds)"
-        >
-          <Input
-            type="number"
-            min="1"
-            step="1"
-            placeholder="Enter time in minutes"
-            suffix="minutes"
-            onChange={(e) => {
-              // Remove decimal points and ensure it's a positive integer
-              const value = e.target.value
-              if (value) {
-                const intValue = Math.max(1, Math.floor(parseFloat(value)))
-                if (intValue.toString() !== value) {
-                  form.setFieldsValue({ required_time: intValue })
-                }
+            <Form.Item
+              name="required_time"
+              label={
+                <span className="form-content__label">
+                  <ClockCircleOutlined /> Required Time (minutes)
+                </span>
               }
-            }}
-          />
-        </Form.Item>
-      </>
-    )
-  }
-
-  const renderFormItems = () => {
-    switch (itemType?.toLowerCase()) {
-      case 'video':
-        return (
-          <>
-            <Form.Item
-              name="title"
-              label="Video Title"
-              rules={[{ required: true, message: 'Please enter a title' }]}
-            >
-              <Input placeholder="Enter video title" />
-            </Form.Item>
-            <Form.Item
-              name="resource"
-              label="YouTube Video URL"
               rules={[
-                { required: true, message: 'Please enter the YouTube URL' },
-                { type: 'url', message: 'Please enter a valid URL' },
+                { required: true, message: 'Please specify required time' },
               ]}
-              extra="Enter a valid YouTube video URL"
+              className="form-content__form-item"
             >
-              <Input
-                prefix={<LinkOutlined />}
-                placeholder="https://www.youtube.com/watch?v=..."
+              <InputNumber
+                min={1}
+                className="form-content__input-number"
+                placeholder="e.g. 30"
+                style={{ width: '100%' }}
               />
             </Form.Item>
-            <Form.Item name="description" label="Description">
-              <Input.TextArea
-                placeholder="Brief description of the video (optional)"
-                autoSize={{ minRows: 2, maxRows: 4 }}
-              />
-            </Form.Item>
-          </>
-        )
+          </div>
+        ) : (
+          <Form.Item
+            name="title"
+            label="Title"
+            rules={[{ required: true, message: 'Please enter a title' }]}
+            className="form-content__form-item"
+          >
+            <Input placeholder="Enter title" className="form-content__input" />
+          </Form.Item>
+        )}
+      </div>
 
-      case 'file':
-      case 'document': // For backward compatibility
-        return renderFileUpload()
+      {itemType === 'video' && (
+        <div className="form-content__compact-section">
+          <div className="form-content__section-header">
+            <div className="form-content__section-icon">
+              <LinkOutlined />
+            </div>
+            <div className="form-content__section-title">Video Source</div>
+          </div>
 
-      case 'quiz':
-        return (
-          <>
-            <Form.Item
-              name="title"
-              label="Quiz Title"
-              rules={[{ required: true, message: 'Please enter a title' }]}
-            >
-              <Input placeholder="Enter quiz title" />
-            </Form.Item>
-            <Form.Item name="description" label="Description">
-              <Input.TextArea
-                placeholder="Brief description of the quiz"
-                autoSize={{ minRows: 3, maxRows: 5 }}
-              />
-            </Form.Item>
-            <Alert
-              message="Note"
-              description="You will be able to add questions to this quiz after creating it."
-              type="info"
-              showIcon
-              style={{ marginBottom: 16 }}
-            />
-            <Form.Item name="time_limit" label="Time Limit (minutes)">
-              <Input
-                type="number"
-                placeholder="Time limit for completion (optional)"
-              />
-            </Form.Item>
-            <Form.Item
-              name="passing_score"
-              label="Passing Score (%)"
-              initialValue={70}
-            >
-              <Input type="number" placeholder="Required score to pass" />
-            </Form.Item>
-          </>
-        )
-
-      default:
-        return (
           <Alert
-            message="Select item type"
-            description="Please select an item type from the options."
-            type="warning"
+            message="Supported: YouTube, Vimeo, and other streaming services"
+            type="info"
             showIcon
+            className="form-content__alert"
           />
-        )
-    }
+
+          <Form.Item
+            name="resource"
+            label="Video URL"
+            rules={[
+              { required: true, message: 'Please enter video URL' },
+              { type: 'url', message: 'Please enter a valid URL' },
+            ]}
+            className="form-content__form-item"
+          >
+            <Input
+              prefix={<LinkOutlined />}
+              placeholder="Enter video URL (YouTube, Vimeo, etc.)"
+              className="form-content__input"
+            />
+          </Form.Item>
+        </div>
+      )}
+
+      {itemType === 'file' && (
+        <div className="form-content__compact-section">
+          <div className="form-content__section-header">
+            <div className="form-content__section-icon">
+              <UploadOutlined />
+            </div>
+            <div className="form-content__section-title">File Upload</div>
+          </div>
+
+          <Form.Item
+            name="resource"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+            rules={[{ required: true, message: 'Please upload a file' }]}
+            className="form-content__upload-item form-content__upload-item--compact"
+          >
+            <Dragger
+              maxCount={1}
+              beforeUpload={() => false}
+              listType="picture"
+              className="file-upload-dragger file-upload-dragger--compact file-upload-dragger--extra-compact"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
+              multiple={false}
+              customRequest={({ onSuccess }) => {
+                setTimeout(() => {
+                  onSuccess('ok')
+                }, 0)
+              }}
+            >
+              <div className="file-upload-dragger__content">
+                <div className="file-upload-dragger__icon">
+                  <InboxOutlined />
+                </div>
+                <div className="file-upload-dragger__text">
+                  <Text strong>Click or drag file</Text>
+                </div>
+              </div>
+            </Dragger>
+          </Form.Item>
+        </div>
+      )}
+
+      {!isInDrawer && (
+        <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={fileToBase64Loading}
+          >
+            Save
+          </Button>
+        </Form.Item>
+      )}
+    </>
+  )
+
+  if (isInDrawer) {
+    return (
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        className="form-content"
+      >
+        {renderFormContent()}
+        <Form.Item className="form-content__submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            loading={fileToBase64Loading}
+          >
+            Add {itemType === 'video' ? 'Video' : 'File'}
+          </Button>
+        </Form.Item>
+      </Form>
+    )
   }
 
   return (
     <Modal
-      title={
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {getIcon()} {getFormTitle()}
-        </Typography.Title>
-      }
+      title={`Add ${itemType === 'video' ? 'Video' : 'File'}`}
       open={visible}
       onCancel={onCancel}
-      onOk={handleSubmit}
-      okText="Add Item"
-      cancelText="Cancel"
-      destroyOnClose
-      width={window.innerWidth < 576 ? '95%' : 600}
-      centered
+      footer={null}
+      className="module-item-modal"
     >
       <Form
         form={form}
         layout="vertical"
-        initialValues={initialValues}
-        requiredMark={false}
+        onFinish={handleSubmit}
+        className="form-content"
       >
-        {renderFormItems()}
+        {renderFormContent()}
       </Form>
     </Modal>
   )
 }
 
 ModuleItemForm.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onCancel: PropTypes.func.isRequired,
+  visible: PropTypes.bool,
+  onCancel: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
-  itemType: PropTypes.string,
-  initialValues: PropTypes.object,
+  itemType: PropTypes.string.isRequired,
+  form: PropTypes.object,
+  isInDrawer: PropTypes.bool,
 }
 
 export default ModuleItemForm
