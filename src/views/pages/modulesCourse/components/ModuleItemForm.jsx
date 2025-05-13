@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Modal, Form, Input, Typography, Button, Alert, Select } from 'antd'
+import { Modal, Form, Input, Typography, Button, Alert } from 'antd'
 import {
   LinkOutlined,
   VideoCameraOutlined,
@@ -10,8 +10,6 @@ import {
 } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-
-const { Option } = Select
 
 const FileUploadContainer = styled.div`
   border: 1px dashed #d9d9d9;
@@ -294,6 +292,12 @@ const ModuleItemForm = ({
                 placeholder="https://www.youtube.com/watch?v=..."
               />
             </Form.Item>
+            <Form.Item name="description" label="Description">
+              <Input.TextArea
+                placeholder="Brief description of the video (optional)"
+                autoSize={{ minRows: 2, maxRows: 4 }}
+              />
+            </Form.Item>
           </>
         )
 
@@ -355,17 +359,18 @@ const ModuleItemForm = ({
   return (
     <Modal
       title={
-        <Typography.Title level={4}>
+        <Typography.Title level={4} style={{ margin: 0 }}>
           {getIcon()} {getFormTitle()}
         </Typography.Title>
       }
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       onOk={handleSubmit}
       okText="Add Item"
       cancelText="Cancel"
       destroyOnClose
-      width={600}
+      width={window.innerWidth < 576 ? '95%' : 600}
+      centered
     >
       <Form
         form={form}

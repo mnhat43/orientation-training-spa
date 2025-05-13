@@ -5,10 +5,10 @@ import {
   Button,
   Space,
   Dropdown,
-  Menu,
   Tooltip,
-  Badge,
   Tag,
+  Divider,
+  Empty,
 } from 'antd'
 import {
   EditOutlined,
@@ -20,74 +20,15 @@ import {
   VideoCameraOutlined,
   LinkOutlined,
   QuestionCircleOutlined,
+  MoreOutlined,
+  InfoCircleOutlined,
 } from '@ant-design/icons'
-import styled from 'styled-components'
 import ModuleForm from './ModuleForm'
 import ModuleItemForm from './ModuleItemForm'
 import PropTypes from 'prop-types'
+import './moduleList.scss'
 
-const { Text } = Typography
-
-const ModuleCard = styled(Card)`
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 16px;
-  border: 1px solid #f0f0f0;
-
-  .ant-card-head {
-    border-bottom: 1px solid #f0f0f0;
-    min-height: 48px;
-    padding: 0 16px;
-  }
-
-  .ant-card-body {
-    padding: 16px;
-  }
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  }
-`
-
-const ModuleItemWrapper = styled.div`
-  padding: 12px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  background-color: #fafafa;
-  border: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  .module-item-title {
-    display: flex;
-    align-items: center;
-  }
-
-  .module-item-type-icon {
-    margin-right: 8px;
-    font-size: 16px;
-  }
-`
-
-const ItemTypeIcon = ({ type }) => {
-  switch (type?.toLowerCase()) {
-    case 'video':
-      return <VideoCameraOutlined style={{ color: '#1890ff' }} />
-    case 'file':
-      return <FileTextOutlined style={{ color: '#52c41a' }} />
-    case 'link':
-      return <LinkOutlined style={{ color: '#722ed1' }} />
-    case 'quiz':
-      return <QuestionCircleOutlined style={{ color: '#fa8c16' }} />
-    default:
-      return <FileTextOutlined style={{ color: '#d9d9d9' }} />
-  }
-}
+const { Text, Title } = Typography
 
 const ModuleList = ({
   module,
@@ -125,7 +66,6 @@ const ModuleList = ({
       case 'video':
         return 'Video'
       case 'file':
-        return 'File'
       case 'document': // Include this for backward compatibility
         return 'File'
       case 'link':
@@ -137,143 +77,226 @@ const ModuleList = ({
     }
   }
 
+  const getItemTagColor = (type) => {
+    switch (type?.toLowerCase()) {
+      case 'video':
+        return '#1890ff'
+      case 'file':
+      case 'document':
+        return '#52c41a'
+      case 'link':
+        return '#722ed1'
+      case 'quiz':
+        return '#fa8c16'
+      default:
+        return '#d9d9d9'
+    }
+  }
+
   const showAddItemModal = (type) => {
     setItemType(type)
     setAddItemModalVisible(true)
   }
 
-  const moduleItemsMenuItems = [
-    {
-      key: 'video',
-      icon: <VideoCameraOutlined />,
-      label: 'Add Video',
-      onClick: () => showAddItemModal('video'),
-    },
-    {
-      key: 'file',
-      icon: <FileTextOutlined />,
-      label: 'Add File',
-      onClick: () => showAddItemModal('file'),
-    },
-    {
-      key: 'quiz',
-      icon: <QuestionCircleOutlined />,
-      label: 'Add Quiz',
-      onClick: () => showAddItemModal('quiz'),
-    },
-  ]
+  const moduleItemsMenu = {
+    items: [
+      {
+        key: 'video',
+        icon: <VideoCameraOutlined />,
+        label: 'Add Video',
+        onClick: () => showAddItemModal('video'),
+      },
+      {
+        key: 'file',
+        icon: <FileTextOutlined />,
+        label: 'Add File',
+        onClick: () => showAddItemModal('file'),
+      },
+      {
+        key: 'quiz',
+        icon: <QuestionCircleOutlined />,
+        label: 'Add Quiz',
+        onClick: () => showAddItemModal('quiz'),
+      },
+    ],
+  }
+
+  const moreMenu = {
+    items: [
+      {
+        key: 'edit',
+        icon: <EditOutlined />,
+        label: 'Edit Module',
+        onClick: () => setEditModalVisible(true),
+      },
+      !isFirst && {
+        key: 'moveUp',
+        icon: <ArrowUpOutlined />,
+        label: 'Move Up',
+        onClick: moveUp,
+      },
+      !isLast && {
+        key: 'moveDown',
+        icon: <ArrowDownOutlined />,
+        label: 'Move Down',
+        onClick: moveDown,
+      },
+      {
+        key: 'divider',
+        type: 'divider',
+      },
+      {
+        key: 'delete',
+        icon: <DeleteOutlined />,
+        label: 'Delete Module',
+        danger: true,
+        onClick: removeModule,
+      },
+    ].filter(Boolean),
+  }
+
+  const ItemTypeIcon = ({ type }) => {
+    const lowerType = type?.toLowerCase()
+    let iconComponent
+    let className = ''
+
+    switch (lowerType) {
+      case 'video':
+        iconComponent = <VideoCameraOutlined />
+        className = 'module-item__icon--video'
+        break
+      case 'file':
+      case 'document':
+        iconComponent = <FileTextOutlined />
+        className = 'module-item__icon--file'
+        break
+      case 'link':
+        iconComponent = <LinkOutlined />
+        className = 'module-item__icon--link'
+        break
+      case 'quiz':
+        iconComponent = <QuestionCircleOutlined />
+        className = 'module-item__icon--quiz'
+        break
+      default:
+        iconComponent = <FileTextOutlined />
+        break
+    }
+
+    return (
+      <div className={`module-item__icon ${className}`}>{iconComponent}</div>
+    )
+  }
 
   return (
-    <div>
-      <ModuleCard
-        title={
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Text strong>{module.title}</Text>
-            <Badge
-              count={module.module_items?.length || 0}
-              style={{ marginLeft: 8, backgroundColor: '#52c41a' }}
-              showZero
-            />
+    <Card className="module-card" bordered={false}>
+      <div className="module-card__header">
+        <div className="module-card__title-section">
+          <Title level={4} className="module-card__title">
+            {module.title}
+          </Title>
+          <div className="module-card__badge">
+            {module.module_items?.length || 0} items
           </div>
-        }
-        extra={
-          <Space>
-            {!isFirst && (
-              <Tooltip title="Move Up">
-                <Button
-                  icon={<ArrowUpOutlined />}
-                  type="text"
-                  onClick={moveUp}
-                  disabled={isLoading}
-                />
-              </Tooltip>
-            )}
-            {!isLast && (
-              <Tooltip title="Move Down">
-                <Button
-                  icon={<ArrowDownOutlined />}
-                  type="text"
-                  onClick={moveDown}
-                  disabled={isLoading}
-                />
-              </Tooltip>
-            )}
-            <Tooltip title="Edit Module">
-              <Button
-                icon={<EditOutlined />}
-                type="text"
-                onClick={() => setEditModalVisible(true)}
-                disabled={isLoading}
-              />
-            </Tooltip>
-            <Dropdown
-              menu={{ items: moduleItemsMenuItems }}
-              placement="bottomRight"
-              disabled={isLoading}
-            >
-              <Button
-                icon={<PlusOutlined />}
-                type="text"
-                disabled={isLoading}
-              />
-            </Dropdown>
-            <Tooltip title="Delete Module">
-              <Button
-                icon={<DeleteOutlined />}
-                type="text"
-                danger
-                onClick={removeModule}
-                disabled={isLoading}
-              />
-            </Tooltip>
-          </Space>
-        }
-      >
+        </div>
+
+        <div className="module-card__actions">
+          <Dropdown
+            menu={moduleItemsMenu}
+            placement="bottomLeft"
+            disabled={isLoading}
+            trigger={['click']}
+          >
+            <Button type="primary" icon={<PlusOutlined />} disabled={isLoading}>
+              Add Content
+            </Button>
+          </Dropdown>
+
+          <Dropdown
+            menu={moreMenu}
+            placement="bottomRight"
+            disabled={isLoading}
+            trigger={['click']}
+          >
+            <Button icon={<MoreOutlined />} disabled={isLoading}>
+              Actions
+            </Button>
+          </Dropdown>
+        </div>
+      </div>
+
+      <Divider className="module-card__divider" />
+
+      <div className="module-card__body">
         {module.description && (
-          <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
-            {module.description}
-          </Text>
+          <Text className="module-card__description">{module.description}</Text>
         )}
 
         {module.module_items && module.module_items.length > 0 ? (
           <div>
-            {module.module_items.map((item) => (
-              <ModuleItemWrapper key={item.id}>
-                <div className="module-item-title">
-                  <span className="module-item-type-icon">
-                    <ItemTypeIcon type={item.item_type} />
-                  </span>
-                  <Space direction="vertical" size={0}>
-                    <Text strong>{item.title}</Text>
-                    {item.description && (
-                      <Text type="secondary" style={{ fontSize: '12px' }}>
-                        {item.description.length > 80
-                          ? `${item.description.substring(0, 80)}...`
-                          : item.description}
-                      </Text>
-                    )}
-                  </Space>
+            {module.module_items.map((item) => {
+              const itemType = item.item_type?.toLowerCase()
+              return (
+                <div
+                  key={item.id}
+                  className={`module-item module-item--${itemType}`}
+                >
+                  <div className="module-item__content">
+                    <ItemTypeIcon type={itemType} />
+
+                    <div className="module-item__details">
+                      <h4 className="module-item__title">{item.title}</h4>
+                      {item.description && (
+                        <p className="module-item__description">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <Space className="module-item__actions">
+                      <Tag
+                        color={getItemTagColor(itemType)}
+                        className="module-item__tag"
+                      >
+                        {getItemLabel(itemType)}
+                      </Tag>
+                      <Tooltip title="Delete item">
+                        <Button
+                          icon={<DeleteOutlined />}
+                          size="small"
+                          type="text"
+                          className="module-item__delete-btn"
+                          onClick={() => removeModuleItem(item.id)}
+                          disabled={isLoading}
+                        />
+                      </Tooltip>
+                    </Space>
+                  </div>
                 </div>
-                <Space>
-                  <Tag color="blue">{getItemLabel(item.item_type)}</Tag>
-                  <Button
-                    icon={<DeleteOutlined />}
-                    size="small"
-                    type="text"
-                    danger
-                    onClick={() => removeModuleItem(item.id)}
-                    disabled={isLoading}
-                  />
-                </Space>
-              </ModuleItemWrapper>
-            ))}
+              )
+            })}
           </div>
         ) : (
-          <Text type="secondary">
-            No items in this module. Click the "+" button to add content.
-          </Text>
+          <div className="module-empty-state">
+            <div className="module-empty-state__icon">
+              <InfoCircleOutlined />
+            </div>
+            <h4 className="module-empty-state__title">No content yet</h4>
+            <p className="module-empty-state__description">
+              Add videos, files, or quizzes to this module to get started
+            </p>
+            <Dropdown
+              menu={moduleItemsMenu}
+              placement="bottom"
+              trigger={['click']}
+            >
+              <Button type="primary" icon={<PlusOutlined />}>
+                Add Content
+              </Button>
+            </Dropdown>
+          </div>
         )}
-      </ModuleCard>
+      </div>
 
       <ModuleForm
         visible={editModalVisible}
@@ -289,7 +312,7 @@ const ModuleList = ({
         onSubmit={handleAddItem}
         itemType={itemType}
       />
-    </div>
+    </Card>
   )
 }
 

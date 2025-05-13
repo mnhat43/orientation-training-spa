@@ -34,13 +34,19 @@ const ModuleForm = ({
 
   return (
     <Modal
-      title={<Typography.Title level={4}>{title}</Typography.Title>}
+      title={
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {title}
+        </Typography.Title>
+      }
       open={visible}
       onCancel={onCancel}
       onOk={handleSubmit}
       okText="Submit"
       cancelText="Cancel"
       destroyOnClose
+      width={window.innerWidth < 576 ? '95%' : 520}
+      centered
     >
       <Form
         form={form}

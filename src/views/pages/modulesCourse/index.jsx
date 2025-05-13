@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react'
+import { Typography, Button, Space, Spin, Alert, Row, Col } from 'antd'
 import {
-  Typography,
-  Button,
-  Empty,
-  Card,
-  Space,
-  Spin,
-  Alert,
-  Divider,
-  Badge,
-} from 'antd'
-import { PlusOutlined, BookOutlined, RightOutlined } from '@ant-design/icons'
+  PlusOutlined,
+  AppstoreOutlined,
+  FileAddOutlined,
+  BookOutlined,
+} from '@ant-design/icons'
 import { useParams } from 'react-router-dom'
 import ModuleList from './components/ModuleList'
 import ModuleForm from './components/ModuleForm'
+import Banner from '@components/Banner'
 import ConfirmationModal from '@components/ConfirmationModal'
 import module from '@api/module'
 import moduleItem from '@api/moduleItem'
@@ -21,7 +17,7 @@ import { toast } from 'react-toastify'
 import './modulesCourse.scss'
 
 const Modules = () => {
-  const { Title, Text } = Typography
+  const { Title } = Typography
   const { courseId } = useParams()
   const [isFormModalVisible, setIsFormModalVisible] = useState(false)
   const [modules, setModules] = useState([])
@@ -61,6 +57,7 @@ const Modules = () => {
       const response = await module.addModule({
         course_id: parseInt(courseId),
         title: values.title,
+        description: values.description,
         position: modules.length + 1,
       })
       if (response.status === 1) {
@@ -175,7 +172,7 @@ const Modules = () => {
       (direction === 'up' && currentIndex === 0) ||
       (direction === 'down' && currentIndex === modules.length - 1)
     ) {
-      return // Can't move further
+      return
     }
 
     const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
@@ -183,7 +180,6 @@ const Modules = () => {
     const [movedModule] = reorderedModules.splice(currentIndex, 1)
     reorderedModules.splice(newIndex, 0, movedModule)
 
-    // Update positions
     const updatedModules = reorderedModules.map((item, index) => ({
       ...item,
       position: index + 1,
@@ -191,7 +187,6 @@ const Modules = () => {
 
     setModules(updatedModules)
 
-    // Update in the backend
     try {
       setLoading(true)
       const response = await module.updateModulePositions({
@@ -203,7 +198,7 @@ const Modules = () => {
 
       if (response.status !== 1) {
         toast.error('Failed to update module positions')
-        fetchModules() // Refresh to get the original order
+        fetchModules()
       }
     } catch (error) {
       toast.error('Failed to save the new order')
@@ -212,6 +207,26 @@ const Modules = () => {
       setLoading(false)
     }
   }
+
+  const renderEmptyState = () => (
+    <div className="empty-state">
+      <div className="empty-state-icon">
+        <AppstoreOutlined />
+      </div>
+      <h3 className="empty-state-title">No Modules Yet</h3>
+      <p className="empty-state-description">
+        Get started by creating your first module for this course
+      </p>
+      <Button
+        type="primary"
+        icon={<FileAddOutlined />}
+        size="large"
+        onClick={() => setIsFormModalVisible(true)}
+      >
+        Create First Module
+      </Button>
+    </div>
+  )
 
   const renderContent = () => {
     if (loading && modules.length === 0) {
@@ -227,106 +242,84 @@ const Modules = () => {
     }
 
     if (modules.length === 0) {
-      return (
-        <Card>
-          <Empty
-            description="No modules found"
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-          >
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => setIsFormModalVisible(true)}
-            >
-              Create First Module
-            </Button>
-          </Empty>
-        </Card>
-      )
+      return renderEmptyState()
     }
 
     return (
-      <Space direction="vertical" style={{ width: '100%' }}>
+      <Row gutter={[16, 16]}>
         {modules.map((module, index) => (
-          <ModuleList
-            key={module.id}
-            module={module}
-            index={index}
-            editModule={(updatedModule) => editModule(module.id, updatedModule)}
-            removeModule={() => confirmDeleteModule(module.id)}
-            addModuleItem={(moduleItem) => addModuleItem(module.id, moduleItem)}
-            removeModuleItem={(id) => confirmDeleteModuleItem(id)}
-            isLoading={loading}
-            moveUp={() => moveModule(module.id, 'up')}
-            moveDown={() => moveModule(module.id, 'down')}
-            isFirst={index === 0}
-            isLast={index === modules.length - 1}
-          />
+          <Col xs={24} key={module.id}>
+            <ModuleList
+              module={module}
+              index={index}
+              editModule={(updatedModule) =>
+                editModule(module.id, updatedModule)
+              }
+              removeModule={() => confirmDeleteModule(module.id)}
+              addModuleItem={(moduleItem) =>
+                addModuleItem(module.id, moduleItem)
+              }
+              removeModuleItem={(id) => confirmDeleteModuleItem(id)}
+              isLoading={loading}
+              moveUp={() => moveModule(module.id, 'up')}
+              moveDown={() => moveModule(module.id, 'down')}
+              isFirst={index === 0}
+              isLast={index === modules.length - 1}
+            />
+          </Col>
         ))}
-      </Space>
+      </Row>
     )
   }
 
-  // Add a computed property to get the count of all items
   const totalItems = modules.reduce(
     (acc, module) => acc + (module.module_items?.length || 0),
     0,
   )
 
   return (
-    <>
-      <div className="header-container">
-        <div className="header-content">
-          <div className="title-section">
-            <div className="icon-wrapper">
-              <BookOutlined style={{ fontSize: 24, color: 'white' }} />
+    <div className="modules-page">
+      <Banner
+        title={`Course Modules (${modules.length})`}
+        description={`Organize your course content into logical sections. This course has ${modules.length} modules with ${totalItems} total items.`}
+        icon={BookOutlined}
+        closable={false}
+      />
+
+      <div className="modules-layout">
+        <div className="modules-main">
+          <div className="modules-container">{renderContent()}</div>
+        </div>
+
+        <div className="modules-sidebar">
+          <div className="modules-actions">
+            <div className="actions-header">
+              <Typography.Title level={4}>Module Actions</Typography.Title>
             </div>
-            <div className="text-content">
-              <Title level={3}>
-                Course Modules
-                <Badge
-                  count={modules.length}
-                  className="badge"
-                  style={{
-                    backgroundColor: '#1890ff',
-                    fontSize: '14px',
-                    marginTop: '-4px',
-                  }}
-                />
-              </Title>
-              <Text className="description">
-                Organize your course content into logical sections with
-                materials, quizzes, and assignments
-              </Text>
+
+            <div className="action-card">
+              <div className="action-card-icon">
+                <PlusOutlined />
+              </div>
+              <div className="action-card-content">
+                <h4>Create Module</h4>
+                <p>
+                  Add a new module to organize your course content into logical
+                  sections
+                </p>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => setIsFormModalVisible(true)}
+                  className="action-button"
+                >
+                  Add New Module
+                </Button>
+              </div>
             </div>
           </div>
-          <Button
-            onClick={() => setIsFormModalVisible(true)}
-            type="primary"
-            icon={<PlusOutlined />}
-            size="large"
-            className="add-module-btn"
-          >
-            Add Module
-            <RightOutlined />
-          </Button>
         </div>
-        <Divider className="styled-divider" />
-        <Space>
-          <Badge
-            status="processing"
-            text={`${modules.length} Modules`}
-            className="stats-badge"
-          />
-          <Badge
-            status="success"
-            text={`${totalItems} Total Items`}
-            className="stats-badge"
-          />
-        </Space>
       </div>
-
-      <div className="modules-container">{renderContent()}</div>
 
       <ModuleForm
         visible={isFormModalVisible}
@@ -341,8 +334,13 @@ const Modules = () => {
         onConfirm={handleRemoveModule}
         confirmLoading={loading}
       >
-        Are you sure you want to delete this module? All module items will be
-        deleted as well.
+        <Alert
+          message="Warning"
+          description="Are you sure you want to delete this module? All module items will be permanently deleted as well."
+          type="warning"
+          showIcon
+          style={{ marginBottom: 16 }}
+        />
       </ConfirmationModal>
 
       <ConfirmationModal
@@ -352,9 +350,14 @@ const Modules = () => {
         onConfirm={removeModuleItem}
         confirmLoading={loading}
       >
-        Are you sure you want to delete this item?
+        <Alert
+          message="Warning"
+          description="Are you sure you want to delete this item? This action cannot be undone."
+          type="warning"
+          showIcon
+        />
       </ConfirmationModal>
-    </>
+    </div>
   )
 }
 
