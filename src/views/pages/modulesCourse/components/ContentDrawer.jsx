@@ -18,6 +18,8 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
   const [activeTab, setActiveTab] = useState('video')
 
   const handleSubmit = (values) => {
+    console.log('Form values:', values)
+    return
     let formattedValues = {
       ...values,
       item_type: activeTab,

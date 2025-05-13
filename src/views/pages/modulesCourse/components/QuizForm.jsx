@@ -13,6 +13,7 @@ import {
   Col,
   Collapse,
   Badge,
+  Radio,
 } from 'antd'
 import {
   PlusOutlined,
@@ -29,7 +30,6 @@ import {
   FileTextOutlined,
   ClockCircleOutlined,
   CaretRightOutlined,
-  EditOutlined,
 } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 import './QuizForm.scss'
@@ -40,29 +40,56 @@ const { Panel } = Collapse
 
 const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
   const [quizType, setQuizType] = useState('multiple_choice')
+  const [essayInputType, setEssayInputType] = useState('text')
 
   const difficultyOptions = [
-    { label: 'Easy', value: 'easy' },
-    { label: 'Medium', value: 'medium' },
-    { label: 'Hard', value: 'hard' },
+    { label: 'Easy', value: 'Easy' },
+    { label: 'Medium', value: 'Medium' },
+    { label: 'Hard', value: 'Hard' },
   ]
 
-  const handleSubmit = (values) => {
+  // Function to convert file to base64
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
+  }
+
+  const handleSubmit = async (values) => {
+    let pdfBase64 = null
+
+    // Convert PDF to base64 if needed
+    if (
+      quizType === 'essay' &&
+      essayInputType === 'file' &&
+      values.pdf_file &&
+      values.pdf_file.length > 0
+    ) {
+      try {
+        pdfBase64 = await getBase64(values.pdf_file[0].originFileObj)
+      } catch (error) {
+        console.error('Error converting PDF to base64:', error)
+      }
+    }
+
     const formattedValues = {
       title: values.title,
       item_type: 'quiz',
       quiz_data: {
         type: quizType,
-        category: values.category,
+        difficulty: values.difficulty,
         score: values.score,
         max_attempts: values.max_attempts,
         time_limit: values.time_limit || null,
         questions: quizType === 'multiple_choice' ? values.questions : null,
-        essay_question: quizType === 'essay' ? values.essay_question : null,
-        pdf_file:
-          quizType === 'essay' && values.pdf_file
-            ? values.pdf_file[0].originFileObj
+        essay_question:
+          quizType === 'essay' && essayInputType === 'text'
+            ? values.essay_question
             : null,
+        pdf_file: pdfBase64,
       },
     }
 
@@ -91,7 +118,6 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
           </div>
           <div className="form-content__section-title">Quiz Details</div>
         </div>
-
         <Row gutter={16}>
           <Col xs={24} md={12}>
             <Form.Item
@@ -108,7 +134,7 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
           </Col>
           <Col xs={24} md={12}>
             <Form.Item
-              name="category"
+              name="difficulty"
               label={
                 <span className="form-content__label">
                   <FireOutlined /> Difficulty
@@ -125,7 +151,6 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
             </Form.Item>
           </Col>
         </Row>
-
         <Row gutter={16}>
           <Col xs={24} md={8}>
             <Form.Item
@@ -194,7 +219,6 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
           </Col>
         </Row>
       </div>
-
       <div className="form-content__section">
         <div className="form-content__section-header">
           <div className="form-content__section-icon">
@@ -202,10 +226,13 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
           </div>
           <div className="form-content__section-title">Question Type</div>
         </div>
-
         <div className="quiz-form__type-selector">
           <div
-            className={`quiz-form__type-option ${quizType === 'multiple_choice' ? 'quiz-form__type-option--active' : ''}`}
+            className={`quiz-form__type-option ${
+              quizType === 'multiple_choice'
+                ? 'quiz-form__type-option--active'
+                : ''
+            }`}
             onClick={() => setQuizType('multiple_choice')}
           >
             <div className="quiz-form__type-icon">
@@ -221,9 +248,10 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
               <CheckOutlined className="quiz-form__type-check" />
             )}
           </div>
-
           <div
-            className={`quiz-form__type-option ${quizType === 'essay' ? 'quiz-form__type-option--active' : ''}`}
+            className={`quiz-form__type-option ${
+              quizType === 'essay' ? 'quiz-form__type-option--active' : ''
+            }`}
             onClick={() => setQuizType('essay')}
           >
             <div className="quiz-form__type-icon">
@@ -240,7 +268,6 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
             )}
           </div>
         </div>
-
         <div className="quiz-form__type-content">
           {quizType === 'multiple_choice' && (
             <Form.List name="questions">
@@ -309,82 +336,80 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
                       )}
                       expandIconPosition="end"
                       ghost
-                    >
-                      {fields.map(({ key, name, ...restField }) => (
-                        <Panel
-                          key={key}
-                          className="quiz-form__question-panel"
-                          header={
-                            <div className="quiz-form__question-header">
-                              <div className="quiz-form__question-number">
-                                Q{name + 1}
-                              </div>
-                              <div className="quiz-form__question-preview">
-                                <Form.Item
-                                  noStyle
-                                  shouldUpdate={(prevValues, currentValues) => {
-                                    return (
-                                      prevValues?.questions?.[name]
-                                        ?.question_text !==
-                                      currentValues?.questions?.[name]
-                                        ?.question_text
-                                    )
-                                  }}
-                                >
-                                  {({ getFieldValue }) => {
-                                    const questionText =
-                                      getFieldValue([
-                                        'questions',
-                                        name,
-                                        'question_text',
-                                      ]) || 'New Question'
-                                    return <Text ellipsis>{questionText}</Text>
-                                  }}
-                                </Form.Item>
-                              </div>
-                              <div className="quiz-form__question-points-badge">
-                                <Form.Item
-                                  noStyle
-                                  shouldUpdate={(prevValues, currentValues) => {
-                                    return (
-                                      prevValues?.questions?.[name]
-                                        ?.question_score !==
-                                      currentValues?.questions?.[name]
-                                        ?.question_score
-                                    )
-                                  }}
-                                >
-                                  {({ getFieldValue }) => {
-                                    const points =
-                                      getFieldValue([
-                                        'questions',
-                                        name,
-                                        'question_score',
-                                      ]) || 1
-                                    return (
-                                      <Badge
-                                        count={`${points} pts`}
-                                        style={{ backgroundColor: '#52c41a' }}
-                                      />
-                                    )
-                                  }}
-                                </Form.Item>
-                              </div>
+                      items={fields.map(({ key, name, ...restField }) => ({
+                        key,
+                        className: 'quiz-form__question-panel',
+                        label: (
+                          <div className="quiz-form__question-header">
+                            <div className="quiz-form__question-number">
+                              Q{name + 1}
                             </div>
-                          }
-                          extra={
-                            <Button
-                              type="text"
-                              danger
-                              icon={<DeleteOutlined />}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                remove(name)
-                              }}
-                              className="quiz-form__delete-question-btn"
-                            />
-                          }
-                        >
+                            <div className="quiz-form__question-preview">
+                              <Form.Item
+                                noStyle
+                                shouldUpdate={(prevValues, currentValues) => {
+                                  return (
+                                    prevValues?.questions?.[name]
+                                      ?.question_text !==
+                                    currentValues?.questions?.[name]
+                                      ?.question_text
+                                  )
+                                }}
+                              >
+                                {({ getFieldValue }) => {
+                                  const questionText =
+                                    getFieldValue([
+                                      'questions',
+                                      name,
+                                      'question_text',
+                                    ]) || 'New Question'
+                                  return <Text ellipsis>{questionText}</Text>
+                                }}
+                              </Form.Item>
+                            </div>
+                            <div className="quiz-form__question-points-badge">
+                              <Form.Item
+                                noStyle
+                                shouldUpdate={(prevValues, currentValues) => {
+                                  return (
+                                    prevValues?.questions?.[name]
+                                      ?.question_score !==
+                                    currentValues?.questions?.[name]
+                                      ?.question_score
+                                  )
+                                }}
+                              >
+                                {({ getFieldValue }) => {
+                                  const points =
+                                    getFieldValue([
+                                      'questions',
+                                      name,
+                                      'question_score',
+                                    ]) || 1
+                                  return (
+                                    <Badge
+                                      count={`${points} pts`}
+                                      style={{ backgroundColor: '#52c41a' }}
+                                    />
+                                  )
+                                }}
+                              </Form.Item>
+                            </div>
+                          </div>
+                        ),
+                        extra: (
+                          <Button
+                            type="text"
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              remove(name)
+                            }}
+                            className="quiz-form__delete-question-btn"
+                          />
+                        ),
+                        children: (
                           <div className="quiz-form__question-content">
                             <div className="quiz-form__question-main">
                               <Row gutter={16} align="middle">
@@ -411,7 +436,14 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
                                   <Form.Item
                                     {...restField}
                                     name={[name, 'question_score']}
-                                    label="Points"
+                                    label={
+                                      <span>
+                                        Weight{' '}
+                                        <Tooltip title="Percentage of the Total Score for this question">
+                                          <InfoCircleOutlined />
+                                        </Tooltip>
+                                      </span>
+                                    }
                                     rules={[
                                       { required: true, message: 'Required' },
                                     ]}
@@ -420,6 +452,8 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
                                     <InputNumber
                                       min={1}
                                       max={100}
+                                      formatter={(value) => `${value}%`}
+                                      parser={(value) => value.replace('%', '')}
                                       style={{ width: '100%' }}
                                     />
                                   </Form.Item>
@@ -499,7 +533,12 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
 
                                     <Button
                                       type="dashed"
-                                      onClick={() => subOpt.add()}
+                                      onClick={() =>
+                                        subOpt.add({
+                                          text: '',
+                                          is_correct: false,
+                                        })
+                                      }
                                       icon={<PlusOutlined />}
                                       className="quiz-form__add-option-btn"
                                     >
@@ -510,9 +549,9 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
                               </Form.List>
                             </div>
                           </div>
-                        </Panel>
-                      ))}
-                    </Collapse>
+                        ),
+                      }))}
+                    />
                   )}
                 </>
               )}
@@ -522,44 +561,69 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
           {quizType === 'essay' && (
             <div className="quiz-form__essay-section">
               <Form.Item
-                name="essay_question"
-                label="Essay Question"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter the essay question',
-                  },
-                ]}
+                name="essay_input_type"
+                label="Question Format"
+                initialValue="text"
                 className="form-content__form-item"
               >
-                <TextArea
-                  rows={4}
-                  placeholder="Enter the essay question"
-                  className="form-content__textarea"
-                />
+                <Radio.Group
+                  onChange={(e) => setEssayInputType(e.target.value)}
+                  value={essayInputType}
+                >
+                  <Radio value="text">Write Question</Radio>
+                  <Radio value="file">Upload PDF</Radio>
+                </Radio.Group>
               </Form.Item>
 
-              <Form.Item
-                name="pdf_file"
-                label="Or Upload Question PDF (optional)"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-                className="form-content__form-item quiz-form__pdf-upload form-content__upload-item--compact"
-              >
-                <Upload
-                  maxCount={1}
-                  beforeUpload={() => false}
-                  accept=".pdf"
-                  className="form-content__upload form-content__upload--compact"
+              {essayInputType === 'text' && (
+                <Form.Item
+                  name="essay_question"
+                  label="Essay Question"
+                  rules={[
+                    {
+                      required: essayInputType === 'text',
+                      message: 'Please enter the essay question',
+                    },
+                  ]}
+                  className="form-content__form-item"
                 >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="form-content__upload-btn form-content__upload-btn--compact"
+                  <TextArea
+                    rows={4}
+                    placeholder="Enter the essay question"
+                    className="form-content__textarea"
+                  />
+                </Form.Item>
+              )}
+
+              {essayInputType === 'file' && (
+                <Form.Item
+                  name="pdf_file"
+                  label="Upload Question PDF"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  rules={[
+                    {
+                      required: essayInputType === 'file',
+                      message: 'Please upload a PDF file',
+                    },
+                  ]}
+                  className="form-content__form-item quiz-form__pdf-upload form-content__upload-item--compact"
+                >
+                  <Upload
+                    maxCount={1}
+                    beforeUpload={() => false}
+                    accept=".pdf"
+                    className="form-content__upload form-content__upload--compact"
                   >
-                    Upload PDF
-                  </Button>
-                </Upload>
-              </Form.Item>
+                    <Button
+                      icon={<UploadOutlined />}
+                      className="form-content__upload-btn form-content__upload-btn--compact"
+                    >
+                      Upload PDF
+                    </Button>
+                  </Upload>
+                </Form.Item>
+              )}
 
               <Form.Item
                 name="answer_format"
@@ -576,7 +640,6 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
           )}
         </div>
       </div>
-
       <Form.Item className="form-content__submit">
         <Button type="primary" htmlType="submit" block>
           Create Quiz
