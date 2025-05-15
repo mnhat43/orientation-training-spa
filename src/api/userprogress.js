@@ -13,6 +13,10 @@ const userprogress = {
     const url = '/user-progress/get-user-progress'
     return API.post(url, progressData)
   },
+  getUserProgressSingle: (progressData) => {
+    const url = '/user-progress/get-single'
+    return API.post(url, progressData)
+  },
   getListTraineeByCourse: (courseID) => {
     const url = '/user-progress/list-trainee-by-course'
     return API.post(url, courseID)

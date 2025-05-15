@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import lecture from '@api/lecture'
 import userprogress from '@api/userprogress'
 
-const useLectureData = (courseId, moduleId, moduleItemId) => {
+const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
   const navigate = useNavigate()
   const [lectures, setLectures] = useState({})
   const [selectedLecture, setSelectedLecture] = useState(null)
@@ -124,7 +124,8 @@ const useLectureData = (courseId, moduleId, moduleItemId) => {
     if (!courseId) return false
 
     try {
-      const response = await userprogress.getUserProgress({
+      const response = await userprogress.getUserProgressSingle({
+        user_id: parseInt(userId),
         course_id: parseInt(courseId),
       })
 

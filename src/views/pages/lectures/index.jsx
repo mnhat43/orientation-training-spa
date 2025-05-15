@@ -6,13 +6,17 @@ import LectureContent from './components/LectureContent'
 import CertificateView from './components/CertificateView'
 import LearningTimer from './components/LearningTimer'
 import useLectureData from '@hooks/useLectureData'
+import useAuth from '@hooks/useAuth'
 import './lectures.scss'
 
 const Lectures = () => {
+  const { currentUser } = useAuth()
   const { moduleId, moduleItemId, courseId } = useParams()
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [activeTab, setActiveTab] = useState('lecture')
   const [lastViewedLecture, setLastViewedLecture] = useState(null)
+
+  const userId = currentUser.id
 
   const {
     lectures,
@@ -27,7 +31,7 @@ const Lectures = () => {
     handleCompleteLecture,
     loading,
     error,
-  } = useLectureData(courseId, moduleId, moduleItemId)
+  } = useLectureData(userId, courseId, moduleId, moduleItemId)
 
   const handlePlayStateChange = useCallback((isPlaying) => {
     setIsVideoPlaying(isPlaying)
