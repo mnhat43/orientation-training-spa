@@ -1,17 +1,14 @@
 @import "../../../styles/variables.scss";
 
 .lectures-page {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     overflow: hidden;
+    padding: 0 24px;
     &__content-container {
         padding: 0px !important;
-        height: calc(100vh - 100px);
+        max-height: calc(100vh - 70px);
         overflow-y: auto;
         overflow-x: hidden;
 
-        // Ensure scrollbar styling is consistent across browsers
         &::-webkit-scrollbar {
             width: 8px;
         }
@@ -27,7 +24,7 @@
         }
 
         @media (max-width: 992px) {
-            height: 60vh; // Fixed height for mobile
+            height: 60vh;
             order: 1;
             padding-right: 16px;
         }
@@ -39,7 +36,7 @@
     }
 
     &__playlist-container {
-        height: calc(100vh - 100px);
+        height: calc(100vh - 70px);
         overflow-y: auto;
         overflow-x: hidden;
         padding: 0px !important;
@@ -66,13 +63,12 @@
         position: fixed;
         bottom: 20px;
         right: 20px;
-        z-index: 1001; // Make sure this is high enough to be visible
+        z-index: 1001;
         width: 300px;
         transition: all 0.3s ease;
         animation: fadeIn 0.3s forwards;
-        opacity: 1; // Ensure it's visible
+        opacity: 1;
 
-        // Animation to make the timer appear
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -84,7 +80,6 @@
             }
         }
 
-        // When playlist is hidden, adjust position
         .content-expanded & {
             right: 20px;
         }

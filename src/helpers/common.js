@@ -23,6 +23,22 @@ export const formatTime = (seconds) => {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
+export const timeStringToSeconds = (timeString) => {
+  if (!timeString) return 0
+
+  const parts = timeString.split(':')
+
+  if (parts.length === 3) {
+    return (
+      parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2])
+    )
+  } else if (parts.length === 2) {
+    return parseInt(parts[0]) * 60 + parseInt(parts[1])
+  }
+
+  return 0
+}
+
 export const calculateTotalHours = (courses) => {
   return courses.reduce((total, course) => {
     const hours = parseInt(course.duration) || 0

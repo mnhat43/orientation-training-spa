@@ -1,21 +1,17 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Video from './Video'
-import VideoInfo from './VideoInfo'
 import File from './File'
+import QuizModern from './QuizModern'
 import './LectureContent.scss'
 
-const LectureContent = ({ selectedLecture, onPlayStateChange, isExpanded }) => {
-  useEffect(() => {
-    // Reset video playing state when lecture changes
-    if (onPlayStateChange) {
-      onPlayStateChange(false)
-    }
-  }, [
-    selectedLecture?.module_id,
-    selectedLecture?.module_item_id,
-    onPlayStateChange,
-  ])
-
+const LectureContent = ({
+  selectedLecture,
+  setIsVideoPlaying,
+  onCompleteLecture,
+  onCompleteCourse,
+  isLastLecture,
+  allLectures,
+}) => {
   return (
     <div className="lecture-content-container">
       {selectedLecture.item_type === 'video' ? (
@@ -23,19 +19,19 @@ const LectureContent = ({ selectedLecture, onPlayStateChange, isExpanded }) => {
           <div className="video-content">
             <Video
               videoId={selectedLecture.videoId}
-              onPlayStateChange={onPlayStateChange}
+              setIsVideoPlaying={setIsVideoPlaying}
             />
           </div>
-
-          <div className="video-info-container">
-            <VideoInfo
-              title={selectedLecture.title}
-              description={selectedLecture.description}
-              publishedAt={selectedLecture.publishedAt}
-              duration={selectedLecture.duration}
-              tags={selectedLecture.tags}
-            />
-          </div>
+        </div>
+      ) : selectedLecture.item_type === 'quiz' ? (
+        <div className="quiz-container">
+          <QuizModern
+            selectedLecture={selectedLecture}
+            onCompleteLecture={onCompleteLecture}
+            onCompleteCourse={onCompleteCourse}
+            isLastLecture={isLastLecture}
+            allLectures={allLectures}
+          />
         </div>
       ) : (
         <div className="file-container">

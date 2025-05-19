@@ -2,102 +2,89 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import lecture from '@api/lecture'
 import userprogress from '@api/userprogress'
+import { useParams } from 'react-router-dom'
 
-const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
+const useLectureData = () => {
   const navigate = useNavigate()
+  const { moduleId, moduleItemId, courseId } = useParams()
+
   const [lectures, setLectures] = useState({})
-  const [selectedLecture, setSelectedLecture] = useState(null)
+  const [selectedLecture, setSelectedLecture] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [courseCompleted, setCourseCompleted] = useState(false)
 
   const allLectures = useMemo(() => Object.values(lectures).flat(), [lectures])
 
-  // Find the latest unlocked lecture
   const latestUnlockedLecture = useMemo(() => {
+    if (!Array.isArray(allLectures) || !allLectures.length) return null
+
     const unlockedLectures = allLectures.filter(
       (lecture) => lecture.unlocked === true,
     )
     if (!unlockedLectures.length) return null
 
     return unlockedLectures.reduce((highest, current) => {
-      const currentModuleId = parseInt(current.module_id)
-      const highestModuleId = highest ? parseInt(highest.module_id) : -1
+      const currentModulePosition = parseInt(current.module_position)
+      const highestModulePosition = highest
+        ? parseInt(highest.module_position)
+        : -1
 
-      if (currentModuleId > highestModuleId) return current
-      if (currentModuleId < highestModuleId) return highest
+      if (currentModulePosition > highestModulePosition) return current
+      if (currentModulePosition < highestModulePosition) return highest
 
-      return parseInt(current.module_item_id) > parseInt(highest.module_item_id)
+      return parseInt(current.module_item_position) >
+        parseInt(highest.module_item_position)
         ? current
         : highest
     }, null)
   }, [allLectures])
 
-  // Find the last lecture in the course
   const lastLecture = useMemo(() => {
     if (!Array.isArray(allLectures) || !allLectures.length) return null
 
-    // Find the lecture with highest module_id and highest module_item_id within that module
     return allLectures.reduce((highest, current) => {
       if (!highest) return current
 
-      // Compare module_id first
-      const currentModuleId = parseInt(current.module_id)
-      const highestModuleId = parseInt(highest.module_id)
+      const currentModulePosition = parseInt(current.module_position)
+      const highestModulePosition = parseInt(highest.module_position)
 
-      if (currentModuleId > highestModuleId) return current
-      if (currentModuleId < highestModuleId) return highest
+      if (currentModulePosition > highestModulePosition) return current
+      if (currentModulePosition < highestModulePosition) return highest
 
-      // If module_id is the same, compare module_item_id
-      return parseInt(current.module_item_id) > parseInt(highest.module_item_id)
+      return parseInt(current.module_item_position) >
+        parseInt(highest.module_item_position)
         ? current
         : highest
     }, null)
   }, [allLectures])
 
-  // Check if the selected lecture is the latest unlocked one
   const isLatestUnlocked = useMemo(() => {
     if (!selectedLecture || !latestUnlockedLecture) return false
 
-    return (
-      parseInt(selectedLecture.module_id) ===
-        parseInt(latestUnlockedLecture.module_id) &&
-      parseInt(selectedLecture.module_item_id) ===
-        parseInt(latestUnlockedLecture.module_item_id)
-    )
+    return selectedLecture === latestUnlockedLecture
   }, [selectedLecture, latestUnlockedLecture])
 
-  // Check if selected lecture is the last one
   const isLastLecture = useMemo(() => {
     if (!selectedLecture || !lastLecture) return false
 
-    return (
-      parseInt(selectedLecture.module_id) === parseInt(lastLecture.module_id) &&
-      parseInt(selectedLecture.module_item_id) ===
-        parseInt(lastLecture.module_item_id)
-    )
+    return selectedLecture === lastLecture
   }, [selectedLecture, lastLecture])
 
-  // Find a lecture by moduleId and moduleItemId
-  const findLectureById = useCallback(
-    (moduleId, moduleItemId) => {
-      if (!Array.isArray(allLectures) || !allLectures.length) return null
-      if (!moduleId || !moduleItemId) return allLectures[0]
-
-      return (
-        allLectures.find(
-          (lecture) =>
-            lecture.module_id === parseInt(moduleId) &&
-            lecture.module_item_id === parseInt(moduleItemId),
-        ) || null
-      )
-    },
-    [allLectures],
-  )
-
-  // Helper function to set the selected lecture
   const selectLecture = useCallback(
-    (moduleId, moduleItemId, replace = false) => {
+    (moduleId, moduleItemId) => {
+      const findLectureById = (moduleId, moduleItemId) => {
+        if (!Array.isArray(allLectures) || !allLectures.length) return null
+        if (!moduleId || !moduleItemId) return allLectures[0]
+
+        return (
+          allLectures.find(
+            (lecture) =>
+              lecture.module_id === parseInt(moduleId) &&
+              lecture.module_item_id === parseInt(moduleItemId),
+          ) || null
+        )
+      }
       const lecture = findLectureById(moduleId, moduleItemId)
 
       if (lecture) {
@@ -107,25 +94,22 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
 
       return null
     },
-    [findLectureById],
+    [moduleId, moduleItemId, courseId],
   )
 
-  // Navigate to a lecture and update selected lecture
   const handleChooseLecture = useCallback(
     (moduleId, moduleItemId) => {
       navigate(`/course/${courseId}/lectures/${moduleId}/${moduleItemId}`)
       selectLecture(moduleId, moduleItemId)
     },
-    [navigate, courseId, selectLecture],
+    [navigate, courseId],
   )
 
-  // Check course completion status
   const checkCourseCompletionStatus = useCallback(async () => {
     if (!courseId) return false
 
     try {
       const response = await userprogress.getUserProgressSingle({
-        user_id: parseInt(userId),
         course_id: parseInt(courseId),
       })
 
@@ -144,7 +128,6 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
     }
   }, [courseId])
 
-  // Fetch lectures data
   const fetchLectures = async () => {
     if (!courseId) return
 
@@ -156,7 +139,6 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
       })
       setLectures(response.data)
 
-      // After fetching lectures, check course completion status
       await checkCourseCompletionStatus()
     } catch (error) {
       console.error('Failed to fetch lectures:', error.message)
@@ -166,7 +148,6 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
     }
   }
 
-  // Complete course function
   const handleCompleteCourse = useCallback(async () => {
     try {
       const response = await userprogress.updateUserProgress({
@@ -182,26 +163,51 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
       console.error('Failed to complete course:', error)
       return false
     }
-  }, [])
+  }, [selectedLecture])
 
-  const handleCompleteLecture = useCallback(async (lecture) => {
+  const handleCompleteLecture = useCallback(async () => {
     try {
-      const { courseId, modulePosition, moduleItemPosition } = lecture
-      console.log(courseId, modulePosition, moduleItemPosition)
+      const findNextLecture = (
+        allLectures,
+        currentModulePosition,
+        currentItemPosition,
+      ) => {
+        if (!allLectures?.length) return null
+
+        const currentModulePos = Number(currentModulePosition)
+        const currentItemPos = Number(currentItemPosition)
+
+        const nextInModule = allLectures.find(
+          (lec) =>
+            Number(lec.module_position) === currentModulePos &&
+            Number(lec.module_item_position) > currentItemPos,
+        )
+
+        if (nextInModule) return nextInModule
+
+        return allLectures.find(
+          (lec) => Number(lec.module_position) > currentModulePos,
+        )
+      }
+
+      const nextLecture = findNextLecture(
+        allLectures,
+        selectedLecture.module_position,
+        selectedLecture.module_item_position,
+      )
 
       const response = await userprogress.updateUserProgress({
-        course_id: courseId,
-        module_position: modulePosition,
-        module_item_position: moduleItemPosition,
+        course_id: Number(courseId),
+        module_position: Number(nextLecture.module_position),
+        module_item_position: Number(nextLecture.module_item_position),
       })
 
       if (response.status === 1 && response?.data) {
         const updatedData = response.data
-        // Update lectures structure without refetching
+
         setLectures((prevLectures) => {
           const newLectures = { ...prevLectures }
 
-          // Find the lecture that needs to be unlocked
           Object.keys(newLectures).forEach((week) => {
             const weekLectures = [...newLectures[week]]
             let updated = false
@@ -209,14 +215,12 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
             for (let i = 0; i < weekLectures.length; i++) {
               const lecture = weekLectures[i]
 
-              // If this is the lecture we need to unlock (based on positions from updatedData)
               if (
                 parseInt(lecture.module_position) ===
                   parseInt(updatedData.module_position) &&
                 parseInt(lecture.module_item_position) ===
                   parseInt(updatedData.module_item_position)
               ) {
-                // Update the lecture's unlocked status
                 weekLectures[i] = { ...lecture, unlocked: true }
                 updated = true
                 break
@@ -227,6 +231,7 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
               newLectures[week] = weekLectures
             }
           })
+          console.log('Updated lectures:', newLectures)
 
           return newLectures
         })
@@ -234,33 +239,27 @@ const useLectureData = (userId, courseId, moduleId, moduleItemId) => {
     } catch (error) {
       console.error('Failed to update progress:', error)
     }
-  }, [])
+  }, [selectedLecture])
 
-  // Check completion status on component mount, separately from lecture fetch
   useEffect(() => {
     if (courseId) {
       checkCourseCompletionStatus()
     }
   }, [courseId, checkCourseCompletionStatus])
 
-  // Fetch lectures on component mount
   useEffect(() => {
     fetchLectures()
   }, [])
 
-  // Set selected lecture based on URL params
   useEffect(() => {
     if (loading || !allLectures.length) return
 
-    // Try to select lecture based on URL params
     const lecture = selectLecture(moduleId, moduleItemId)
 
-    // If lecture not found but lectures are available, redirect to first lecture
     if (!lecture && allLectures.length > 0) {
       const firstLecture = allLectures[0]
       setSelectedLecture(firstLecture)
 
-      // Replace current URL with the first lecture URL to maintain history
       navigate(
         `/course/${courseId}/lectures/${firstLecture.module_id}/${firstLecture.module_item_id}`,
         { replace: true },

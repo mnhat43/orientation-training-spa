@@ -1,24 +1,26 @@
-import { useEffect, useState, useCallback, useRef, memo } from 'react'
+import { useEffect, useState, useCallback, useRef, memo, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 
 const REQUIRED_TIME_DEFAULT = 10
 const USER_ACTIVITY_TIMEOUT = 10000
 const TIMER_CHECK_INTERVAL = 500
-const IS_DEV = process.env.NODE_ENV !== 'production'
+const IS_DEV = process.env.NODE_ENV !== 'prod'
 
 const LearningTimer = ({
-  lecture,
-  courseId,
+  lectures,
+  selectedLecture,
   isVideoPlaying,
-  allLectures = [],
-  courseCompleted = false,
-  isLastLecture = false,
+  courseCompleted,
+  isLastLecture,
   onCompleteLecture,
   onCompleteCourse,
 }) => {
   if (courseCompleted) return null
+  const allLectures = useMemo(() => Object.values(lectures).flat(), [lectures])
 
   const [isUserActive, setIsUserActive] = useState(false)
   const [timeSpent, setTimeSpent] = useState(0)
+  const { courseId } = useParams()
 
   const {
     module_id,
@@ -27,13 +29,12 @@ const LearningTimer = ({
     module_item_position,
     required_time,
     item_type,
-  } = lecture
+  } = selectedLecture
 
   const requiredTime = required_time > 0 ? required_time : REQUIRED_TIME_DEFAULT
   const isFileContent = item_type !== 'video'
   const isActive = isFileContent ? isUserActive : isVideoPlaying
 
-  // Technical refs for timer management
   const refs = useRef({
     timer: null,
     activityTimer: null,
@@ -43,63 +44,27 @@ const LearningTimer = ({
     lastPauseTime: null,
   }).current
 
-  // Find next lecture in course
-  const findNextLecture = useCallback(() => {
-    if (!allLectures?.length) return null
-
-    const currentModulePos = Number(module_position)
-    const currentItemPos = Number(module_item_position)
-
-    // First check in same module
-    const nextInModule = allLectures.find(
-      (lec) =>
-        Number(lec.module_position) === currentModulePos &&
-        Number(lec.module_item_position) > currentItemPos,
-    )
-
-    if (nextInModule) return nextInModule
-
-    // Then check next module
-    return allLectures.find(
-      (lec) => Number(lec.module_position) > currentModulePos,
-    )
-  }, [allLectures, module_position, module_item_position])
-
-  // Handle completion - now handles both lecture completion and course completion
   const completeProgress = useCallback(() => {
     if (refs.completed) return
     refs.completed = true
 
-    // If this is the last lecture, complete the course instead
     if (isLastLecture) {
       onCompleteCourse()
       return
     }
 
-    // Otherwise find next lecture and update progress as before
-    const nextLecture = findNextLecture()
-    if (!nextLecture) return
-
-    // Notify parent component with completion data
-    onCompleteLecture({
-      courseId: Number(courseId),
-      modulePosition: Number(nextLecture.module_position),
-      moduleItemPosition: Number(nextLecture.module_item_position),
-      currentModule: module_id,
-      currentItem: module_item_id,
-    })
+    onCompleteLecture()
   }, [
     courseId,
-    findNextLecture,
-    module_id,
-    module_item_id,
+    allLectures,
+    module_position,
+    module_item_position,
     refs,
     isLastLecture,
     onCompleteCourse,
     onCompleteLecture,
   ])
 
-  // Reset everything when lecture changes
   useEffect(() => {
     const resetTimer = () => {
       if (refs.timer) clearInterval(refs.timer)
@@ -108,7 +73,7 @@ const LearningTimer = ({
       refs.activityTimer = null
       refs.startTime = null
       refs.completed = false
-      refs.accumulatedTime = 0 // Reset accumulated time
+      refs.accumulatedTime = 0
       refs.lastPauseTime = null
       setTimeSpent(0)
       setIsUserActive(false)
@@ -118,7 +83,6 @@ const LearningTimer = ({
     return resetTimer
   }, [module_id, module_item_id, refs])
 
-  // Track user activity for file content
   useEffect(() => {
     if (!isFileContent) return
 
@@ -131,7 +95,6 @@ const LearningTimer = ({
       }, USER_ACTIVITY_TIMEOUT)
     }
 
-    // Add events with passive option for performance
     const events = [
       'mousemove',
       'mousedown',
@@ -143,7 +106,7 @@ const LearningTimer = ({
       document.addEventListener(event, handleActivity, { passive: true }),
     )
 
-    handleActivity() // Initialize
+    handleActivity()
 
     return () => {
       events.forEach((event) =>
@@ -153,44 +116,37 @@ const LearningTimer = ({
     }
   }, [isFileContent, refs])
 
-  // Main timer logic - modified to accumulate time
+  // Main timer logic
   useEffect(() => {
     if (refs.timer) {
       clearInterval(refs.timer)
       refs.timer = null
     }
 
-    // When active state changes, handle accumulated time
     if (!isActive) {
-      // If we were active before and now we're inactive, store progress
       if (refs.startTime) {
         const sessionTime = Math.floor(
           (performance.now() - refs.startTime) / 1000,
         )
-        refs.accumulatedTime += sessionTime // Add session time to accumulated time
+        refs.accumulatedTime += sessionTime
         refs.lastPauseTime = performance.now()
         refs.startTime = null
       }
       return
     }
 
-    // Only proceed if active and not completed
     if (refs.completed) return
 
-    // Start fresh timing session
     refs.startTime = performance.now()
 
     refs.timer = setInterval(() => {
-      // Calculate current session time
       const currentSessionTime = Math.floor(
         (performance.now() - refs.startTime) / 1000,
       )
 
-      // Total time is accumulated plus current session
       const totalTimeSpent = refs.accumulatedTime + currentSessionTime
       setTimeSpent(totalTimeSpent)
 
-      // Complete the lesson when time requirement is met
       if (totalTimeSpent >= requiredTime && !refs.completed) {
         clearInterval(refs.timer)
         refs.timer = null

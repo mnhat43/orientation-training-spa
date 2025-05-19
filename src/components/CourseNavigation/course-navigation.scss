@@ -2,9 +2,9 @@
 
 .course-navigation {
     width: 100%;
-    height: $layout-header-height;
+    height: 50px; // Reduced from $layout-header-height
     background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); // Lighter shadow
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -12,7 +12,7 @@
 
     &-container {
         display: flex;
-        gap: 30px;
+        gap: 20px; // Reduced gap
         align-items: center;
         height: 100%;
         max-width: $max-width;
@@ -26,11 +26,12 @@
         flex-shrink: 0;
 
         .back-button {
-            margin-right: 15px;
-            transition: all 0.3s;
+            margin-right: 10px; // Reduced margin
+            transition: all 0.2s;
             color: #4a6bff;
-            width: 28px;
-            height: 28px;
+            width: 24px; // Smaller button
+            height: 24px; // Smaller button
+            font-size: 12px; // Smaller icon
 
             &:hover {
                 background-color: rgba(74, 107, 255, 0.1);
@@ -44,8 +45,9 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 300px;
-            font-size: 20px;
+            max-width: 250px; // Slightly reduced
+            font-size: 16px; // Smaller font
+            font-weight: 500; // Medium weight
         }
     }
 
@@ -55,9 +57,12 @@
             background: transparent;
 
             .ant-menu-item {
-                height: $layout-header-height;
-                line-height: $layout-header-height;
-                transition: all 0.3s;
+                height: 50px; // Match new navigation height
+                line-height: 50px; // Match new navigation height
+                padding: 0 15px; // Reduced padding
+                margin: 0 2px; // Reduced margin
+                font-size: 14px; // Slightly smaller font
+                transition: all 0.2s;
 
                 &:hover {
                     background-color: rgba(74, 107, 255, 0.08);
@@ -69,6 +74,11 @@
                     &::after {
                         border-bottom: 2px solid #4a6bff;
                     }
+                }
+
+                .anticon {
+                    font-size: 14px; // Smaller icons
+                    margin-right: 6px; // Less spacing after icon
                 }
             }
         }

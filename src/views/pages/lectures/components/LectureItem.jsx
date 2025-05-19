@@ -6,42 +6,69 @@ import {
   PlayCircleFilled,
   ClockCircleOutlined,
   RightCircleFilled,
-  PlaySquareOutlined,
   FilePdfOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons'
-import { formatTime } from '@helpers/common'
 import './LectureItem.scss'
+import { formatTime } from '@helpers/common'
 
 const LectureItem = ({
   lecture,
   highlight,
   onChooseLecture,
-  ItemIcon,
-  itemType,
-  durationField,
-  isLatestUnlocked = false,
-  courseCompleted = false,
+  isLatestUnlocked,
+  courseCompleted,
 }) => {
-  const accessible = lecture.unlocked === true
-  const isCompleted = (courseCompleted || !isLatestUnlocked) && accessible
+  const {
+    unlocked,
+    duration,
+    quiz_data,
+    item_type,
+    module_id,
+    module_item_id,
+    title,
+  } = lecture
+  const isCompleted = (courseCompleted || !isLatestUnlocked) && unlocked
 
   const getClassNames = () => {
     let classNames = 'lecture-item'
     if (highlight) classNames += ' lecture-item--highlighted'
-    if (!accessible) classNames += ' lecture-item--locked'
+    if (!unlocked) classNames += ' lecture-item--locked'
     if (isCompleted) classNames += ' lecture-item--completed'
     return classNames
   }
 
-  const getIconClassNames = () => {
-    let classNames = 'lecture-item__icon'
-    if (itemType === 'video') classNames += ' lecture-item__icon--video'
-    if (itemType === 'file') classNames += ' lecture-item__icon--file'
-    return classNames
+  const getDuration = () => {
+    if (item_type === 'video') return duration
+    if (item_type === 'file') return duration
+    if (item_type === 'quiz') return formatTime(quiz_data.time_limit)
+    return null
+  }
+
+  const getMetaItem = () => {
+    if (item_type === 'video')
+      return (
+        <>
+          <PlayCircleFilled /> Video
+        </>
+      )
+    if (item_type === 'file')
+      return (
+        <>
+          <FilePdfOutlined /> File
+        </>
+      )
+    if (item_type === 'quiz')
+      return (
+        <>
+          <FileTextOutlined /> Quiz
+        </>
+      )
+    return null
   }
 
   const getStatusIcon = () => {
-    if (!accessible) {
+    if (!unlocked) {
       return (
         <div className="status-icon status-icon--locked">
           <LockOutlined />
@@ -69,21 +96,10 @@ const LectureItem = ({
   }
 
   const handleClick = () => {
-    if (accessible) {
-      onChooseLecture(lecture.module_id, lecture.module_item_id)
+    if (unlocked) {
+      onChooseLecture(module_id, module_item_id)
     }
   }
-
-  const getDuration = () => {
-    if (itemType === 'video') {
-      return lecture[durationField]
-    } else if (itemType === 'file') {
-      return formatTime(lecture[durationField])
-    }
-    return '00:00:00'
-  }
-
-  const duration = getDuration()
 
   return (
     <div
@@ -92,34 +108,17 @@ const LectureItem = ({
       role="button"
       tabIndex={0}
     >
-      <div className={getIconClassNames()}>
-        <ItemIcon />
-      </div>
-
       <div className="lecture-item__content">
         <Typography.Text className="lecture-item__content-title">
-          {lecture.title}
+          {title}
         </Typography.Text>
 
         <div className="lecture-item__content-meta">
           <span className="meta-item">
             <ClockCircleOutlined />
-            {duration}
+            {getDuration()}
           </span>
-
-          {itemType === 'video' && (
-            <span className="meta-item">
-              <PlayCircleFilled />
-              Video
-            </span>
-          )}
-
-          {itemType === 'file' && (
-            <span className="meta-item">
-              <FilePdfOutlined />
-              PDF
-            </span>
-          )}
+          <span className="meta-item">{getMetaItem()}</span>
         </div>
       </div>
 
