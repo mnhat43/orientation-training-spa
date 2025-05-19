@@ -44,17 +44,9 @@ const COLOR_MAP = {
   default: { color: '#1890ff', background: '#e6f7ff' },
 }
 
-const CourseCard = ({
-  CourseID,
-  Title,
-  Thumbnail,
-  Description,
-  Category,
-  Duration,
-  onDelete,
-  onEdit,
-  onClick,
-}) => {
+const CourseCard = ({ course, onDelete, onEdit, onClick }) => {
+  const { course_id, title, thumbnail, description, category, duration } =
+    course
   const formatDuration = (seconds) => {
     const minutes = Math.round(seconds / 60)
     return minutes + (minutes === 1 ? ' minute' : ' minutes')
@@ -71,7 +63,7 @@ const CourseCard = ({
 
   const handleEditClick = (e) => {
     e.stopPropagation()
-    onEdit(CourseID)
+    onEdit(course_id)
   }
 
   const handleDeleteClick = (e) => {
@@ -79,7 +71,7 @@ const CourseCard = ({
   }
 
   const confirmDelete = () => {
-    onDelete(CourseID)
+    onDelete(course_id)
   }
 
   const processedThumbnail = (thumbUrl) => {
@@ -102,16 +94,16 @@ const CourseCard = ({
     e.target.classList.add('placeholder-image')
   }
 
-  const categoryName = getCategoryName(Category)
-  const categoryStyle = getCategoryColor(Category)
+  const categoryName = getCategoryName(category)
+  const categoryStyle = getCategoryColor(category)
 
   return (
     <div className="course-card-container">
       <div className="course-card" onClick={onClick}>
         <div className="card-thumbnail">
           <img
-            src={processedThumbnail(Thumbnail)}
-            alt={Title}
+            src={processedThumbnail(thumbnail)}
+            alt={title}
             onError={handleImageError}
           />
           <div className="thumbnail-overlay">
@@ -129,14 +121,14 @@ const CourseCard = ({
         </div>
 
         <div className="card-body">
-          <h3 className="card-title">{Title}</h3>
+          <h3 className="card-title">{title}</h3>
           <p className="card-description">
-            {Description || 'No description available'}
+            {description || 'No description available'}
           </p>
 
           <div className="card-footer">
             <div className="card-duration">
-              <ClockCircleOutlined /> {formatDuration(Duration || 0)}
+              <ClockCircleOutlined /> {formatDuration(duration || 0)}
             </div>
 
             <div className="card-actions">

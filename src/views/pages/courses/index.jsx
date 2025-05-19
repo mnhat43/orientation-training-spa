@@ -8,7 +8,6 @@ import {
   Empty,
   Select,
   Pagination,
-  Typography,
   Tag,
 } from 'antd'
 import {
@@ -18,7 +17,7 @@ import {
   BookOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import course from '@api/course'
+import courseApi from '@api/course'
 import CourseCard from '@components/CourseCard'
 import AddCourseForm from './components/AddCourseForm.jsx'
 import './index.scss'
@@ -28,7 +27,6 @@ import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
 import BannerComponent from '@components/Banner/index.jsx'
 
 const { Option } = Select
-const { Title, Paragraph } = Typography
 
 const useResponsive = () => {
   const [windowSize, setWindowSize] = useState({
@@ -89,7 +87,7 @@ const Courses = () => {
   const fetchCourses = async () => {
     try {
       setLoading(true)
-      const response = await course.getListCourse()
+      const response = await courseApi.getListCourse()
       if (response.status === 1) {
         setCourseList(response.data.courses)
       }
@@ -104,7 +102,7 @@ const Courses = () => {
 
   const handleDeleteCourse = async (courseID) => {
     try {
-      const response = await course.deleteCourse({ id: courseID })
+      const response = await courseApi.deleteCourse({ id: courseID })
       if (response.status === 1) {
         fetchCourses()
         toast.success('Course deleted successfully')
@@ -137,7 +135,7 @@ const Courses = () => {
         category: category,
       }
 
-      const response = await course.addCourse(payload)
+      const response = await courseApi.addCourse(payload)
 
       if (response.status === 1) {
         toast.success('Course added successfully!')
@@ -302,19 +300,14 @@ const Courses = () => {
                   sm={12}
                   md={8}
                   lg={6}
-                  key={courseItem.id}
+                  key={courseItem.course_id}
                   className="course-card-wrapper"
                 >
                   <CourseCard
-                    CourseID={courseItem.id}
-                    Title={courseItem.title}
-                    Thumbnail={courseItem.thumbnail}
-                    Description={courseItem.description}
-                    Category={courseItem.category}
-                    Duration={courseItem.duration}
+                    course={courseItem}
                     onDelete={handleDeleteCourse}
                     onEdit={handleEditCourse}
-                    onClick={() => handleClickCard(courseItem.id)}
+                    onClick={() => handleClickCard(courseItem.course_id)}
                   />
                 </Col>
               ))}
