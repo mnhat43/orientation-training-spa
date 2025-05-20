@@ -1,0 +1,74 @@
+// Features Section Styles
+
+.features-section {
+    margin-top: -60px;
+    position: relative;
+    z-index: 2;
+
+    .feature-card {
+        height: 100%;
+        text-align: center;
+        border-radius: 16px;
+        overflow: hidden;
+        @include glass-effect;
+        padding: 40px 30px;
+        border: none;
+        @include card-hover;
+
+        .feature-icon-wrapper {
+            margin: 0 auto 25px;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba($primary-blue, 0.1) 0%, rgba($primary-blue, 0.05) 100%);
+            box-shadow: 0 10px 20px rgba(0, 82, 204, 0.1);
+            animation: pulse 3s ease-in-out infinite;
+
+            // Different colors for each feature icon
+            &:nth-child(1) {
+                background: linear-gradient(135deg, rgba($primary-blue, 0.15) 0%, rgba($primary-blue, 0.05) 100%);
+                .feature-icon {
+                    color: $primary-blue;
+                }
+            }
+
+            &:nth-child(2) {
+                background: linear-gradient(135deg, rgba($medium-blue, 0.15) 0%, rgba($medium-blue, 0.05) 100%);
+                .feature-icon {
+                    color: $medium-blue;
+                }
+            }
+
+            &:nth-child(3) {
+                background: linear-gradient(135deg, rgba($accent-teal, 0.15) 0%, rgba($accent-teal, 0.05) 100%);
+                .feature-icon {
+                    color: $accent-teal;
+                }
+            }
+
+            &:nth-child(4) {
+                background: linear-gradient(135deg, rgba($accent-indigo, 0.15) 0%, rgba($accent-indigo, 0.05) 100%);
+                .feature-icon {
+                    color: $accent-indigo;
+                }
+            }
+
+            .feature-icon {
+                font-size: 44px;
+            }
+        }
+
+        h4 {
+            margin-bottom: 16px;
+            color: $deep-blue;
+            font-weight: 600;
+        }
+
+        p {
+            color: rgba($text-color, 0.8);
+        }
+    }
+}

@@ -8,7 +8,7 @@ import Assignments from '@views/pages/assignments'
 import AssessmentCreation from '@views/pages/assessmentCreate/AssessmentCreation'
 import Exams from '@views/pages/exams'
 import LoginPage from '@views/pages/login'
-import Home from '@views/pages/home'
+import LandingPage from '@views/pages/landing'
 import ManageEmployees from '@views/pages/manage-employee'
 import TemplatePage from '@views/pages/template'
 import TraineePathCreator from '@views/pages/trainee-path'
@@ -24,7 +24,7 @@ function AllRoutes() {
       {/* Public routes - accessible only when not logged in */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<MainLayout component={Home} />} />
+        <Route path="/" element={<LandingPage />} />
       </Route>
 
       {/* Routes accessible by all authenticated users */}

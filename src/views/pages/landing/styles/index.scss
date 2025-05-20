@@ -1,0 +1,17 @@
+// Main SCSS file importing all partial files
+
+// Import variables and mixins first
+@import "variables";
+@import "animations";
+
+// Import global styles
+@import "globals";
+
+// Import section-specific styles
+@import "hero";
+@import "features";
+@import "how-it-works";
+@import "roles";
+@import "benefits";
+@import "testimonials";
+@import "cta";

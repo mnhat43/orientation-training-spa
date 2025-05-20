@@ -1,0 +1,109 @@
+.testimonials-section {
+    background-color: $light-bg;
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(circle at 15% 15%, rgba($deep-blue, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 85% 85%, rgba($accent-teal, 0.12) 0%, transparent 40%);
+        z-index: 0;
+    }
+
+    .testimonial-card {
+        height: 100%;
+        border-radius: 16px;
+        box-shadow: 0 15px 30px rgba(0, 82, 204, 0.08);
+        border: none;
+        background: white;
+        overflow: hidden;
+        @include card-hover;
+        position: relative;
+        z-index: 1;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba($primary-blue, 0.05) 0%, rgba($primary-blue, 0.01) 100%);
+            border-radius: 0 0 0 100%;
+            z-index: 0;
+        }
+
+        &::after {
+            content: "\201D"; // Right double quotation mark
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 80px;
+            color: $primary-blue;
+            opacity: 0.1;
+            font-family: serif;
+            line-height: 1;
+        }
+
+        .testimonial-content {
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+
+            .testimonial-text {
+                font-size: 16px;
+                font-style: italic;
+                margin-bottom: 20px;
+                min-height: 100px;
+                color: $text-color;
+                line-height: 1.6;
+            }
+
+            .stars-container {
+                margin-bottom: 20px;
+
+                .star-icon {
+                    color: $accent-gold;
+                    margin-right: 4px;
+                }
+            }
+
+            .testimonial-author {
+                display: flex;
+                align-items: center;
+
+                .avatar {
+                    width: 56px;
+                    height: 56px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                    font-size: 24px;
+                    color: white;
+                    box-shadow: 0 8px 16px rgba(0, 82, 204, 0.15);
+                }
+
+                .author-info {
+                    margin-left: 15px;
+
+                    .author-name {
+                        font-size: 18px;
+                        font-weight: 600;
+                        color: $deep-blue;
+                        display: block;
+                    }
+
+                    .author-role {
+                        font-size: 14px;
+                        color: rgba($text-color, 0.7);
+                    }
+                }
+            }
+        }
+    }
+}

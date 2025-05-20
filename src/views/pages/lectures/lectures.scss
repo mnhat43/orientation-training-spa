@@ -1,6 +1,8 @@
 @import "../../../styles/variables.scss";
 
 .lectures-page {
+    max-width: $max-width;
+    margin: 0 auto;
     overflow: hidden;
     padding: 0 24px;
     &__content-container {

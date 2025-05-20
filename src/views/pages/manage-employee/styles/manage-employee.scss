@@ -1,9 +1,11 @@
+@import "../../../../styles/variables.scss";
+
 .manage-employees-container {
-    padding: 0;
-    min-height: 80vh;
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
-// Shared styling for loading and error states
 .loading-container,
 .error-container {
     display: flex;
@@ -18,7 +20,6 @@
     }
 }
 
-// Common card styling
 .ant-card {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border-radius: 4px;
@@ -28,7 +29,6 @@
     }
 }
 
-// React transitions
 .page-transition-enter {
     opacity: 0;
     transform: translateY(20px);

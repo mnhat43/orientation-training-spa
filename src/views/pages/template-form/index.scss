@@ -1,12 +1,14 @@
-// Import all component styles
 @import "./components/TemplateFormHeader.scss";
+@import "../../../styles/variables.scss";
 
-// Main container styles
 .template-form-wrapper {
     background-color: #f5f8fa;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding: 0 24px;
+    max-width: $max-width;
+    margin: 0 auto;
 
     .template-form-content {
         flex: 1;
@@ -16,7 +18,6 @@
         width: 100%;
 
         .template-form {
-            // Course Selection Section
             .course-section {
                 margin-bottom: 32px;
 

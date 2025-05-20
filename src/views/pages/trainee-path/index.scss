@@ -1,14 +1,15 @@
 @import "../../../styles/variables.scss";
 
 .trainee-path-creator {
-    min-width: $min-width;
     min-height: calc(100vh - $layout-header-height - 20px) !important;
     overflow-x: hidden;
-    // padding: 10px;
     background-color: #f7f9fc;
     box-sizing: border-box;
     margin: 0;
     position: relative;
+    padding: 0 24px;
+    max-width: $max-width;
+    margin: 0 auto;
 
     .steps-header-container {
         background-color: #f7f9fa;

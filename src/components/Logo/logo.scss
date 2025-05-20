@@ -2,6 +2,15 @@
     display: flex;
     align-items: center;
     text-decoration: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: scale(1.02);
+
+        .logo-icon {
+            transform: rotate(15deg);
+        }
+    }
 
     .logo-container {
         display: flex;
@@ -9,20 +18,29 @@
 
         .logo-icon {
             font-size: 24px;
-            color: #1890ff;
-            margin-right: 8px;
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 10px;
+            transition: transform 0.3s ease;
         }
 
         .logo-text {
             font-size: 22px;
             font-weight: 700;
-            color: #1890ff;
-            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.2px;
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 
             .highlight {
                 color: #0050b3;
                 font-weight: 800;
+                background: linear-gradient(135deg, #096dd9 0%, #003a8c 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
         }
     }

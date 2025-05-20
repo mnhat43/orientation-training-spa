@@ -1,0 +1,98 @@
+.roles-section {
+    .role-card {
+        position: relative;
+        text-align: center;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0, 82, 204, 0.08);
+        transition: all 0.4s ease;
+        border: none;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            z-index: 0;
+        }
+
+        &.manager-card::before {
+            background: linear-gradient(90deg, $accent-indigo, darken($accent-indigo, 10%));
+        }
+
+        &.employee-card::before {
+            background: linear-gradient(90deg, $accent-teal, darken($accent-teal, 10%));
+        }
+
+        .role-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100px;
+                height: 100px;
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                background: rgba($primary-blue, 0.05);
+                z-index: -1;
+                animation: pulse 3s ease-in-out infinite;
+            }
+        }
+
+        .role-icon {
+            font-size: 46px;
+            color: $accent-indigo;
+        }
+
+        &.employee-card .role-icon {
+            color: $accent-teal;
+        }
+
+        h3 {
+            margin-bottom: 25px;
+            color: $deep-blue;
+            font-weight: 600;
+        }
+
+        .role-benefits {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+
+            li {
+                margin-bottom: 12px;
+                padding-left: 30px;
+                position: relative;
+                font-size: 16px;
+
+                .anticon {
+                    position: absolute;
+                    left: 0;
+                    top: 4px;
+                    color: $accent-indigo;
+                }
+            }
+        }
+
+        &.employee-card .role-benefits li .anticon {
+            color: $accent-teal;
+        }
+
+        &:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 82, 204, 0.15);
+        }
+    }
+}

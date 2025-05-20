@@ -1,0 +1,98 @@
+// How It Works Section Styles
+
+.how-it-works-section {
+    position: relative;
+    background-color: $light-bg;
+
+    .steps-container {
+        position: relative;
+
+        // Progress line connecting the steps
+        &::before {
+            content: "";
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            width: 75%;
+            height: 4px;
+            background: linear-gradient(90deg, $primary-blue, $accent-teal);
+            transform: translateX(-50%);
+            z-index: 0;
+
+            @media (max-width: 992px) {
+                display: none;
+            }
+        }
+    }
+
+    .step-card {
+        text-align: center;
+        padding: 35px 25px;
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: 0 15px 30px rgba(0, 82, 204, 0.08);
+        height: 100%;
+        @include card-hover;
+        position: relative;
+        z-index: 1;
+        transition: all 0.4s ease;
+
+        .step-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 64px;
+                height: 64px;
+                background: linear-gradient(135deg, $primary-blue, $accent-teal);
+                border-radius: 50%;
+                z-index: -1;
+                box-shadow: 0 8px 16px rgba(0, 82, 204, 0.2);
+            }
+
+            span {
+                position: relative;
+                z-index: 1;
+                color: white;
+            }
+        }
+
+        .step-icon {
+            font-size: 36px;
+            color: $accent-teal;
+            margin: 10px 0;
+        }
+
+        .role-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        h4 {
+            margin-bottom: 16px;
+            color: $deep-blue;
+            font-weight: 600;
+        }
+
+        p {
+            color: rgba($text-color, 0.8);
+        }
+
+        &:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 82, 204, 0.12);
+        }
+    }
+}
