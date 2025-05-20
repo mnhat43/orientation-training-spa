@@ -1,18 +1,20 @@
 import React from 'react'
 import { Button } from 'antd'
-import { Link } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'
 import Logo from '@components/Logo'
 import '../styles/HeaderSection.scss'
+import { useNavigate } from 'react-router-dom'
 
 const HeaderSection = () => {
+  const navigate = useNavigate()
+  const goLogin = () => {
+    navigate('/login')
+  }
   return (
     <header className="landing-header">
       <div className="header-container">
         <div className="logo">
-          <Link to="/">
-            <Logo />
-          </Link>
+          <Logo />
         </div>
         <div className="login-button-container">
           <Button
@@ -20,8 +22,9 @@ const HeaderSection = () => {
             size="large"
             className="login-button"
             icon={<UserOutlined />}
+            onClick={goLogin}
           >
-            <Link to="/login">Login</Link>
+            Login
           </Button>
         </div>
       </div>

@@ -1,6 +1,11 @@
 import { useState } from 'react'
-import { Form, Input, Button, Checkbox } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { Form, Input, Button } from 'antd'
+import {
+  UserOutlined,
+  LockOutlined,
+  ArrowLeftOutlined,
+  CompassOutlined,
+} from '@ant-design/icons'
 import './login.scss'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -16,7 +21,6 @@ function LoginPage() {
     setIsLoading(true)
     try {
       await handleLogin(values.email, values.password)
-
       navigate('/courses')
     } catch (error) {
       toast.error('Login failed! Please check your credentials.')
@@ -25,36 +29,37 @@ function LoginPage() {
     }
   }
 
+  const goToHome = () => {
+    navigate('/')
+  }
+
   return (
     <div className="login-container">
-      <div className="login-container__sub">
-        <div className="login-container__sub__logo">
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/0a7ec8b021aa8f242c74c6fefb029d66b5c28ea7be26ba07593ea659c8fd3147?apiKey=10b1e221f97543f5b056ca1fc29636cb&"
-            alt="eTracking logo"
-          />
-          <div className="textLogo">Orientation</div>
-          <div className="textLogo2">Training</div>
+      {/* Background elements */}
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="bg-gradient"></div>
+
+      <div className="login-card">
+        <div className="login-logo">
+          <CompassOutlined className="logo-icon" />
+          <h1 className="logo-text">OrienHub</h1>
         </div>
 
-        <div className="login-container__sub__content">
+        <div className="login-form-container">
+          <h2 className="login-heading">Welcome Back</h2>
+          <p className="login-subheading">Sign in to your OrienHub account</p>
+
           <Form
             layout="vertical"
             name="login"
-            className="login-container__sub__content__form"
+            className="login-form"
             initialValues={{ remember: true }}
             onFinish={onFinish}
           >
-            <div className="login-container__sub__content__form__header">
-              <h3 className="login-container__sub__content__form__header__title">
-                Login
-              </h3>
-              <hr />
-            </div>
-
             <Form.Item
-              label="Email Address"
               name="email"
               rules={[
                 {
@@ -68,50 +73,45 @@ function LoginPage() {
               ]}
             >
               <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="Email"
+                prefix={<UserOutlined />}
+                placeholder="Email Address"
+                className="login-input"
               />
             </Form.Item>
 
             <Form.Item
-              label="Password"
               name="password"
               rules={[
                 { required: true, message: 'Please enter your password!' },
               ]}
             >
               <Input.Password
-                prefix={<LockOutlined className="site-form-item-icon" />}
+                prefix={<LockOutlined />}
                 placeholder="Password"
+                className="login-input"
               />
             </Form.Item>
 
             <Form.Item>
-              <div className="remember-forgot">
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
-                <div className="login-form-forgot" style={{ color: '#09C4AE' }}>
-                  Forgot password?
-                </div>
-              </div>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-button"
+                loading={isLoading}
+              >
+                Sign In
+              </Button>
             </Form.Item>
 
             <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              style={{ background: '#209EA6', height: '38px' }}
-              loading={isLoading}
+              type="link"
+              className="home-button"
+              onClick={goToHome}
+              icon={<ArrowLeftOutlined />}
             >
-              Login
+              Return to Home
             </Button>
           </Form>
-          <div className="register">
-            Don't have an account?
-            <span className="register-link">Register here</span>
-          </div>
         </div>
       </div>
     </div>
