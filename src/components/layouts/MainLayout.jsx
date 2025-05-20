@@ -1,7 +1,7 @@
 import { Layout } from 'antd'
 import { useLocation } from 'react-router-dom'
 import FooterRender from '@components/footer'
-import CourseNavigation from '@components/CourseNavigation'
+import BreadcrumbNavigation from '@components/BreadcrumbNavigation'
 import HeaderRender from '@components/header'
 import './main-layout.scss'
 
@@ -14,7 +14,7 @@ const MainLayout = ({ component: Component }) => {
   return (
     <Layout className="main-layout">
       <Header className="main-layout-header">
-        {isCourseRoute ? <CourseNavigation /> : <HeaderRender />}
+        {isCourseRoute ? <BreadcrumbNavigation /> : <HeaderRender />}
       </Header>
       <Content className="main-layout-content">
         <Component />

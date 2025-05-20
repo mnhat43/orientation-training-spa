@@ -16,6 +16,7 @@ import TemplateFormPage from '@views/pages/template-form'
 import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
 import { ROLES } from '@constants/roles'
+import MyLearningPath from '@views/pages/learning-path'
 
 function AllRoutes() {
   return (
@@ -106,6 +107,14 @@ function AllRoutes() {
         <Route
           path="/learning-paths/create"
           element={<MainLayout component={TraineePathCreator} />}
+        />
+      </Route>
+
+      {/* Routes accessible only by EMPLOYEE */}
+      <Route element={<ProtectedRoute allowedRoles={[ROLES.EMPLOYEE]} />}>
+        <Route
+          path="/my-learning-path"
+          element={<MainLayout component={MyLearningPath} />}
         />
       </Route>
 

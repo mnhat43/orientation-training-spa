@@ -62,9 +62,9 @@ export const ROLE_NAVIGATION = {
       path: '/dashboard',
     },
     {
-      key: 'courses',
-      label: 'Courses',
-      path: '/courses',
+      key: 'my-learning-path',
+      label: 'My Learning Path',
+      path: '/my-learning-path',
     },
   ],
 }

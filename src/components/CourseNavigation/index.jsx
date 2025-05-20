@@ -6,7 +6,6 @@ import {
   ReadOutlined,
   FormOutlined,
   FileTextOutlined,
-  MenuOutlined,
 } from '@ant-design/icons'
 import './course-navigation.scss'
 

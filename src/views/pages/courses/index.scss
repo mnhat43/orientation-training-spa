@@ -2,13 +2,12 @@
 
 .courses-container {
     min-width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
     padding: 16px;
     background-color: #f7f9fc;
     box-sizing: border-box;
     margin: 0;
     position: relative;
+    min-height: calc(100vh - $layout-header-height);
 
     @media (max-width: 576px) {
         padding: 12px 8px;

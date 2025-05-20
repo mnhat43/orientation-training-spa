@@ -4,8 +4,11 @@ import {
   EditOutlined,
   DeleteOutlined,
   ClockCircleOutlined,
+  LockOutlined,
+  CheckCircleOutlined,
 } from '@ant-design/icons'
 import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import { ROLES } from '@constants/roles'
 import './index.scss'
 
 const DEFAULT_COURSE_SVG = `
@@ -44,9 +47,19 @@ const COLOR_MAP = {
   default: { color: '#1890ff', background: '#e6f7ff' },
 }
 
-const CourseCard = ({ course, onDelete, onEdit, onClick }) => {
+const CourseCard = ({
+  course,
+  onDelete,
+  onEdit,
+  onClick,
+  role = ROLES.MANAGER,
+  status = {},
+  position,
+}) => {
   const { course_id, title, thumbnail, description, category, duration } =
     course
+  const { locked = false, completed = false } = status
+
   const formatDuration = (seconds) => {
     const minutes = Math.round(seconds / 60)
     return minutes + (minutes === 1 ? ' minute' : ' minutes')
@@ -97,18 +110,47 @@ const CourseCard = ({ course, onDelete, onEdit, onClick }) => {
   const categoryName = getCategoryName(category)
   const categoryStyle = getCategoryColor(category)
 
+  const getStatusClass = () => {
+    if (locked) return 'locked'
+    if (completed) return 'completed'
+    return 'in-progress'
+  }
+
   return (
     <div className="course-card-container">
-      <div className="course-card" onClick={onClick}>
+      <div
+        className={`course-card ${getStatusClass()}`}
+        onClick={locked ? null : onClick}
+      >
         <div className="card-thumbnail">
           <img
             src={processedThumbnail(thumbnail)}
             alt={title}
             onError={handleImageError}
           />
-          <div className="thumbnail-overlay">
-            <button className="view-course-btn">View Course</button>
-          </div>
+
+          {!locked && (
+            <div className="thumbnail-overlay">
+              <button className="view-course-btn">View Course</button>
+            </div>
+          )}
+
+          {role === ROLES.EMPLOYEE && position && (
+            <div className="course-position">{position}</div>
+          )}
+
+          {role === ROLES.EMPLOYEE && locked && (
+            <div className="locked-overlay">
+              <LockOutlined />
+            </div>
+          )}
+
+          {role === ROLES.EMPLOYEE && completed && (
+            <div className="completed-overlay">
+              <CheckCircleOutlined />
+            </div>
+          )}
+
           <div
             className="card-category"
             style={{
@@ -122,41 +164,65 @@ const CourseCard = ({ course, onDelete, onEdit, onClick }) => {
 
         <div className="card-body">
           <h3 className="card-title">{title}</h3>
-          <p className="card-description">
-            {description || 'No description available'}
-          </p>
+          <Tooltip
+            title={description || 'No description available'}
+            placement="bottom"
+            mouseEnterDelay={0.5}
+          >
+            <p className="card-description">
+              {description || 'No description available'}
+            </p>
+          </Tooltip>
 
           <div className="card-footer">
             <div className="card-duration">
               <ClockCircleOutlined /> {formatDuration(duration || 0)}
             </div>
 
-            <div className="card-actions">
-              <Tooltip title="Edit course">
-                <button className="action-btn edit" onClick={handleEditClick}>
-                  <EditOutlined />
-                </button>
-              </Tooltip>
-
-              <Tooltip title="Delete course">
-                <Popconfirm
-                  title="Delete this course?"
-                  description="All course content and progress will be permanently removed."
-                  onConfirm={confirmDelete}
-                  okText="Delete"
-                  cancelText="Cancel"
-                  okButtonProps={{ danger: true }}
-                  placement="topRight"
-                >
-                  <button
-                    className="action-btn delete"
-                    onClick={handleDeleteClick}
-                  >
-                    <DeleteOutlined />
+            {role === ROLES.MANAGER && (
+              <div className="card-actions">
+                <Tooltip title="Edit course">
+                  <button className="action-btn edit" onClick={handleEditClick}>
+                    <EditOutlined />
                   </button>
-                </Popconfirm>
-              </Tooltip>
-            </div>
+                </Tooltip>
+
+                <Tooltip title="Delete course">
+                  <Popconfirm
+                    title="Delete this course?"
+                    description="All course content and progress will be permanently removed."
+                    onConfirm={confirmDelete}
+                    okText="Delete"
+                    cancelText="Cancel"
+                    okButtonProps={{ danger: true }}
+                    placement="topRight"
+                  >
+                    <button
+                      className="action-btn delete"
+                      onClick={handleDeleteClick}
+                    >
+                      <DeleteOutlined />
+                    </button>
+                  </Popconfirm>
+                </Tooltip>
+              </div>
+            )}
+
+            {role === ROLES.EMPLOYEE && (
+              <div className="course-status">
+                {locked ? (
+                  <span className="status locked">
+                    <LockOutlined /> Locked
+                  </span>
+                ) : completed ? (
+                  <span className="status completed">
+                    <CheckCircleOutlined /> Completed
+                  </span>
+                ) : (
+                  <span className="status in-progress">Available</span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
