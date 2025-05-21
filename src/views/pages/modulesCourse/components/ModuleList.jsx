@@ -169,7 +169,7 @@ const ModuleList = ({
   }
 
   return (
-    <Card className="module-card" bordered={false}>
+    <Card className="module-card" variant="borderless">
       <div className="module-card__header">
         <div className="module-card__title-section">
           <Title level={4} className="module-card__title">

@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Menu, Dropdown, Button, Avatar } from 'antd'
+import { Dropdown, Button, Avatar } from 'antd'
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
@@ -12,20 +12,25 @@ const UserMenu = ({ currentUser, onLogout, navigate }) => {
     )
   }
 
-  const dropdownMenu = (
-    <Menu>
-      <Menu.Item key="profile" icon={<UserOutlined />}>
-        <Link to="/profile">Profile</Link>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={onLogout}>
-        Logout
-      </Menu.Item>
-    </Menu>
-  )
+  const menuItems = [
+    {
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: <Link to="/profile">Profile</Link>,
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: 'Logout',
+      onClick: onLogout,
+    },
+  ]
 
   return (
-    <Dropdown overlay={dropdownMenu} trigger={['click']}>
+    <Dropdown menu={{ items: menuItems }} trigger={['click']}>
       <div className="user-dropdown-trigger">
         <Avatar size="small" icon={<UserOutlined />} />
         <span className="username">{currentUser.fullname || 'User'}</span>

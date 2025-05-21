@@ -16,10 +16,8 @@ const CourseList = ({ courses }) => {
 
   const showCourseDetail = (course) => {
     setLoading(true)
-
-    // Fetch detailed course information
     apiCourse
-      .getCourseDetail({ course_id: course.id })
+      .getCourseDetail({ course_id: course.course_id })
       .then((response) => {
         if (response && response.status === 1 && response.data) {
           setSelectedCourse(response.data)
@@ -29,14 +27,12 @@ const CourseList = ({ courses }) => {
             'Failed to load course details:',
             response?.message || 'Unknown error',
           )
-          // Fallback to basic course data if detailed data can't be loaded
           setSelectedCourse(course)
           setDetailModalVisible(true)
         }
       })
       .catch((error) => {
         console.error('Error fetching course details:', error)
-        // Fallback to basic course data
         setSelectedCourse(course)
         setDetailModalVisible(true)
       })
@@ -59,8 +55,8 @@ const CourseList = ({ courses }) => {
         renderItem={(course, index) => (
           <Card
             className="course-card-material"
-            key={course.id}
-            bordered={true}
+            key={course.course_id}
+            variant="default"
           >
             <div className="card-left">
               <Badge
@@ -82,7 +78,6 @@ const CourseList = ({ courses }) => {
                     onClick={() => showCourseDetail(course)}
                     className="course-detail-btn"
                     size="small"
-                    loading={loading}
                   />
                 </Tooltip>
               </div>

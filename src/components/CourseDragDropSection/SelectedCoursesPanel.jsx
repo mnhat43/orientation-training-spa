@@ -16,11 +16,12 @@ import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
 import { formatTime } from '@helpers/common'
 
 const SelectedCoursesPanel = ({ selectedCourses, setSelectedCourses }) => {
+  console.log('Selected Courses:', selectedCourses)
   const totalHours = calculateTotalHours(selectedCourses)
 
   const handleRemoveCourse = (courseId) => {
     setSelectedCourses(
-      selectedCourses.filter((course) => course.id !== courseId),
+      selectedCourses.filter((course) => course.course_id !== courseId),
     )
   }
 
@@ -75,8 +76,8 @@ const SelectedCoursesPanel = ({ selectedCourses, setSelectedCourses }) => {
                   >
                     {selectedCourses.map((course, index) => (
                       <Draggable
-                        key={course.id}
-                        draggableId={`course-${course.id}`}
+                        key={String(course.course_id)}
+                        draggableId={String(course.course_id)}
                         index={index}
                       >
                         {(provided, snapshot) => (
@@ -110,7 +111,9 @@ const SelectedCoursesPanel = ({ selectedCourses, setSelectedCourses }) => {
                               type="text"
                               danger
                               icon={<DeleteOutlined />}
-                              onClick={() => handleRemoveCourse(course.id)}
+                              onClick={() =>
+                                handleRemoveCourse(course.course_id)
+                              }
                               className="remove-course-btn"
                             />
                           </div>

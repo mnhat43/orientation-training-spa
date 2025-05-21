@@ -9,7 +9,6 @@ import {
   Badge,
   Typography,
   Divider,
-  message,
   List,
 } from 'antd'
 import {
@@ -59,13 +58,12 @@ const CourseSelectionPanel = ({
       })
       .catch((error) => {
         console.error('Error fetching courses:', error)
-        message.error('Failed to load courses')
         setAvailableCourses([])
         setLoading(false)
       })
   }
 
-  const selectedCourseIds = selectedCourses.map((course) => course.id)
+  const selectedCourseIds = selectedCourses.map((course) => course.course_id)
 
   const filteredCourses = availableCourses.filter((course) => {
     const matchesSearch =
@@ -79,10 +77,12 @@ const CourseSelectionPanel = ({
   })
 
   const handleCourseToggle = (course) => {
-    const isSelected = selectedCourseIds.includes(course.id)
+    const isSelected = selectedCourseIds.includes(course.course_id)
 
     if (isSelected) {
-      setSelectedCourses(selectedCourses.filter((c) => c.id !== course.id))
+      setSelectedCourses(
+        selectedCourses.filter((c) => c.course_id !== course.course_id),
+      )
     } else {
       setSelectedCourses([...selectedCourses, course])
     }
@@ -166,7 +166,7 @@ const CourseSelectionPanel = ({
             xxl: 1,
           }}
           renderItem={(course) => {
-            const isSelected = selectedCourseIds.includes(course.id)
+            const isSelected = selectedCourseIds.includes(course.course_id)
 
             return (
               <List.Item>

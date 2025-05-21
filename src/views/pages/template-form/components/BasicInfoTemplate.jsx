@@ -14,7 +14,7 @@ const BasicInfoTemplate = () => {
   return (
     <Card
       className="template-details-card"
-      bordered={false}
+      variant="outlined"
       style={{ marginBottom: 24 }}
     >
       <div className="card-header">

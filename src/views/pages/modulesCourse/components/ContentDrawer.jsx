@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Drawer, Tabs, Form } from 'antd'
 import {
   VideoCameraOutlined,
@@ -6,41 +6,74 @@ import {
   QuestionCircleOutlined,
   CloseOutlined,
 } from '@ant-design/icons'
-import ModuleItemForm from './ModuleItemForm'
+import VideoForm from './VideoForm'
+import FileForm from './FileForm'
 import QuizForm from './QuizForm'
-import PropTypes from 'prop-types'
 import './ContentDrawer.scss'
 
-const { TabPane } = Tabs
-
 const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
-  const [form] = Form.useForm()
-  const [activeTab, setActiveTab] = useState('video')
+  const [videoForm] = Form.useForm()
+  const [fileForm] = Form.useForm()
+  const [quizForm] = Form.useForm()
+  const [activeTab, setActiveTab] = useState('video') //video, file, quiz
 
-  const handleSubmit = (values) => {
-    console.log('Form values:', values)
-    return
+  useEffect(() => {
+    if (visible) {
+      videoForm.resetFields()
+      fileForm.resetFields()
+      quizForm.resetFields()
+    }
+  }, [visible, videoForm, fileForm, quizForm])
+
+  const getCurrentForm = () => {
+    switch (activeTab) {
+      case 'video':
+        return videoForm
+      case 'file':
+        return fileForm
+      case 'quiz':
+        return quizForm
+      default:
+        return videoForm
+    }
+  }
+
+  const handleSubmit = (values, callbacks) => {
+    console.log(`Form values from ${activeTab}:`, values)
+
     let formattedValues = {
       ...values,
-      item_type: activeTab,
       module_id: moduleId,
+      item_type: activeTab,
     }
 
-    if (activeTab === 'quiz') {
-      formattedValues = {
-        ...formattedValues,
-        quiz_data: values.quiz_data,
+    try {
+      const result = onSubmit(formattedValues)
+
+      if (result && typeof result.then === 'function') {
+        result
+          .then(() => {
+            getCurrentForm().resetFields()
+            onClose()
+            if (callbacks && callbacks.onSuccess) callbacks.onSuccess()
+          })
+          .catch((error) => {
+            console.error('Error submitting form:', error)
+            if (callbacks && callbacks.onError) callbacks.onError(error)
+          })
+      } else {
+        getCurrentForm().resetFields()
+        onClose()
+        if (callbacks && callbacks.onSuccess) callbacks.onSuccess()
       }
+    } catch (error) {
+      console.error('Error in form submission:', error)
+      if (callbacks && callbacks.onError) callbacks.onError(error)
     }
-
-    onSubmit(formattedValues)
-    form.resetFields()
-    onClose()
   }
 
   const handleTabChange = (key) => {
     setActiveTab(key)
-    form.resetFields()
   }
 
   const getDrawerTitle = () => {
@@ -55,6 +88,39 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
         return 'Add Content'
     }
   }
+
+  const tabItems = [
+    {
+      key: 'video',
+      label: (
+        <span className="content-drawer__tab">
+          <VideoCameraOutlined />
+          <span className="content-drawer__tab-text">Video</span>
+        </span>
+      ),
+      children: <VideoForm form={videoForm} onSubmit={handleSubmit} />,
+    },
+    {
+      key: 'file',
+      label: (
+        <span className="content-drawer__tab">
+          <FileTextOutlined />
+          <span className="content-drawer__tab-text">File</span>
+        </span>
+      ),
+      children: <FileForm form={fileForm} onSubmit={handleSubmit} />,
+    },
+    {
+      key: 'quiz',
+      label: (
+        <span className="content-drawer__tab">
+          <QuestionCircleOutlined />
+          <span className="content-drawer__tab-text">Quiz</span>
+        </span>
+      ),
+      children: <QuizForm form={quizForm} onSubmit={handleSubmit} />,
+    },
+  ]
 
   return (
     <Drawer
@@ -80,67 +146,11 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
           activeKey={activeTab}
           onChange={handleTabChange}
           className="content-drawer__tabs"
-        >
-          <TabPane
-            tab={
-              <span className="content-drawer__tab">
-                <VideoCameraOutlined />
-                <span className="content-drawer__tab-text">Video</span>
-              </span>
-            }
-            key="video"
-          />
-          <TabPane
-            tab={
-              <span className="content-drawer__tab">
-                <FileTextOutlined />
-                <span className="content-drawer__tab-text">File</span>
-              </span>
-            }
-            key="file"
-          />
-          <TabPane
-            tab={
-              <span className="content-drawer__tab">
-                <QuestionCircleOutlined />
-                <span className="content-drawer__tab-text">Quiz</span>
-              </span>
-            }
-            key="quiz"
-          />
-        </Tabs>
-
-        <div className="content-drawer__content">
-          {activeTab === 'video' && (
-            <ModuleItemForm
-              form={form}
-              itemType="video"
-              onSubmit={handleSubmit}
-              isInDrawer={true}
-            />
-          )}
-          {activeTab === 'file' && (
-            <ModuleItemForm
-              form={form}
-              itemType="file"
-              onSubmit={handleSubmit}
-              isInDrawer={true}
-            />
-          )}
-          {activeTab === 'quiz' && (
-            <QuizForm form={form} onSubmit={handleSubmit} isInDrawer={true} />
-          )}
-        </div>
+          items={tabItems}
+        />
       </div>
     </Drawer>
   )
-}
-
-ContentDrawer.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  moduleId: PropTypes.number,
 }
 
 export default ContentDrawer

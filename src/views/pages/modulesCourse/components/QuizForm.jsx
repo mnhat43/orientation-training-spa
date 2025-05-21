@@ -29,26 +29,26 @@ import {
   CaretRightOutlined,
 } from '@ant-design/icons'
 import './QuizForm.scss'
+import { DIFFICULTY, QUESTION_TYPE } from '@/constants/quiz'
 
 const { TextArea } = Input
 const { Text } = Typography
-const { Panel } = Collapse
 
-const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
-  const [quizType, setQuizType] = useState('multiple_choice')
+const QuizForm = ({ form, onSubmit }) => {
+  const [quizType, setQuizType] = useState(QUESTION_TYPE.MultipleChoice)
   const [totalWeight, setTotalWeight] = useState(0)
 
   const questionsFieldsRef = useRef([])
   const hasAdjustedWeightsRef = useRef(false)
 
   const difficultyOptions = [
-    { label: 'Easy', value: 'Easy' },
-    { label: 'Medium', value: 'Medium' },
-    { label: 'Hard', value: 'Hard' },
+    { label: 'Easy', value: DIFFICULTY.Easy },
+    { label: 'Medium', value: DIFFICULTY.Medium },
+    { label: 'Hard', value: DIFFICULTY.Hard },
   ]
 
   useEffect(() => {
-    if (quizType === 'multiple_choice') {
+    if (quizType === QUESTION_TYPE.MultipleChoice) {
       const questions = form.getFieldValue('questions') || []
       const total = questions.reduce(
         (sum, q) => sum + (q?.question_score || 0),
@@ -96,7 +96,7 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
   }
 
   const handleSubmit = async (values) => {
-    if (quizType === 'multiple_choice') {
+    if (quizType === QUESTION_TYPE.MultipleChoice) {
       const questions = values.questions || []
       const totalWeight = questions.reduce(
         (sum, q) => sum + (q?.question_score || 0),
@@ -107,22 +107,47 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
         message.error('Question weights must add up to 100%')
         return
       }
-    }
 
-    const formattedValues = {
-      title: values.title,
-      item_type: 'quiz',
-      quiz_data: {
-        type: quizType,
-        difficulty: values.difficulty,
-        score: values.score,
-        time_limit: values.time_limit || null,
-        questions: quizType === 'multiple_choice' ? values.questions : null,
-        essay_question: quizType === 'essay' ? values.essay_question : null,
-      },
-    }
+      const formattedQuestions = questions.map((question) => {
+        const formattedOptions = question.options.map((option) => ({
+          answers_text: option.text,
+          is_correct: option.is_correct,
+        }))
 
-    onSubmit(formattedValues)
+        return {
+          question_text: question.question_text,
+          weight: question.question_score / 100,
+          allow_multiple: question.allow_multiple,
+          options: formattedOptions,
+        }
+      })
+
+      const formattedValues = {
+        title: values.title,
+        quiz_data: {
+          question_type: QUESTION_TYPE.MultipleChoice,
+          difficulty: values.difficulty,
+          total_score: values.total_score,
+          time_limit: values.time_limit * 60 || null,
+          questions: formattedQuestions,
+        },
+      }
+
+      onSubmit(formattedValues)
+    } else if (quizType === QUESTION_TYPE.Essay) {
+      const formattedValues = {
+        title: values.title,
+        quiz_data: {
+          question_type: QUESTION_TYPE.Essay,
+          difficulty: values.difficulty,
+          total_score: values.total_score,
+          time_limit: values.time_limit * 60 || null,
+          essay_question: values.essay_question,
+        },
+      }
+
+      onSubmit(formattedValues)
+    }
   }
 
   return (
@@ -135,6 +160,9 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
       onValuesChange={handleFormValuesChange}
       initialValues={{
         score: 100,
+      }}
+      onFinishFailed={(errorInfo) => {
+        console.log('Form validation failed:', errorInfo)
       }}
     >
       <div className="form-content__section form-content__compact-section">
@@ -180,7 +208,7 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
         <Row gutter={16}>
           <Col xs={24} md={12}>
             <Form.Item
-              name="score"
+              name="total_score"
               label={
                 <span className="form-content__label">
                   <TrophyOutlined /> Total Score
@@ -229,11 +257,11 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
         <div className="quiz-form__type-selector">
           <div
             className={`quiz-form__type-option ${
-              quizType === 'multiple_choice'
+              quizType === QUESTION_TYPE.MultipleChoice
                 ? 'quiz-form__type-option--active'
                 : ''
             }`}
-            onClick={() => setQuizType('multiple_choice')}
+            onClick={() => setQuizType(QUESTION_TYPE.MultipleChoice)}
           >
             <div className="quiz-form__type-icon">
               <QuestionCircleOutlined />
@@ -244,15 +272,17 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
                 Questions with predefined answer options
               </div>
             </div>
-            {quizType === 'multiple_choice' && (
+            {quizType === QUESTION_TYPE.MultipleChoice && (
               <CheckOutlined className="quiz-form__type-check" />
             )}
           </div>
           <div
             className={`quiz-form__type-option ${
-              quizType === 'essay' ? 'quiz-form__type-option--active' : ''
+              quizType === QUESTION_TYPE.Essay
+                ? 'quiz-form__type-option--active'
+                : ''
             }`}
-            onClick={() => setQuizType('essay')}
+            onClick={() => setQuizType(QUESTION_TYPE.Essay)}
           >
             <div className="quiz-form__type-icon">
               <FormOutlined />
@@ -263,13 +293,13 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
                 Open questions requiring written responses
               </div>
             </div>
-            {quizType === 'essay' && (
+            {quizType === QUESTION_TYPE.Essay && (
               <CheckOutlined className="quiz-form__type-check" />
             )}
           </div>
         </div>
         <div className="quiz-form__type-content">
-          {quizType === 'multiple_choice' && (
+          {quizType === QUESTION_TYPE.MultipleChoice && (
             <>
               <div className="quiz-form__weight-container">
                 <div className="quiz-form__weight-indicator">
@@ -685,7 +715,7 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
             </>
           )}
 
-          {quizType === 'essay' && (
+          {quizType === QUESTION_TYPE.Essay && (
             <div className="quiz-form__essay-section">
               <Form.Item
                 name="essay_question"
@@ -713,7 +743,9 @@ const QuizForm = ({ form, onSubmit, isInDrawer = false }) => {
           type="primary"
           htmlType="submit"
           block
-          disabled={quizType === 'multiple_choice' && totalWeight !== 100}
+          disabled={
+            quizType === QUESTION_TYPE.MultipleChoice && totalWeight !== 100
+          }
         >
           Create Quiz
         </Button>

@@ -53,7 +53,7 @@ const TemplateFormPage = () => {
 
   useEffect(() => {
     form.setFieldsValue({
-      courseIds: selectedCourses.map((c) => c.id),
+      courseIds: selectedCourses.map((course) => course.course_id),
     })
   }, [selectedCourses, form])
 
@@ -71,7 +71,7 @@ const TemplateFormPage = () => {
         const formData = {
           name: values.name,
           description: values.description,
-          course_ids: selectedCourses.map((course) => course.id),
+          course_ids: selectedCourses.map((course) => course.course_id),
         }
 
         const apiRequest = isEditing
@@ -81,11 +81,6 @@ const TemplateFormPage = () => {
         apiRequest
           .then((response) => {
             if (response && response.data && response.status == 1) {
-              if (isEditing) {
-                message.success('Template updated successfully')
-              } else {
-                message.success('Template created successfully')
-              }
               navigate('/templates')
             } else {
               throw new Error('Failed to save template')
@@ -93,7 +88,6 @@ const TemplateFormPage = () => {
           })
           .catch((error) => {
             console.error('Error saving template:', error)
-            message.error('Failed to save template. Please try again.')
           })
           .finally(() => {
             setLoading(false)
@@ -116,7 +110,9 @@ const TemplateFormPage = () => {
       <Content className="template-form-content">
         {initialLoading ? (
           <div className="template-form-simple loading-container">
-            <Spin size="large" tip="Loading template data..." />
+            <Spin size="large" tip="Loading template data...">
+              <div className="spin-content" style={{ minHeight: '200px' }} />
+            </Spin>
           </div>
         ) : error ? (
           <div className="template-form-simple">

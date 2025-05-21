@@ -231,8 +231,9 @@ const Modules = () => {
   const renderContent = () => {
     if (loading && modules.length === 0) {
       return (
-        <div className="loading-container">
-          <Spin size="large" tip="Loading modules..." />
+        <div className="loading-container" style={{ textAlign: 'center' }}>
+          <Spin size="large" />
+          <div style={{ marginTop: 16 }}>Loading modules...</div>
         </div>
       )
     }
@@ -285,12 +286,10 @@ const Modules = () => {
         icon={BookOutlined}
         closable={false}
       />
-
       <div className="modules-layout">
         <div className="modules-main">
           <div className="modules-container">{renderContent()}</div>
         </div>
-
         <aside className="modules-sidebar">
           <div className="modules-actions">
             <div className="action-card">

@@ -210,7 +210,6 @@ const Courses = () => {
                     onChange={(value) => setFilterCategory(value)}
                     placeholder="Category"
                     suffixIcon={<FilterOutlined />}
-                    dropdownMatchSelectWidth={false}
                   >
                     <Option value="all">All Categories</Option>
                     <Option value="Onboarding">Onboarding Essentials</Option>
@@ -231,58 +230,6 @@ const Courses = () => {
                 </Button>
               </div>
             </div>
-
-            {(searchQuery || filterCategory !== 'all') && (
-              <div className="filters-active">
-                <div className="active-filters">
-                  <span className="label">Active filters:</span>
-                  <div className="tags">
-                    {searchQuery && (
-                      <Tag closable onClose={() => setSearchQuery('')}>
-                        <SearchOutlined /> {searchQuery}
-                      </Tag>
-                    )}
-
-                    {filterCategory !== 'all' && (
-                      <Tag
-                        closable
-                        onClose={() => setFilterCategory('all')}
-                        color={CATEGORY_COLORS[filterCategory] || 'blue'}
-                      >
-                        <FilterOutlined />{' '}
-                        {CATEGORIES[filterCategory] || filterCategory}
-                      </Tag>
-                    )}
-                  </div>
-                </div>
-
-                <Button
-                  type="text"
-                  size="small"
-                  onClick={() => {
-                    setSearchQuery('')
-                    setFilterCategory('all')
-                  }}
-                >
-                  Clear all
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <div
-            className={`filters-result ${filteredCourses.length > 0 ? '' : 'empty'}`}
-          >
-            {filteredCourses.length > 0 ? (
-              <div className="result-count">
-                Found <strong>{filteredCourses.length}</strong>{' '}
-                {filteredCourses.length === 1 ? 'course' : 'courses'}
-              </div>
-            ) : searchQuery || filterCategory !== 'all' ? (
-              <div className="no-results">
-                <FilterOutlined /> No courses match your filters
-              </div>
-            ) : null}
           </div>
         </div>
 
@@ -344,13 +291,6 @@ const Courses = () => {
                     : 'No employee training courses available yet'
                 }
               />
-              <div className="empty-text">
-                <p>
-                  {searchQuery || filterCategory !== 'all'
-                    ? 'Try adjusting your search or filters to find courses.'
-                    : 'Start building your employee orientation program by creating your first training course.'}
-                </p>
-              </div>
               {!searchQuery && filterCategory === 'all' && (
                 <Button
                   type="primary"

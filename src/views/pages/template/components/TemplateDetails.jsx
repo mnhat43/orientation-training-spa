@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Typography, Divider, Drawer, Spin, message } from 'antd'
+import { Typography, Divider, Drawer, Spin } from 'antd'
 import { BookOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import CourseList from '@components/CourseList'
 import templatepath from '@api/templatepath'
@@ -43,7 +43,7 @@ const TemplateDetails = ({ template, drawerVisible, setDrawerVisible }) => {
       placement="right"
       closable={false}
       onClose={() => setDrawerVisible(false)}
-      visible={drawerVisible}
+      open={drawerVisible}
       width={450}
       className="template-drawer"
     >
@@ -65,13 +65,11 @@ const TemplateDetails = ({ template, drawerVisible, setDrawerVisible }) => {
         </Title>
 
         <div className="courses-list-container">
-          {loading ? (
-            <div className="loading-container">
-              <Spin tip="Loading courses..." />
+          <Spin spinning={loading} tip="Loading courses...">
+            <div className={loading ? 'loading-content' : ''}>
+              {!loading && <CourseList courses={coursesList || []} />}
             </div>
-          ) : (
-            <CourseList courses={coursesList || []} />
-          )}
+          </Spin>
         </div>
       </div>
     </Drawer>

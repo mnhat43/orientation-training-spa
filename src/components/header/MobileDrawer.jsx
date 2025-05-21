@@ -57,7 +57,7 @@ const MobileDrawer = ({
       open={visible}
       width={drawerWidth}
       className="mobile-menu-drawer"
-      bodyStyle={{ padding: 0 }}
+      styles={{ body: { padding: 0 } }}
     >
       <div className="mobile-menu-content">
         {currentUser && (

@@ -1,27 +1,41 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState, memo } from 'react'
 import { Droppable } from 'react-beautiful-dnd'
 
-/**
- * Wrapper component for react-beautiful-dnd's Droppable to make it compatible with React StrictMode
- */
-const StrictModeDroppable = ({ children, ...props }) => {
+const StrictModeDroppable = ({
+  children,
+  droppableId,
+  type = 'DEFAULT',
+  direction = 'vertical',
+  isDropDisabled = false,
+  isCombineEnabled = false,
+  ignoreContainerClipping = false,
+  ...otherProps
+}) => {
   const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
-    // This workaround is needed to fix issues with react-beautiful-dnd in React 18's StrictMode
     const animation = requestAnimationFrame(() => setEnabled(true))
-
     return () => {
       cancelAnimationFrame(animation)
       setEnabled(false)
     }
   }, [])
 
-  if (!enabled) {
-    return null
-  }
+  if (!enabled) return null
 
-  return <Droppable {...props}>{children}</Droppable>
+  return (
+    <Droppable
+      droppableId={droppableId}
+      type={type}
+      direction={direction}
+      isDropDisabled={isDropDisabled}
+      isCombineEnabled={isCombineEnabled}
+      ignoreContainerClipping={ignoreContainerClipping}
+      {...otherProps}
+    >
+      {children}
+    </Droppable>
+  )
 }
 
 export default StrictModeDroppable

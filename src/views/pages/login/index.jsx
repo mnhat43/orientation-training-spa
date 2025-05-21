@@ -76,6 +76,7 @@ function LoginPage() {
                 prefix={<UserOutlined />}
                 placeholder="Email Address"
                 className="login-input"
+                autoComplete="current-email"
               />
             </Form.Item>
 
@@ -89,6 +90,7 @@ function LoginPage() {
                 prefix={<LockOutlined />}
                 placeholder="Password"
                 className="login-input"
+                autoComplete="current-password"
               />
             </Form.Item>
 

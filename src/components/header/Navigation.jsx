@@ -32,15 +32,20 @@ const Navigation = ({ navItems, currentPath }) => {
     return navItems
   }, [navItems, width])
 
+  // Convert navigation items to the format expected by Menu's items prop
+  const menuItems = useMemo(
+    () =>
+      visibleItems.map((item) => ({
+        key: item.key,
+        icon: item.icon,
+        label: <Link to={item.path}>{item.label}</Link>,
+      })),
+    [visibleItems],
+  )
+
   return (
     <div className="header-navigation">
-      <Menu mode="horizontal" selectedKeys={[activeKey]}>
-        {visibleItems.map((item) => (
-          <Menu.Item key={item.key} icon={item.icon}>
-            <Link to={item.path}>{item.label}</Link>
-          </Menu.Item>
-        ))}
-      </Menu>
+      <Menu mode="horizontal" selectedKeys={[activeKey]} items={menuItems} />
     </div>
   )
 }

@@ -1,0 +1,103 @@
+.file-form {
+    &__dragger {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    &__file-preview {
+        border: 1px dashed #d9d9d9;
+        border-radius: 8px;
+        padding: 16px;
+        background-color: #fafafa;
+        transition: border-color 0.3s;
+
+        &:hover {
+            border-color: #1890ff;
+        }
+    }
+
+    &__file-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    &__file-icon {
+        font-size: 24px;
+        margin-right: 12px;
+        color: rgba(0, 0, 0, 0.65);
+    }
+
+    &__file-details {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__remove-btn {
+        margin-left: 8px;
+    }
+
+    &__progress {
+        margin-top: 8px;
+    }
+
+    &__upload-container {
+        min-height: 150px;
+    }
+}
+
+.file-form-container {
+    position: relative;
+    width: 100%;
+}
+
+// Enhance form content styles
+.form-content {
+    &__section {
+        margin-bottom: 24px;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+        &-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        &-icon {
+            font-size: 18px;
+            margin-right: 12px;
+            color: #1890ff;
+        }
+
+        &-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.85);
+        }
+    }
+
+    &__compact-section {
+        margin-bottom: 16px;
+    }
+
+    &__form-item {
+        margin-bottom: 16px;
+
+        &--compact {
+            margin-bottom: 12px;
+        }
+    }
+
+    &__upload-item {
+        margin-bottom: 0;
+    }
+
+    &__submit {
+        margin-top: 24px;
+    }
+}
