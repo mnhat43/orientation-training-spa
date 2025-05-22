@@ -135,6 +135,13 @@ const QuizForm = ({ form, onSubmit }) => {
 
       onSubmit(formattedValues)
     } else if (quizType === QUESTION_TYPE.Essay) {
+      const formattedQuestions = [
+        {
+          question_text: values.essay_question,
+          weight: 1,
+          allow_multiple: false,
+        },
+      ]
       const formattedValues = {
         title: values.title,
         quiz_data: {
@@ -142,7 +149,7 @@ const QuizForm = ({ form, onSubmit }) => {
           difficulty: values.difficulty,
           total_score: values.total_score,
           time_limit: values.time_limit * 60 || null,
-          essay_question: values.essay_question,
+          questions: formattedQuestions,
         },
       }
 

@@ -229,7 +229,7 @@ const MyLearningPath = () => {
                             className={`step-course-title ${courseStatus.locked ? 'locked' : ''}`}
                             onClick={() =>
                               !courseStatus.locked &&
-                              navigate(`/course/${course.course_id}/modules`)
+                              navigate(`/course/${course.course_id}/lectures`)
                             }
                           >
                             {course.title}
@@ -284,7 +284,7 @@ const MyLearningPath = () => {
                                   size="small"
                                   onClick={() =>
                                     navigate(
-                                      `/course/${course.course_id}/modules`,
+                                      `/course/${course.course_id}/lectures`,
                                     )
                                   }
                                 >
@@ -407,7 +407,7 @@ const MyLearningPath = () => {
                           icon={<RocketOutlined />}
                           onClick={() =>
                             navigate(
-                              `/course/${courses[userProgress.nextCourseIndex].course_id}/modules`,
+                              `/course/${courses[userProgress.nextCourseIndex].course_id}/lectures`,
                             )
                           }
                           className="start-button"

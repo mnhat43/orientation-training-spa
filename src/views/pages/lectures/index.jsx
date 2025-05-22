@@ -24,8 +24,6 @@ const Lectures = () => {
     error,
   } = useLectureData()
 
-  console.log('latestUnlockedLecture:', latestUnlockedLecture)
-
   if (loading) {
     return (
       <div className="lectures-page__loading">
