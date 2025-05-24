@@ -11,9 +11,6 @@ const QuestionCard = ({
   quizTotalScore,
 }) => {
   const isMultipleSelect = question.allow_multiple
-  const questionPoints = Math.round(
-    (question.question_score / 100) * quizTotalScore,
-  )
 
   return (
     <div className="question-content-wrapper">
@@ -21,7 +18,9 @@ const QuestionCard = ({
         <div className="question-text">{question.question_text}</div>
         <div className="question-points">
           <Tooltip title="Points for this question">
-            <span className="question-points-value">{questionPoints} pts</span>
+            <span className="question-points-value">
+              {question.question_score * quizTotalScore} point
+            </span>
             <InfoCircleOutlined className="question-points-icon" />
           </Tooltip>
         </div>

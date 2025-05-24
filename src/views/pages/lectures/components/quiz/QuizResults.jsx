@@ -125,7 +125,7 @@ const QuizResults = ({ quizData, quizResult, onRetry }) => {
                       </div>
                       <div className="quiz-results__question-meta">
                         <div className="quiz-results__question-points">
-                          {questionScore} pts
+                          {questionScore} point
                         </div>
                         <div className="quiz-results__question-result">
                           {is_correct ? (

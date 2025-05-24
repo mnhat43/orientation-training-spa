@@ -76,7 +76,7 @@ const MultipleChoiceQuiz = ({
           multipleAnswers={multipleAnswers}
           onSingleAnswerSelect={onSingleAnswerSelect}
           onMultipleAnswerSelect={onMultipleAnswerSelect}
-          quizTotalScore={quizData.score || 100} // Pass the total score
+          quizTotalScore={quizData.score}
         />
       </div>
 

@@ -33,7 +33,9 @@ const StartScreen = ({ quizData, onStartQuiz }) => {
   const timeFormatted = formatTime(quizData.time_limit)
 
   const QuizTypeIcon =
-    quizData.type === 'multiple_choice' ? CheckCircleOutlined : FileTextOutlined
+    quizData.quiz_type === 'multiple_choice'
+      ? CheckCircleOutlined
+      : FileTextOutlined
 
   const getDifficultyStyle = () => {
     switch (quizData.difficulty?.toLowerCase()) {
@@ -65,7 +67,7 @@ const StartScreen = ({ quizData, onStartQuiz }) => {
 
             <Tag color="blue">
               <QuizTypeIcon />{' '}
-              {quizData.type === 'multiple_choice'
+              {quizData.quiz_type === 'multiple_choice'
                 ? 'Multiple Choice'
                 : 'Essay'}
             </Tag>
@@ -89,7 +91,7 @@ const StartScreen = ({ quizData, onStartQuiz }) => {
             <div className="info-label">Points</div>
           </div>
 
-          {quizData.type === 'multiple_choice' && (
+          {quizData.quiz_type === 'multiple_choice' && (
             <div className="info-item">
               <Tooltip title="Number of questions">
                 <QuestionOutlined className="info-icon" />
@@ -120,7 +122,7 @@ const StartScreen = ({ quizData, onStartQuiz }) => {
 
           <div className="instruction-content">
             <Text>
-              {quizData.type === 'multiple_choice'
+              {quizData.quiz_type === 'multiple_choice'
                 ? 'Answer all questions before submitting. Some questions may have multiple correct answers.'
                 : 'Provide a comprehensive answer to the essay question.'}
               {quizData.time_limit > 0 &&
