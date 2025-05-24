@@ -7,6 +7,7 @@ import {
   Typography,
   Progress,
   Card,
+  Alert,
 } from 'antd'
 import {
   CheckCircleOutlined,
@@ -34,12 +35,6 @@ const QuizResults = ({ quizData, quizResult, onRetry }) => {
 
   return (
     <div className="quiz-results">
-      <div className="quiz-results__header">
-        <Title level={4} className="quiz-results__title">
-          Quiz Results
-        </Title>
-      </div>
-
       <div className="quiz-results__content">
         <div className="quiz-results__summary-redesign">
           <div className="quiz-results__status-card">
@@ -106,9 +101,12 @@ const QuizResults = ({ quizData, quizResult, onRetry }) => {
               )
               if (!submission) return null
 
-              const { is_correct, selected_answers, correct_answers, score } =
-                submission
-              const questionScore = score || 0
+              const {
+                is_correct,
+                selected_answers,
+                correct_answers,
+                explanation,
+              } = submission
 
               return (
                 <Panel
@@ -125,7 +123,7 @@ const QuizResults = ({ quizData, quizResult, onRetry }) => {
                       </div>
                       <div className="quiz-results__question-meta">
                         <div className="quiz-results__question-points">
-                          {questionScore} point
+                          {question.points} points
                         </div>
                         <div className="quiz-results__question-result">
                           {is_correct ? (
@@ -177,6 +175,16 @@ const QuizResults = ({ quizData, quizResult, onRetry }) => {
                       )
                     })}
                   </div>
+
+                  {explanation && (
+                    <div className="quiz-results__explanation">
+                      <Alert
+                        message="Explanation"
+                        description={explanation}
+                        type="info"
+                      />
+                    </div>
+                  )}
                 </Panel>
               )
             })}

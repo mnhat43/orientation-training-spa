@@ -111,14 +111,14 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     &__summary-redesign {
-        margin: 16px 0 24px;
+        margin: 10px 0 16px;
         display: flex;
-        flex-direction: row; // Changed from column to row
-        gap: 16px;
+        flex-direction: row;
+        gap: 10px;
         align-items: stretch;
 
         @media (max-width: 768px) {
-            flex-direction: column; // Revert to column on mobile
+            flex-direction: column;
         }
     }
 
@@ -126,9 +126,9 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         display: flex;
         align-items: center;
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        padding: 10px 12px;
         overflow: hidden;
         position: relative;
         flex: 2;
@@ -151,11 +151,11 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
-        margin-right: 16px;
-        font-size: 24px;
+        margin-right: 12px;
+        font-size: 20px;
         flex-shrink: 0;
 
         &.passed {
@@ -174,23 +174,23 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     &__status-label {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 600;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
 
     &__score-bar {
         display: flex;
         align-items: center;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
 
         .ant-progress {
             flex: 1;
-            margin-right: 12px;
+            margin-right: 8px;
 
             .ant-progress-bg {
-                height: 8px !important;
-                border-radius: 4px;
+                height: 6px !important;
+                border-radius: 3px;
             }
         }
     }
@@ -208,22 +208,22 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     &__stats-cards {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        flex: 2; // Take less space than status card
+        gap: 10px;
+        flex: 2;
 
         &--two {
             grid-template-columns: repeat(2, 1fr);
 
             .quiz-results__stat-card {
                 width: 100%;
-                height: 100%; // Make sure cards fill the container height
+                height: 100%;
 
                 .quiz-results__stat-card-value {
-                    font-size: 24px;
+                    font-size: 22px;
                 }
 
                 .quiz-results__stat-card-label {
-                    font-size: 14px;
+                    font-size: 13px;
                 }
             }
         }
@@ -243,8 +243,8 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
     &__stat-card {
         text-align: center;
-        padding: 12px 8px;
-        border-radius: 12px;
+        padding: 8px 6px;
+        border-radius: 10px;
         transition: transform 0.2s;
         cursor: default;
 
@@ -277,23 +277,23 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .ant-card-body {
-            padding: 12px 8px !important;
+            padding: 8px 6px !important;
         }
     }
 
     &__stat-card-icon {
-        font-size: 20px;
-        margin-bottom: 4px;
+        font-size: 18px;
+        margin-bottom: 3px;
     }
 
     &__stat-card-value {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
         line-height: 1.2;
     }
 
     &__stat-card-label {
-        font-size: 12px;
+        font-size: 11px;
         color: $color-text-secondary;
     }
 
@@ -551,6 +551,25 @@ $box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     &__option-text {
         flex: 1;
         line-height: 1.5;
+    }
+
+    &__explanation {
+        margin-top: 16px;
+        padding: 0 16px 8px;
+
+        .ant-alert {
+            border-radius: 8px;
+
+            .ant-alert-message {
+                color: $color-info;
+                font-weight: 500;
+            }
+
+            .ant-alert-description {
+                color: $color-text;
+                line-height: 1.6;
+            }
+        }
     }
 
     &__footer {

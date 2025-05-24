@@ -31,7 +31,7 @@ const QuizModern = ({
   const [quizResult, setQuizResult] = useState(null)
 
   const quizData = selectedLecture?.quiz_data || {}
-  console.log('Quiz Data:', quizData)
+
   const { quiz_id, quiz_type, time_limit, questions } = quizData
 
   useEffect(() => {

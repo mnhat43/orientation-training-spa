@@ -8,40 +8,37 @@ const QuestionCard = ({
   multipleAnswers,
   onSingleAnswerSelect,
   onMultipleAnswerSelect,
-  quizTotalScore,
 }) => {
-  const isMultipleSelect = question.allow_multiple
+  const { id, question_text, allow_multiple, points, options } = question
 
   return (
     <div className="question-content-wrapper">
       <div className="question-header">
-        <div className="question-text">{question.question_text}</div>
+        <div className="question-text">{question_text}</div>
         <div className="question-points">
           <Tooltip title="Points for this question">
-            <span className="question-points-value">
-              {question.question_score * quizTotalScore} point
-            </span>
+            <span className="question-points-value">{points} points</span>
             <InfoCircleOutlined className="question-points-icon" />
           </Tooltip>
         </div>
       </div>
 
       <div className="question-type-tag">
-        <Tag color={isMultipleSelect ? 'purple' : 'blue'}>
-          {isMultipleSelect ? 'Select all that apply' : 'Select one answer'}
+        <Tag color={allow_multiple ? 'purple' : 'blue'}>
+          {allow_multiple ? 'Select all that apply' : 'Select one answer'}
         </Tag>
       </div>
 
       <div className="answer-options-modern">
-        {isMultipleSelect ? (
+        {allow_multiple ? (
           <Checkbox.Group
-            value={multipleAnswers[question.id] || []}
+            value={multipleAnswers[id] || []}
             onChange={(checkedValues) =>
-              onMultipleAnswerSelect(checkedValues, question.id)
+              onMultipleAnswerSelect(checkedValues, id)
             }
           >
             <Row gutter={[0, 12]}>
-              {question.options.map((option) => (
+              {options.map((option) => (
                 <Col span={24} key={option.id}>
                   <div className="answer-option-card multiple">
                     <Checkbox value={option.id}>{option.text}</Checkbox>
@@ -52,11 +49,11 @@ const QuestionCard = ({
           </Checkbox.Group>
         ) : (
           <Radio.Group
-            value={userAnswers[question.id]}
-            onChange={(e) => onSingleAnswerSelect(question.id, e.target.value)}
+            value={userAnswers[id]}
+            onChange={(e) => onSingleAnswerSelect(id, e.target.value)}
           >
             <Row gutter={[0, 12]}>
-              {question.options.map((option) => (
+              {options.map((option) => (
                 <Col span={24} key={option.id}>
                   <div className="answer-option-card single">
                     <Radio value={option.id}>{option.text}</Radio>
