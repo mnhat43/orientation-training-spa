@@ -1,0 +1,16 @@
+.learning-path-courses {
+    h3 {
+        margin: 0 0 20px;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 18px;
+    }
+
+    .ant-col {
+        height: 100%;
+        display: flex;
+
+        .course-card-container {
+            width: 100%;
+        }
+    }
+}

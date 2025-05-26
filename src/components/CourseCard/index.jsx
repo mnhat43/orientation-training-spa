@@ -10,6 +10,7 @@ import {
 import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
 import { ROLES } from '@constants/roles'
 import './index.scss'
+import { formatTime } from '@helpers/common'
 
 const DEFAULT_COURSE_SVG = `
 <svg width="320" height="180" xmlns="http://www.w3.org/2000/svg">
@@ -59,11 +60,6 @@ const CourseCard = ({
   const { course_id, title, thumbnail, description, category, duration } =
     course
   const { locked = false, completed = false } = status
-
-  const formatDuration = (seconds) => {
-    const minutes = Math.round(seconds / 60)
-    return minutes + (minutes === 1 ? ' minute' : ' minutes')
-  }
 
   const getCategoryName = (categoryKey) => {
     return CATEGORIES[categoryKey] || categoryKey || 'Uncategorized'
@@ -176,7 +172,7 @@ const CourseCard = ({
 
           <div className="card-footer">
             <div className="card-duration">
-              <ClockCircleOutlined /> {formatDuration(duration || 0)}
+              <ClockCircleOutlined /> {formatTime(duration)}
             </div>
 
             {role === ROLES.MANAGER && (
