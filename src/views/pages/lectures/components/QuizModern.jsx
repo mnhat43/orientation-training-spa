@@ -14,7 +14,7 @@ import {
 import quizApi from '@api/quiz'
 
 const QuizModern = ({
-  selectedLecture,
+  contentQuiz,
   onCompleteLecture,
   onCompleteCourse,
   isLastLecture,
@@ -30,9 +30,7 @@ const QuizModern = ({
   const [timeWarning, setTimeWarning] = useState(false)
   const [quizResult, setQuizResult] = useState(null)
 
-  const quizData = selectedLecture?.quiz_data || {}
-
-  const { quiz_id, quiz_type, time_limit, questions } = quizData
+  const { quiz_id, quiz_type, time_limit, questions } = contentQuiz
 
   useEffect(() => {
     if (time_limit && hasStarted && !showResults) {
@@ -95,7 +93,7 @@ const QuizModern = ({
           quiz_id: Number(quiz_id),
           answers: [
             {
-              question_id: questions[0].id,
+              question_id: questions[0].question_id,
               answer_text: essayAnswer,
             },
           ],
@@ -103,10 +101,9 @@ const QuizModern = ({
 
         if (response.status === 1) {
           setQuizResult(response.data)
-
-          const passed = response.data?.passed === true
-
-          if (passed) {
+          console.log('Quiz result:', response.data)
+          if (response.data.passed) {
+            console.log('Lecture completed')
             handleLectureCompletion()
           }
         }
@@ -115,14 +112,14 @@ const QuizModern = ({
           let selectedAnswerIds = []
 
           if (question.allow_multiple) {
-            selectedAnswerIds = multipleAnswers[question.id] || []
+            selectedAnswerIds = multipleAnswers[question.question_id] || []
           } else {
-            const answerId = userAnswers[question.id]
+            const answerId = userAnswers[question.question_id]
             if (answerId) selectedAnswerIds = [answerId]
           }
 
           return {
-            question_id: question.id,
+            question_id: question.question_id,
             selected_answer_ids: selectedAnswerIds,
           }
         })
@@ -145,9 +142,9 @@ const QuizModern = ({
   }
 
   const handleSubmit = () => {
+    submitQuiz()
     setShowResults(true)
     setConfirmModalVisible(false)
-    submitQuiz()
   }
 
   const handleTimeWarning = () => {
@@ -176,11 +173,11 @@ const QuizModern = ({
   return (
     <>
       {!hasStarted ? (
-        <StartScreen quizData={quizData} onStartQuiz={handleStartQuiz} />
+        <StartScreen content={contentQuiz} onStartQuiz={handleStartQuiz} />
       ) : quiz_type === 'essay' ? (
         <>
           <EssayQuiz
-            quizData={quizData}
+            questions={questions}
             deadline={deadline}
             showResults={showResults}
             essayAnswer={essayAnswer}
@@ -213,14 +210,14 @@ const QuizModern = ({
         </div>
       ) : showResults ? (
         <QuizResults
-          quizData={quizData}
+          questions={questions}
           quizResult={quizResult}
           onRetry={handleRetry}
         />
       ) : (
         <>
           <MultipleChoiceQuiz
-            quizData={quizData}
+            questions={questions}
             currentQuestion={currentQuestion}
             userAnswers={userAnswers}
             multipleAnswers={multipleAnswers}

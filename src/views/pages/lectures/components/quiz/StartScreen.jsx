@@ -29,16 +29,15 @@ const formatTime = (seconds) => {
   return parts.join(' ') || '0s'
 }
 
-const StartScreen = ({ quizData, onStartQuiz }) => {
-  const timeFormatted = formatTime(quizData.time_limit)
+const StartScreen = ({ content, onStartQuiz }) => {
+  const { quiz_type, time_limit, difficulty, total_score, questions } = content
+  const timeFormatted = formatTime(time_limit)
 
   const QuizTypeIcon =
-    quizData.quiz_type === 'multiple_choice'
-      ? CheckCircleOutlined
-      : FileTextOutlined
+    quiz_type === 'multiple_choice' ? CheckCircleOutlined : FileTextOutlined
 
   const getDifficultyStyle = () => {
-    switch (quizData.difficulty?.toLowerCase()) {
+    switch (difficulty?.toLowerCase()) {
       case 'easy':
         return { color: '#52c41a' }
       case 'medium':
@@ -62,14 +61,12 @@ const StartScreen = ({ quizData, onStartQuiz }) => {
 
           <Space size={8} className="quiz-meta-tags">
             <Tag color={getDifficultyStyle().color}>
-              <FireOutlined /> {quizData.difficulty || 'Medium'}
+              <FireOutlined /> {difficulty || 'Medium'}
             </Tag>
 
             <Tag color="blue">
               <QuizTypeIcon />{' '}
-              {quizData.quiz_type === 'multiple_choice'
-                ? 'Multiple Choice'
-                : 'Essay'}
+              {quiz_type === 'multiple_choice' ? 'Multiple Choice' : 'Essay'}
             </Tag>
 
             {timeFormatted && (
@@ -87,18 +84,16 @@ const StartScreen = ({ quizData, onStartQuiz }) => {
             <Tooltip title="Total points available">
               <TrophyOutlined className="info-icon" />
             </Tooltip>
-            <div className="info-value">{quizData.score || 100}</div>
+            <div className="info-value">{total_score}</div>
             <div className="info-label">Points</div>
           </div>
 
-          {quizData.quiz_type === 'multiple_choice' && (
+          {quiz_type === 'multiple_choice' && (
             <div className="info-item">
               <Tooltip title="Number of questions">
                 <QuestionOutlined className="info-icon" />
               </Tooltip>
-              <div className="info-value">
-                {quizData.questions?.length || 0}
-              </div>
+              <div className="info-value">{questions?.length || 0}</div>
               <div className="info-label">Questions</div>
             </div>
           )}
@@ -122,10 +117,10 @@ const StartScreen = ({ quizData, onStartQuiz }) => {
 
           <div className="instruction-content">
             <Text>
-              {quizData.quiz_type === 'multiple_choice'
+              {quiz_type === 'multiple_choice'
                 ? 'Answer all questions before submitting. Some questions may have multiple correct answers.'
                 : 'Provide a comprehensive answer to the essay question.'}
-              {quizData.time_limit > 0 &&
+              {time_limit > 0 &&
                 ' The timer will start once you begin and cannot be paused.'}
             </Text>
           </div>

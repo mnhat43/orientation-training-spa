@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import lecture from '@api/lecture'
+import lectureApi from '@api/lecture'
 import userprogress from '@api/userprogress'
 import { useParams } from 'react-router-dom'
 
@@ -8,104 +8,102 @@ const useLectureData = () => {
   const navigate = useNavigate()
   const { moduleId, moduleItemId, courseId } = useParams()
 
-  const [lectures, setLectures] = useState({})
+  const [lectures, setLectures] = useState([])
   const [selectedLecture, setSelectedLecture] = useState({})
+  const [selectedModule, setSelectedModule] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [courseCompleted, setCourseCompleted] = useState(false)
 
-  const allLectures = useMemo(() => Object.values(lectures).flat(), [lectures])
-
-  const latestUnlockedLecture = useMemo(() => {
-    if (!Array.isArray(allLectures) || !allLectures.length) return null
-
-    const unlockedLectures = allLectures.filter(
-      (lecture) => lecture.unlocked === true,
-    )
-    if (!unlockedLectures.length) return null
-
-    return unlockedLectures.reduce((highest, current) => {
-      const currentModulePosition = parseInt(current.module_position)
-      const highestModulePosition = highest
-        ? parseInt(highest.module_position)
-        : -1
-
-      if (currentModulePosition > highestModulePosition) return current
-      if (currentModulePosition < highestModulePosition) return highest
-
-      return parseInt(current.module_item_position) >
-        parseInt(highest.module_item_position)
-        ? current
-        : highest
-    }, null)
-  }, [allLectures])
-
-  const lastLecture = useMemo(() => {
-    if (!Array.isArray(allLectures) || !allLectures.length) return null
-
-    return allLectures.reduce((highest, current) => {
-      if (!highest) return current
-
-      const currentModulePosition = parseInt(current.module_position)
-      const highestModulePosition = parseInt(highest.module_position)
-
-      if (currentModulePosition > highestModulePosition) return current
-      if (currentModulePosition < highestModulePosition) return highest
-
-      return parseInt(current.module_item_position) >
-        parseInt(highest.module_item_position)
-        ? current
-        : highest
-    }, null)
-  }, [allLectures])
-
-  const isLatestUnlocked = useMemo(() => {
-    if (!selectedLecture || !latestUnlockedLecture) return false
-
-    return selectedLecture === latestUnlockedLecture
-  }, [selectedLecture, latestUnlockedLecture])
-
-  const isLastLecture = useMemo(() => {
-    if (!selectedLecture || !lastLecture) return false
-
-    return selectedLecture === lastLecture
-  }, [selectedLecture, lastLecture])
-
-  const selectLecture = useCallback(
-    (moduleId, moduleItemId) => {
-      const findLectureById = (moduleId, moduleItemId) => {
-        if (!Array.isArray(allLectures) || !allLectures.length) return null
-        if (!moduleId || !moduleItemId) return allLectures[0]
-
-        return (
-          allLectures.find(
-            (lecture) =>
-              lecture.module_id === parseInt(moduleId) &&
-              lecture.module_item_id === parseInt(moduleItemId),
-          ) || null
-        )
+  const handleSelectLecture = useCallback(
+    ({ moduleId, moduleItemId, navigate: shouldNavigate = false }) => {
+      if (moduleId === undefined || moduleItemId === undefined) {
+        return null
       }
-      const lecture = findLectureById(moduleId, moduleItemId)
 
-      if (lecture) {
-        setSelectedLecture(lecture)
-        return lecture
+      if (!lectures || !lectures.length) return null
+
+      const targetModule = lectures.find(
+        (module) => module.module_id === parseInt(moduleId),
+      )
+
+      if (!targetModule) return null
+
+      const targetLecture = targetModule.lecture.find(
+        (item) => item.module_item_id === parseInt(moduleItemId),
+      )
+
+      if (!targetLecture) return null
+
+      const completeLecture = {
+        ...targetLecture,
+        // module_id: targetModule.module_id,
+        // module_position: targetModule.module_position,
+        // module_title: targetModule.module_title,
+      }
+      setSelectedModule({
+        module_id: targetModule.module_id,
+        module_position: targetModule.module_position,
+      })
+      setSelectedLecture(completeLecture)
+
+      if (shouldNavigate) {
+        navigate(`/course/${courseId}/lectures/${moduleId}/${moduleItemId}`)
+      }
+
+      return completeLecture
+    },
+    [lectures, courseId, navigate],
+  )
+
+  const __handleGetPositionNext = useCallback(
+    (modulePosition, moduleItemPosition) => {
+      if (!lectures || !lectures.length) return null
+
+      const currentModulePos = Number(modulePosition)
+      const currentItemPos = Number(moduleItemPosition)
+
+      const currentModule = lectures.find(
+        (module) => Number(module.module_position) === currentModulePos,
+      )
+
+      if (currentModule) {
+        const nextLectureInModule = currentModule.lecture.find(
+          (item) => Number(item.module_item_position) > currentItemPos,
+        )
+
+        if (nextLectureInModule) {
+          return {
+            module_position: currentModule.module_position,
+            module_item_position: nextLectureInModule.module_item_position,
+          }
+        }
+      }
+
+      const nextModule = lectures.find(
+        (module) => Number(module.module_position) > currentModulePos,
+      )
+
+      if (nextModule && nextModule.lecture && nextModule.lecture.length > 0) {
+        const firstLecture = nextModule.lecture.reduce((first, current) => {
+          return Number(current.module_item_position) <
+            Number(first.module_item_position)
+            ? current
+            : first
+        }, nextModule.lecture[0])
+
+        return {
+          module_position: nextModule.module_position,
+          module_item_position: firstLecture.module_item_position,
+        }
       }
 
       return null
     },
-    [moduleId, moduleItemId, courseId],
+    [lectures],
   )
 
-  const handleChooseLecture = useCallback(
-    (moduleId, moduleItemId) => {
-      navigate(`/course/${courseId}/lectures/${moduleId}/${moduleItemId}`)
-      selectLecture(moduleId, moduleItemId)
-    },
-    [navigate, courseId],
-  )
-
-  const checkCourseCompletionStatus = useCallback(async () => {
+  const __handleStatusCourses = useCallback(async () => {
     if (!courseId) return false
 
     try {
@@ -128,26 +126,6 @@ const useLectureData = () => {
     }
   }, [courseId])
 
-  const fetchLectures = async () => {
-    if (!courseId) return
-
-    try {
-      setLoading(true)
-      setError(null)
-      const response = await lecture.getListLecture({
-        course_id: parseInt(courseId),
-      })
-      setLectures(response.data)
-
-      await checkCourseCompletionStatus()
-    } catch (error) {
-      console.error('Failed to fetch lectures:', error.message)
-      setError(error.message || 'Failed to fetch lectures')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const handleCompleteCourse = useCallback(async () => {
     try {
       const response = await userprogress.updateUserProgress({
@@ -163,130 +141,206 @@ const useLectureData = () => {
       console.error('Failed to complete course:', error)
       return false
     }
-  }, [selectedLecture])
+  }, [courseId])
 
   const handleCompleteLecture = useCallback(async () => {
     try {
-      const findNextLecture = (
-        allLectures,
-        currentModulePosition,
-        currentItemPosition,
-      ) => {
-        if (!allLectures?.length) return null
-
-        const currentModulePos = Number(currentModulePosition)
-        const currentItemPos = Number(currentItemPosition)
-
-        const nextInModule = allLectures.find(
-          (lec) =>
-            Number(lec.module_position) === currentModulePos &&
-            Number(lec.module_item_position) > currentItemPos,
-        )
-
-        if (nextInModule) return nextInModule
-
-        return allLectures.find(
-          (lec) => Number(lec.module_position) > currentModulePos,
-        )
-      }
-
-      const nextLecture = findNextLecture(
-        allLectures,
-        selectedLecture.module_position,
+      const nextLecturePosition = __handleGetPositionNext(
+        selectedModule.module_position,
         selectedLecture.module_item_position,
       )
 
       const response = await userprogress.updateUserProgress({
         course_id: Number(courseId),
-        module_position: Number(nextLecture.module_position),
-        module_item_position: Number(nextLecture.module_item_position),
+        module_position: Number(nextLecturePosition.module_position),
+        module_item_position: Number(nextLecturePosition.module_item_position),
       })
 
       if (response.status === 1 && response?.data) {
         const updatedData = response.data
 
         setLectures((prevLectures) => {
-          const newLectures = { ...prevLectures }
-
-          Object.keys(newLectures).forEach((week) => {
-            const weekLectures = [...newLectures[week]]
-            let updated = false
-
-            for (let i = 0; i < weekLectures.length; i++) {
-              const lecture = weekLectures[i]
-
-              if (
-                parseInt(lecture.module_position) ===
-                  parseInt(updatedData.module_position) &&
-                parseInt(lecture.module_item_position) ===
-                  parseInt(updatedData.module_item_position)
-              ) {
-                weekLectures[i] = { ...lecture, unlocked: true }
-                updated = true
-                break
+          return prevLectures.map((module) => {
+            if (
+              parseInt(module.module_position) ===
+              parseInt(updatedData.module_position)
+            ) {
+              return {
+                ...module,
+                lecture: module.lecture.map((item) => {
+                  if (
+                    parseInt(item.module_item_position) ===
+                    parseInt(updatedData.module_item_position)
+                  ) {
+                    return { ...item, unlocked: true }
+                  }
+                  return item
+                }),
               }
             }
-
-            if (updated) {
-              newLectures[week] = weekLectures
-            }
+            return module
           })
-          console.log('Updated lectures:', newLectures)
-
-          return newLectures
         })
+
+        return true
       }
+
+      return false
     } catch (error) {
       console.error('Failed to update progress:', error)
+      return false
     }
-  }, [selectedLecture])
+  }, [selectedLecture, courseId, __handleGetPositionNext])
+
+  const handleGetLastLecture = useCallback(() => {
+    if (!lectures || !lectures.length) return null
+
+    let highestModulePosition = -1
+    let lastModuleId = null
+
+    lectures.forEach((module) => {
+      const modulePosition = parseInt(module.module_position)
+      if (modulePosition > highestModulePosition) {
+        highestModulePosition = modulePosition
+        lastModuleId = module.module_id
+      }
+    })
+
+    if (lastModuleId === null) return null
+
+    const lastModule = lectures.find((m) => m.module_id === lastModuleId)
+    if (!lastModule || !lastModule.lecture) return null
+
+    let highestItemPosition = -1
+    let lastItemId = null
+
+    lastModule.lecture.forEach((item) => {
+      const itemPosition = parseInt(item.module_item_position)
+      if (itemPosition > highestItemPosition) {
+        highestItemPosition = itemPosition
+        lastItemId = item.module_item_id
+      }
+    })
+
+    if (lastItemId === null) return null
+
+    const lastLecture = lastModule.lecture.find(
+      (item) => item.module_item_id === lastItemId,
+    )
+
+    if (!lastLecture) return null
+
+    return {
+      ...lastLecture,
+      // module_id: lastModule.module_id,
+      // module_position: lastModule.module_position,
+      // module_title: lastModule.module_title,
+    }
+  }, [lectures])
+
+  const handleGetLastUnlockedLecture = () => {
+    if (!lectures || !lectures.length) return null
+    const unlockedLectures = []
+
+    lectures.forEach((module) => {
+      module.lecture.forEach((item) => {
+        if (item.unlocked === true) {
+          unlockedLectures.push({
+            ...item,
+            module_id: module.module_id,
+            module_position: module.module_position,
+            module_title: module.module_title,
+          })
+        }
+      })
+    })
+
+    if (unlockedLectures.length === 0) return null
+
+    const lastUnlockedLecture = unlockedLectures.reduce((highest, current) => {
+      const currentModulePosition = parseInt(current.module_position)
+      const highestModulePosition = parseInt(highest.module_position)
+
+      if (currentModulePosition > highestModulePosition) return current
+      if (currentModulePosition < highestModulePosition) return highest
+
+      return parseInt(current.module_item_position) >
+        parseInt(highest.module_item_position)
+        ? current
+        : highest
+    }, unlockedLectures[0])
+
+    const { module_id, module_position, module_title, ...cleanLecture } =
+      lastUnlockedLecture
+
+    return cleanLecture
+  }
 
   useEffect(() => {
     if (courseId) {
-      checkCourseCompletionStatus()
+      __handleStatusCourses()
     }
-  }, [courseId, checkCourseCompletionStatus])
+  }, [courseId, __handleStatusCourses])
 
   useEffect(() => {
+    const fetchLectures = async () => {
+      if (!courseId) return
+
+      try {
+        setLoading(true)
+        setError(null)
+        const response = await lectureApi.getListLecture({
+          course_id: parseInt(courseId),
+        })
+
+        if (response.status === 1 && response.data) {
+          setLectures(response.data)
+          await __handleStatusCourses()
+        }
+      } catch (error) {
+        console.error('Failed to fetch lectures:', error.message)
+        setError(error.message || 'Failed to fetch lectures')
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchLectures()
-  }, [])
+  }, [courseId, __handleStatusCourses])
 
   useEffect(() => {
-    if (loading || !allLectures.length) return
+    if (loading || !lectures.length) return
 
-    const lecture = selectLecture(moduleId, moduleItemId)
+    if (moduleId && moduleItemId) {
+      handleSelectLecture({
+        moduleId,
+        moduleItemId,
+      })
+    } else if (
+      lectures.length > 0 &&
+      lectures[0].lecture &&
+      lectures[0].lecture.length > 0
+    ) {
+      const firstModule = lectures[0]
+      const firstLecture = firstModule.lecture[0]
 
-    if (!lecture && allLectures.length > 0) {
-      const firstLecture = allLectures[0]
-      setSelectedLecture(firstLecture)
-
-      navigate(
-        `/course/${courseId}/lectures/${firstLecture.module_id}/${firstLecture.module_item_id}`,
-        { replace: true },
-      )
+      handleSelectLecture({
+        moduleId: firstModule.module_id,
+        moduleItemId: firstLecture.module_item_id,
+        navigate: true,
+      })
     }
-  }, [
-    moduleId,
-    moduleItemId,
-    selectLecture,
-    allLectures,
-    courseId,
-    navigate,
-    loading,
-  ])
+  }, [lectures, loading, moduleId, moduleItemId, handleSelectLecture])
 
   return {
-    lectures,
-    selectedLecture,
     loading,
     error,
-    allLectures,
-    isLatestUnlocked,
-    isLastLecture,
+    lectures,
+    selectedLecture,
     courseCompleted,
-    latestUnlockedLecture,
-    setCourseCompleted,
-    handleChooseLecture,
+    handleSelectLecture,
+    handleGetLastLecture,
+    handleGetLastUnlockedLecture,
     handleCompleteCourse,
     handleCompleteLecture,
   }

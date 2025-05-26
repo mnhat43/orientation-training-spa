@@ -17,17 +17,11 @@ import {
 } from '@ant-design/icons'
 import './QuizResults.scss'
 
-const { Text, Title } = Typography
+const { Text } = Typography
 const { Panel } = Collapse
 
-const QuizResults = ({ quizData, quizResult, onRetry }) => {
-  const {
-    max_score,
-    pass_threshold,
-    passed,
-    total_score,
-    submissions = [],
-  } = quizResult || {}
+const QuizResults = ({ questions, quizResult, onRetry }) => {
+  const { max_score, passed, total_score, submissions = [] } = quizResult || {}
 
   const percentage = max_score ? Math.round((total_score / max_score) * 100) : 0
   const correctCount = submissions.filter((sub) => sub.is_correct).length
@@ -95,9 +89,9 @@ const QuizResults = ({ quizData, quizResult, onRetry }) => {
             expandIconPosition="end"
             className="quiz-results__collapse"
           >
-            {quizData.questions.map((question, index) => {
+            {questions.map((question, index) => {
               const submission = submissions.find(
-                (sub) => sub.question_id === question.id,
+                (sub) => sub.question_id === question.question_id,
               )
               if (!submission) return null
 
@@ -110,7 +104,7 @@ const QuizResults = ({ quizData, quizResult, onRetry }) => {
 
               return (
                 <Panel
-                  key={question.id}
+                  key={question.question_id}
                   header={
                     <div className="quiz-results__question-header">
                       <div

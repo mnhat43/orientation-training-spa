@@ -6,7 +6,7 @@ import QuestionCard from './QuestionCard'
 const { Countdown } = Statistic
 
 const MultipleChoiceQuiz = ({
-  quizData,
+  questions,
   currentQuestion,
   userAnswers,
   multipleAnswers,
@@ -27,11 +27,12 @@ const MultipleChoiceQuiz = ({
     }
   }, [currentQuestion])
 
-  const question = quizData.questions[currentQuestion]
+  const question = questions[currentQuestion]
   const isMultipleSelect = question.allow_multiple
   const isAnswered = isMultipleSelect
-    ? multipleAnswers[question.id] && multipleAnswers[question.id].length > 0
-    : !!userAnswers[question.id]
+    ? multipleAnswers[question.question_id] &&
+      multipleAnswers[question.question_id].length > 0
+    : !!userAnswers[question.question_id]
 
   return (
     <div className="quiz-modern" key={currentQuestion}>
@@ -53,11 +54,11 @@ const MultipleChoiceQuiz = ({
 
         <div className="quiz-modern-progress">
           <div className="progress-text">
-            Question {currentQuestion + 1} of {quizData.questions.length}
+            Question {currentQuestion + 1} of {questions.length}
           </div>
           <Progress
             percent={Math.round(
-              ((currentQuestion + 1) / quizData.questions.length) * 100,
+              ((currentQuestion + 1) / questions.length) * 100,
             )}
             showInfo={false}
             size="small"
@@ -89,7 +90,7 @@ const MultipleChoiceQuiz = ({
           Previous
         </Button>
 
-        {currentQuestion < quizData.questions.length - 1 ? (
+        {currentQuestion < questions.length - 1 ? (
           <Button
             type="primary"
             onClick={onNextQuestion}

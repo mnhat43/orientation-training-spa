@@ -13,21 +13,15 @@ import './LectureItem.scss'
 import { formatTime } from '@helpers/common'
 
 const LectureItem = ({
-  lecture,
+  moduleItem,
+  module_id,
   highlight,
-  onChooseLecture,
+  onSelectLecture,
   isLatestUnlocked,
   courseCompleted,
 }) => {
-  const {
-    unlocked,
-    duration,
-    quiz_data,
-    item_type,
-    module_id,
-    module_item_id,
-    title,
-  } = lecture
+  const { unlocked, item_type, module_item_id, module_item_title, content } =
+    moduleItem
   const isCompleted = (courseCompleted || !isLatestUnlocked) && unlocked
 
   const getClassNames = () => {
@@ -39,9 +33,9 @@ const LectureItem = ({
   }
 
   const getDuration = () => {
-    if (item_type === 'video') return duration
-    if (item_type === 'file') return duration
-    if (item_type === 'quiz') return formatTime(quiz_data.time_limit)
+    if (item_type === 'video') return formatTime(content.duration)
+    if (item_type === 'file') return formatTime(content.duration)
+    if (item_type === 'quiz') return formatTime(content.time_limit)
     return null
   }
 
@@ -97,7 +91,11 @@ const LectureItem = ({
 
   const handleClick = () => {
     if (unlocked) {
-      onChooseLecture(module_id, module_item_id)
+      onSelectLecture({
+        moduleId: module_id,
+        moduleItemId: module_item_id,
+        navigate: true,
+      })
     }
   }
 
@@ -110,7 +108,7 @@ const LectureItem = ({
     >
       <div className="lecture-item__content">
         <Typography.Text className="lecture-item__content-title">
-          {title}
+          {module_item_title}
         </Typography.Text>
 
         <div className="lecture-item__content-meta">

@@ -1,38 +1,30 @@
 import { useEffect, useState, useCallback, useRef, memo, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import _ from 'lodash'
 
-const REQUIRED_TIME_DEFAULT = 10
 const USER_ACTIVITY_TIMEOUT = 10000
 const TIMER_CHECK_INTERVAL = 500
 const IS_DEV = process.env.NODE_ENV !== 'prod'
 
 const LearningTimer = ({
-  lectures,
   selectedLecture,
+  lastLecture,
   isVideoPlaying,
   courseCompleted,
-  isLastLecture,
   onCompleteLecture,
   onCompleteCourse,
 }) => {
   if (courseCompleted) return null
-  const allLectures = useMemo(() => Object.values(lectures).flat(), [lectures])
 
   const [isUserActive, setIsUserActive] = useState(false)
   const [timeSpent, setTimeSpent] = useState(0)
   const { courseId } = useParams()
 
-  const {
-    module_id,
-    module_position,
-    module_item_id,
-    module_item_position,
-    required_time,
-    item_type,
-  } = selectedLecture
+  const { module_item_id, content, item_type } = selectedLecture
 
-  const requiredTime = required_time > 0 ? required_time : REQUIRED_TIME_DEFAULT
-  const isFileContent = item_type !== 'video'
+  const { required_time } = content
+
+  const isFileContent = item_type == 'file'
   const isActive = isFileContent ? isUserActive : isVideoPlaying
 
   const refs = useRef({
@@ -48,7 +40,7 @@ const LearningTimer = ({
     if (refs.completed) return
     refs.completed = true
 
-    if (isLastLecture) {
+    if (_.isEqual(selectedLecture, lastLecture)) {
       onCompleteCourse()
       return
     }
@@ -56,11 +48,9 @@ const LearningTimer = ({
     onCompleteLecture()
   }, [
     courseId,
-    allLectures,
-    module_position,
-    module_item_position,
+    selectedLecture,
     refs,
-    isLastLecture,
+    lastLecture,
     onCompleteCourse,
     onCompleteLecture,
   ])
@@ -81,7 +71,7 @@ const LearningTimer = ({
 
     resetTimer()
     return resetTimer
-  }, [module_id, module_item_id, refs])
+  }, [module_item_id, refs])
 
   useEffect(() => {
     if (!isFileContent) return
@@ -147,7 +137,7 @@ const LearningTimer = ({
       const totalTimeSpent = refs.accumulatedTime + currentSessionTime
       setTimeSpent(totalTimeSpent)
 
-      if (totalTimeSpent >= requiredTime && !refs.completed) {
+      if (totalTimeSpent >= required_time && !refs.completed) {
         clearInterval(refs.timer)
         refs.timer = null
         completeProgress()
@@ -157,7 +147,7 @@ const LearningTimer = ({
     return () => {
       if (refs.timer) clearInterval(refs.timer)
     }
-  }, [isActive, requiredTime, completeProgress, refs])
+  }, [isActive, required_time, completeProgress, refs])
 
   // Simple debug display
   useEffect(() => {
@@ -176,7 +166,7 @@ const LearningTimer = ({
       })
 
       const update = () => {
-        debug.textContent = `${isFileContent ? 'File' : 'Video'}: ${timeSpent}/${requiredTime}s (${isActive ? 'ACTIVE' : 'PAUSED'})`
+        debug.textContent = `${isFileContent ? 'File' : 'Video'}: ${timeSpent}/${required_time}s (${isActive ? 'ACTIVE' : 'PAUSED'})`
       }
 
       update()
@@ -193,9 +183,9 @@ const LearningTimer = ({
     timeSpent,
     isActive,
     isFileContent,
-    requiredTime,
+    required_time,
     refs.accumulatedTime,
-    isLastLecture,
+    lastLecture,
   ])
 
   return null

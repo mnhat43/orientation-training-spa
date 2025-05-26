@@ -8,31 +8,28 @@ import {
   ReadOutlined,
 } from '@ant-design/icons'
 import LectureItem from './LectureItem'
-import { formatTime, timeStringToSeconds } from '@helpers/common'
+import { formatTime } from '@helpers/common'
 import './PlaylistMenu.scss'
+import _ from 'lodash'
 
 const PlaylistMenu = ({
   lectures,
   selectedLecture,
-  latestUnlockedLecture,
+  lastUnlockedLecture,
   courseCompleted,
-  onChooseLecture,
+  onSelectLecture,
 }) => {
-  const allLectures = useMemo(() => Object.values(lectures).flat(), [lectures])
-  const [expandedLectureModules, setExpandedLectureModules] = useState(
-    Object.keys(lectures).slice(0, 0),
-  )
+  const [expandedModules, setExpandedModules] = useState([])
 
   const progressData = useMemo(() => {
-    const totalLectures = allLectures?.length || 0
-    if (totalLectures === 0)
-      return { percent: 0, completedLectures: 0, totalLectures: 0 }
+    const allLectures = lectures.flatMap((module) => module.lecture)
+    const totalLectures = allLectures?.length
 
     const completedLectures = allLectures.filter((lecture) => {
       if (courseCompleted) {
         return lecture.unlocked === true
       } else {
-        return lecture.unlocked === true && lecture !== latestUnlockedLecture
+        return lecture.unlocked === true && lecture !== lastUnlockedLecture
       }
     }).length
 
@@ -41,31 +38,15 @@ const PlaylistMenu = ({
       completedLectures: completedLectures,
       totalLectures: totalLectures,
     }
-  }, [allLectures, courseCompleted, latestUnlockedLecture])
+  }, [lectures, courseCompleted, lastUnlockedLecture])
 
   const { percent, completedLectures, totalLectures } = progressData
 
-  const weekDurations = useMemo(() => {
-    const durations = {}
-
-    Object.keys(lectures).forEach((week) => {
-      durations[week] = lectures[week].reduce((total, lecture) => {
-        if (lecture.item_type === 'video') {
-          return total + timeStringToSeconds(lecture.duration)
-        }
-        if (lecture.item_type === 'file') {
-          return total + (parseInt(lecture.required_time) || 0)
-        }
-        return total
-      }, 0)
-    })
-
-    return durations
-  }, [lectures])
-
-  const toggleModule = (week) => {
-    setExpandedLectureModules((prev) =>
-      prev.includes(week) ? prev.filter((lm) => lm !== week) : [...prev, week],
+  const toggleModule = (moduleId) => {
+    setExpandedModules((prev) =>
+      prev.includes(moduleId)
+        ? prev.filter((id) => id !== moduleId)
+        : [...prev, moduleId],
     )
   }
 
@@ -101,7 +82,7 @@ const PlaylistMenu = ({
         <div className="summary-item">
           <BookOutlined />
           <span>
-            <strong>{Object.keys(lectures).length}</strong> Modules
+            <strong>{lectures.length}</strong> Modules
           </span>
         </div>
         <div className="summary-item">
@@ -116,38 +97,40 @@ const PlaylistMenu = ({
       </div>
 
       <div className="module-list">
-        {Object.keys(lectures).map((week) => {
-          const isExpanded = expandedLectureModules.includes(week)
+        {lectures.map((module) => {
+          const { module_id, lecture, module_title, duration } = module
+          const isExpanded = expandedModules.includes(module_id)
 
-          const completedInWeek = lectures[week].filter(
-            (lecture) =>
-              lecture.unlocked &&
-              (courseCompleted || lecture !== latestUnlockedLecture),
+          const completedInModule = lecture.filter(
+            (item) =>
+              item.unlocked &&
+              (courseCompleted || item !== lastUnlockedLecture),
           ).length
-          const totalInWeek = lectures[week].length
-
-          const weekDuration = formatTime(weekDurations[week] || 0)
+          const totalInModule = lecture.length
 
           return (
             <div
-              className={`module-item ${completedInWeek === totalInWeek ? 'module-completed' : ''}`}
-              key={week}
+              className={`module-item ${completedInModule === totalInModule ? 'module-completed' : ''}`}
+              key={module_id}
             >
-              <div className="module-header" onClick={() => toggleModule(week)}>
+              <div
+                className="module-header"
+                onClick={() => toggleModule(module_id)}
+              >
                 <div className="module-details">
                   <div className="module-title">
-                    <span className="module-name">{week}</span>
-                    {completedInWeek === totalInWeek && (
+                    <span className="module-name">{module_title}</span>
+                    {completedInModule === totalInModule && (
                       <span className="completion-tag">Completed</span>
                     )}
                   </div>
                   <div className="module-subtitle">
                     <span className="completion-indicator">
-                      {completedInWeek}/{totalInWeek}
+                      {completedInModule}/{totalInModule}
                     </span>
                     <span className="subtitle-separator">|</span>
                     <span className="time-indicator">
-                      <ClockCircleOutlined /> {weekDuration}
+                      <ClockCircleOutlined /> {formatTime(duration)}
                     </span>
                   </div>
                 </div>
@@ -159,14 +142,16 @@ const PlaylistMenu = ({
 
               <div className={`module-content ${isExpanded ? 'expanded' : ''}`}>
                 <List
-                  dataSource={lectures[week]}
-                  renderItem={(lecture) => {
+                  dataSource={lecture}
+                  renderItem={(item) => {
                     return (
                       <LectureItem
-                        lecture={lecture}
-                        highlight={lecture === selectedLecture}
-                        onChooseLecture={onChooseLecture}
-                        isLatestUnlocked={lecture === latestUnlockedLecture}
+                        key={item.module_item_id}
+                        moduleItem={item}
+                        module_id={module_id}
+                        highlight={_.isEqual(item, selectedLecture)}
+                        onSelectLecture={onSelectLecture}
+                        isLatestUnlocked={_.isEqual(item, lastUnlockedLecture)}
                         courseCompleted={courseCompleted}
                       />
                     )

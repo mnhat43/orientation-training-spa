@@ -13,21 +13,22 @@ const LectureContent = ({
   onCompleteLecture,
   onCompleteCourse,
   isLastLecture,
-  allLectures,
 }) => {
   const [quizPassed, setQuizPassed] = useState(false)
   const [quizResults, setQuizResults] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const { item_type, content } = selectedLecture
+
   useEffect(() => {
     setQuizPassed(false)
     const fetchQuizStatus = async () => {
-      if (selectedLecture.item_type !== 'quiz') return
+      if (item_type !== 'quiz') return
 
       try {
         setLoading(true)
         const response = await quizApi.getQuizResult({
-          quiz_id: selectedLecture.quiz_id,
+          quiz_id: content.quiz_id,
         })
 
         if (response.status == 1 && response.data) {
@@ -52,34 +53,34 @@ const LectureContent = ({
     if (quizPassed) {
       return (
         <QuizReview
-          quizData={selectedLecture.quiz_data}
+          quizType={content.quiz_type}
+          questions={content.questions}
           quizResult={quizResults}
         />
       )
     }
     return (
       <QuizModern
-        selectedLecture={selectedLecture}
+        contentQuiz={content}
         onCompleteLecture={onCompleteLecture}
         onCompleteCourse={onCompleteCourse}
         isLastLecture={isLastLecture}
-        allLectures={allLectures}
       />
     )
   }
 
   return (
     <div className="lecture-content-container">
-      {selectedLecture.item_type === 'video' ? (
+      {item_type === 'video' ? (
         <div className="video-container">
           <div className="video-content">
             <Video
-              videoId={selectedLecture.videoId}
+              videoId={content.videoId}
               setIsVideoPlaying={setIsVideoPlaying}
             />
           </div>
         </div>
-      ) : selectedLecture.item_type === 'quiz' ? (
+      ) : item_type === 'quiz' ? (
         <div className="quiz-container">
           {loading ? (
             <div className="loading-quiz">Loading quiz...</div>
@@ -87,11 +88,11 @@ const LectureContent = ({
             renderQuizContent()
           )}
         </div>
-      ) : (
+      ) : item_type === 'file' ? (
         <div className="file-container">
-          <File filePath={selectedLecture.file_path} />
+          <File filePath={content.file_path} />
         </div>
-      )}
+      ) : null}
     </div>
   )
 }

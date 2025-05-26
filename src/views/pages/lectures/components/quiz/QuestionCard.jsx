@@ -9,7 +9,8 @@ const QuestionCard = ({
   onSingleAnswerSelect,
   onMultipleAnswerSelect,
 }) => {
-  const { id, question_text, allow_multiple, points, options } = question
+  const { question_id, question_text, allow_multiple, points, options } =
+    question
 
   return (
     <div className="question-content-wrapper">
@@ -32,9 +33,9 @@ const QuestionCard = ({
       <div className="answer-options-modern">
         {allow_multiple ? (
           <Checkbox.Group
-            value={multipleAnswers[id] || []}
+            value={multipleAnswers[question_id] || []}
             onChange={(checkedValues) =>
-              onMultipleAnswerSelect(checkedValues, id)
+              onMultipleAnswerSelect(checkedValues, question_id)
             }
           >
             <Row gutter={[0, 12]}>
@@ -49,8 +50,8 @@ const QuestionCard = ({
           </Checkbox.Group>
         ) : (
           <Radio.Group
-            value={userAnswers[id]}
-            onChange={(e) => onSingleAnswerSelect(id, e.target.value)}
+            value={userAnswers[question_id]}
+            onChange={(e) => onSingleAnswerSelect(question_id, e.target.value)}
           >
             <Row gutter={[0, 12]}>
               {options.map((option) => (

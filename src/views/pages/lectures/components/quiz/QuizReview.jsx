@@ -4,7 +4,7 @@ import './QuizReview.scss'
 import MultipleChoiceQuizReview from './MultipleChoiceQuizReview'
 import EssayQuizReview from './EssayQuizReview'
 
-const QuizReview = ({ quizData, quizResult }) => {
+const QuizReview = ({ quizType, questions, quizResult }) => {
   if (!quizResult) {
     return (
       <div className="quiz-review-loading">
@@ -13,9 +13,7 @@ const QuizReview = ({ quizData, quizResult }) => {
     )
   }
 
-  const { quiz_type, questions } = quizData
-
-  if (quiz_type === 'essay') {
+  if (quizType === 'essay') {
     return <EssayQuizReview questions={questions} quizResult={quizResult} />
   }
 

@@ -12,7 +12,7 @@ const { Text, Paragraph, Title } = Typography
 const { Countdown } = Statistic
 
 const EssayQuiz = ({
-  quizData,
+  questions,
   deadline,
   showResults,
   essayAnswer,
@@ -23,8 +23,8 @@ const EssayQuiz = ({
   resultData,
 }) => {
   const questionText =
-    quizData.questions && quizData.questions.length > 0
-      ? quizData.questions[0].question_text
+    questions && questions.length > 0
+      ? questions[0].question_text
       : 'No question available'
 
   return (

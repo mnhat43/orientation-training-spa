@@ -5,24 +5,30 @@ import LectureContent from './components/LectureContent'
 import LearningTimer from './components/LearningTimer'
 import useLectureData from '@hooks/useLectureData'
 import './lectures.scss'
+import _ from 'lodash'
 
 const Lectures = () => {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
-
   const {
-    lectures,
-    allLectures,
-    selectedLecture,
-    latestUnlockedLecture,
-    courseCompleted,
-    isLatestUnlocked,
-    isLastLecture,
-    handleChooseLecture,
-    handleCompleteCourse,
-    handleCompleteLecture,
     loading,
     error,
+    lectures,
+    selectedLecture,
+    courseCompleted,
+    handleSelectLecture,
+    handleGetLastLecture,
+    handleGetLastUnlockedLecture,
+    handleCompleteCourse,
+    handleCompleteLecture,
   } = useLectureData()
+
+  const lastUnlockedLecture = handleGetLastUnlockedLecture()
+  const lastLecture = handleGetLastLecture()
+
+  console.log('lastUnlockedLecture:', lastUnlockedLecture)
+
+  const itemType = selectedLecture?.item_type || ''
+
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
   if (loading) {
     return (
@@ -36,8 +42,12 @@ const Lectures = () => {
     return <Alert type="error" message={`Error: ${error}`} showIcon />
   }
 
-  if (!Object.keys(lectures).length || !selectedLecture) {
-    return <Empty description="No lectures available" />
+  if (!lectures || !lectures.length) {
+    return (
+      <div className="lectures-page__empty">
+        <Empty description="No lectures available" />
+      </div>
+    )
   }
 
   return (
@@ -56,8 +66,7 @@ const Lectures = () => {
             setIsVideoPlaying={setIsVideoPlaying}
             onCompleteLecture={handleCompleteLecture}
             onCompleteCourse={handleCompleteCourse}
-            isLastLecture={isLastLecture}
-            allLectures={allLectures}
+            isLastLecture={_.isEqual(selectedLecture, lastLecture)}
           />
         </Col>
 
@@ -72,25 +81,21 @@ const Lectures = () => {
           <PlaylistMenu
             lectures={lectures}
             selectedLecture={selectedLecture}
-            latestUnlockedLecture={latestUnlockedLecture}
+            lastUnlockedLecture={lastUnlockedLecture}
             courseCompleted={courseCompleted}
-            onChooseLecture={handleChooseLecture}
+            onSelectLecture={handleSelectLecture}
           />
         </Col>
       </Row>
 
-      {isLatestUnlocked &&
-        selectedLecture &&
-        selectedLecture.item_type !== 'quiz' && (
+      {_.isEqual(selectedLecture, lastUnlockedLecture) &&
+        itemType !== 'quiz' && (
           <div className="lectures-page__timer-container">
             <LearningTimer
-              lectures={lectures}
               selectedLecture={selectedLecture}
-              isVideoPlaying={
-                selectedLecture.item_type === 'video' ? isVideoPlaying : true
-              }
+              lastLecture={lastLecture}
+              isVideoPlaying={itemType === 'video' ? isVideoPlaying : true}
               courseCompleted={courseCompleted}
-              isLastLecture={isLastLecture}
               onCompleteLecture={handleCompleteLecture}
               onCompleteCourse={handleCompleteCourse}
             />

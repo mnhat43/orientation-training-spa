@@ -5,7 +5,9 @@ import './CollapseResultQuiz.scss'
 
 const CollapseResultQuiz = ({ questions, answers }) => {
   const collapseItems = questions.map((question, index) => {
-    const userAnswer = answers.find((a) => a.question_id === question.id)
+    const userAnswer = answers.find(
+      (a) => a.question_id === question.question_id,
+    )
     const isCorrect = userAnswer?.is_correct
     const questionScore = question.points
 
@@ -93,7 +95,7 @@ const CollapseResultQuiz = ({ questions, answers }) => {
     )
 
     return {
-      key: question.id,
+      key: question.question_id,
       label: header,
       children: children,
       className: `quiz-questions-review-panel ${
