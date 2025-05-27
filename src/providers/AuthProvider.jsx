@@ -46,7 +46,6 @@ const AuthProvider = ({ children }) => {
       const response = await apiAuth.login(formData)
       if (response.status === 1) {
         const token = response.data.token
-        console.log('Login successful, token:', token)
 
         localStorage.setItem('token', token)
 

@@ -21,7 +21,7 @@ function LoginPage() {
     setIsLoading(true)
     try {
       await handleLogin(values.email, values.password)
-      navigate('/courses')
+      navigate('/dashboard')
     } catch (error) {
       toast.error('Login failed! Please check your credentials.')
     } finally {
