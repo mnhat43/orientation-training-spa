@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Steps, message, Modal, Row, Col, Tooltip } from 'antd'
+import { Steps, message, Modal, Row, Col } from 'antd'
 import {
   UserOutlined,
   FileSearchOutlined,
@@ -54,7 +54,7 @@ const TraineePathCreator = () => {
 
         const payload = {
           user_id: selectedTrainee.userID,
-          course_ids: selectedCourses.map((course) => course.id),
+          course_ids: selectedCourses.map((course) => course.course_id),
         }
 
         userprogress
@@ -140,8 +140,6 @@ const TraineePathCreator = () => {
       <DesignPath
         selectedCourses={selectedCourses}
         setSelectedCourses={setSelectedCourses}
-        onNext={handleNext}
-        onPrev={handlePrev}
       />
     )
   }
@@ -194,43 +192,87 @@ const TraineePathCreator = () => {
 
   return (
     <div className="trainee-path-creator">
-      <div className="steps-header-container">
-        <div className="steps-header">
-          <Row align="middle" justify="center">
-            <Col span={24}>
-              <Steps
-                current={currentStep}
-                onChange={handleStepClick}
-                className="custom-steps"
-                responsive={true}
-              >
-                {steps.map((item, index) => (
-                  <Step
-                    key={item.title}
-                    title={item.title}
-                    icon={item.icon}
-                    className={`step-item ${index < currentStep ? 'step-completed' : ''} ${index === currentStep ? 'step-active' : ''}`}
-                    description={
-                      index === 0 && selectedTrainee.name ? (
-                        <span className="step-description">
-                          {selectedTrainee.name}
-                        </span>
-                      ) : index === 1 && selectedCourses.length > 0 ? (
-                        <span className="step-description">
-                          {selectedCourses.length} courses
-                        </span>
-                      ) : null
-                    }
-                    disabled={index > currentStep + 1 || index === 3}
-                  />
-                ))}
-              </Steps>
-            </Col>
-          </Row>
-        </div>
-      </div>
+      <Row gutter={[24, 0]} style={{ minHeight: '80vh' }}>
+        <Col xs={24} sm={24} md={6} lg={5} xl={5}>
+          <div className="steps-container">
+            <Steps
+              current={currentStep}
+              onChange={handleStepClick}
+              className="custom-steps"
+              direction="vertical"
+            >
+              {steps.map((item, index) => (
+                <Step
+                  key={item.title}
+                  title={item.title}
+                  icon={item.icon}
+                  className={`step-item ${index < currentStep ? 'step-completed' : ''} ${index === currentStep ? 'step-active' : ''}`}
+                  description={
+                    index === 0 && selectedTrainee.name ? (
+                      <span className="step-description">
+                        {selectedTrainee.name}
+                      </span>
+                    ) : index === 1 && selectedCourses.length > 0 ? (
+                      <span className="step-description">
+                        {selectedCourses.length} courses
+                      </span>
+                    ) : null
+                  }
+                  disabled={index > currentStep + 1 || index === 3}
+                />
+              ))}
+            </Steps>
 
-      <div className="steps-content">{steps[currentStep].content()}</div>
+            <div className="steps-navigation">
+              {currentStep > 0 && currentStep < 3 && (
+                <button
+                  className="step-nav-button back-button"
+                  onClick={handlePrev}
+                >
+                  <span className="nav-arrow">←</span>
+                  <span>Back</span>
+                </button>
+              )}
+
+              {currentStep < 2 && (
+                <button
+                  className="step-nav-button next-button"
+                  onClick={handleNext}
+                  disabled={
+                    (currentStep === 0 && !selectedTrainee.userID) ||
+                    (currentStep === 1 && selectedCourses.length === 0)
+                  }
+                >
+                  <span>Next</span>
+                  <span className="nav-arrow">→</span>
+                </button>
+              )}
+
+              {currentStep === 2 && (
+                <button
+                  className="step-nav-button submit-button"
+                  onClick={handleSubmitPath}
+                  disabled={submitting}
+                >
+                  {submitting ? 'Submitting...' : 'Submit'}
+                </button>
+              )}
+
+              {currentStep === 3 && (
+                <button
+                  className="step-nav-button reset-button"
+                  onClick={handleResetState}
+                >
+                  Start New Path
+                </button>
+              )}
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={18} lg={19} xl={19}>
+          <div className="steps-content">{steps[currentStep].content()}</div>
+        </Col>
+      </Row>
     </div>
   )
 }

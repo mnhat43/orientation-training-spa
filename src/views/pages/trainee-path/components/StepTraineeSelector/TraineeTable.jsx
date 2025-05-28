@@ -1,9 +1,14 @@
 import React from 'react'
-import { Empty, Table, Button, Tooltip } from 'antd'
-import { UserAddOutlined, CheckCircleFilled } from '@ant-design/icons'
+import { Empty, Table, Button, Tooltip, Tag } from 'antd'
+import { CheckOutlined, CheckCircleFilled } from '@ant-design/icons'
 import './TraineeTable.scss'
 
-const TraineeTable = ({ trainees, loading, setSelectedTrainee }) => {
+const TraineeTable = ({
+  trainees,
+  loading,
+  setSelectedTrainee,
+  selectedTrainee,
+}) => {
   const columns = [
     {
       title: 'Full Name',
@@ -54,17 +59,29 @@ const TraineeTable = ({ trainees, loading, setSelectedTrainee }) => {
       width: '10%',
       align: 'center',
       render: (_, record) => {
+        const isSelected = selectedTrainee?.userID === record.userID
+
         return (
-          <Tooltip title={'Select this trainee'}>
-            <Button
-              type={'primary'}
-              className={`select-trainee-btn}`}
-              onClick={() => setSelectedTrainee(record)}
-              icon={<UserAddOutlined />}
-            >
-              Select
-            </Button>
-          </Tooltip>
+          <div className="trainee-selection-action">
+            {isSelected ? (
+              <Tag color="success" className="selected-tag">
+                <CheckCircleFilled /> Selected
+              </Tag>
+            ) : (
+              <Button
+                type="primary"
+                shape="round"
+                size="small"
+                className="select-btn"
+                onClick={(e) => {
+                  e.stopPropagation() // Prevent row click event
+                  setSelectedTrainee(record)
+                }}
+              >
+                Select
+              </Button>
+            )}
+          </div>
         )
       },
     },
@@ -77,6 +94,16 @@ const TraineeTable = ({ trainees, loading, setSelectedTrainee }) => {
         columns={columns}
         dataSource={trainees}
         loading={loading}
+        rowClassName={(record) =>
+          selectedTrainee?.userID === record.userID ? 'selected-table-row' : ''
+        }
+        onRow={(record) => ({
+          onClick: () => setSelectedTrainee(record),
+          className:
+            selectedTrainee?.userID === record.userID
+              ? 'clickable selected-row'
+              : 'clickable',
+        })}
         pagination={{
           defaultPageSize: 5,
           showSizeChanger: true,

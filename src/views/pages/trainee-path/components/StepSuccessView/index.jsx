@@ -45,24 +45,4 @@ const SuccessView = ({
   )
 }
 
-SuccessView.propTypes = {
-  selectedTrainee: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    name: PropTypes.string,
-  }),
-  selectedCourses: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      name: PropTypes.string,
-      duration: PropTypes.string,
-    }),
-  ).isRequired,
-  selectedTemplate: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    name: PropTypes.string,
-  }),
-  setCurrentStep: PropTypes.func.isRequired,
-  onResetState: PropTypes.func.isRequired,
-}
-
 export default memo(SuccessView)

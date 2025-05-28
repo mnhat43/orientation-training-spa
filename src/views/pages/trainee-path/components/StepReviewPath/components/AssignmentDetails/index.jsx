@@ -140,35 +140,6 @@ const AssignmentDetails = ({ trainee, onSubmitPath, submitting, onPrev }) => {
             </Col>
           </Row>
         </div>
-
-        <div className="action-area">
-          <Row gutter={16}>
-            <Col xs={24} sm={12}>
-              <Button
-                icon={<ArrowLeftOutlined />}
-                onClick={onPrev}
-                className="back-button"
-                size="large"
-                block
-              >
-                Back to Design
-              </Button>
-            </Col>
-            <Col xs={24} sm={12}>
-              <Button
-                type="primary"
-                icon={<SendOutlined />}
-                loading={submitting}
-                onClick={onSubmitPath}
-                className="submit-button"
-                size="large"
-                block
-              >
-                Assign Path
-              </Button>
-            </Col>
-          </Row>
-        </div>
       </Card>
     </div>
   )

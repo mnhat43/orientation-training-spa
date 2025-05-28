@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { message, Row, Col, Button, Space } from 'antd'
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { message } from 'antd'
 import './index.scss'
 import './TraineeTable.scss'
 
 import FilterBar from './FilterBar'
 import TraineeTable from './TraineeTable'
-import ConfirmationCard from './ConfirmationCard'
 import apiTrainee from '@api/trainee'
 
 const TraineeSelector = ({ selectedTrainee, setSelectedTrainee, onNext }) => {
@@ -16,7 +14,6 @@ const TraineeSelector = ({ selectedTrainee, setSelectedTrainee, onNext }) => {
   const [searchText, setSearchText] = useState('')
   const [departmentFilter, setDepartmentFilter] = useState(null)
 
-  // Fetch trainees
   useEffect(() => {
     const fetchTrainees = () => {
       setTraineeLoading(true)
@@ -63,54 +60,22 @@ const TraineeSelector = ({ selectedTrainee, setSelectedTrainee, onNext }) => {
     setDepartmentFilter(null)
   }
 
-  const handleBack = () => {
-    setSelectedTrainee({})
-  }
-
   return (
     <div className="simple-trainee-selector">
-      {Object.keys(selectedTrainee).length > 0 ? (
-        <Row>
-          <Col span={22} className="content-section">
-            <ConfirmationCard selectedTrainee={selectedTrainee} />
-          </Col>
-          <Col span={2} className="navigation-buttons">
-            <Space direction="vertical" style={{ width: '100%' }}>
-              <Button
-                icon={<ArrowLeftOutlined />}
-                onClick={handleBack}
-                size="middle"
-              >
-                Back
-              </Button>
-              <Button
-                type="primary"
-                onClick={onNext}
-                icon={<ArrowRightOutlined />}
-                size="middle"
-              >
-                Next
-              </Button>
-            </Space>
-          </Col>
-        </Row>
-      ) : (
-        <>
-          <FilterBar
-            searchText={searchText}
-            departmentFilter={departmentFilter}
-            setDepartmentFilter={setDepartmentFilter}
-            onSearch={handleSearch}
-            onResetFilters={resetFilters}
-            hasActiveFilters={!!searchText || !!departmentFilter}
-          />
-          <TraineeTable
-            trainees={filteredTrainees}
-            loading={traineeLoading}
-            setSelectedTrainee={setSelectedTrainee}
-          />
-        </>
-      )}
+      <FilterBar
+        searchText={searchText}
+        departmentFilter={departmentFilter}
+        setDepartmentFilter={setDepartmentFilter}
+        onSearch={handleSearch}
+        onResetFilters={resetFilters}
+        hasActiveFilters={!!searchText || !!departmentFilter}
+      />
+      <TraineeTable
+        trainees={filteredTrainees}
+        loading={traineeLoading}
+        setSelectedTrainee={setSelectedTrainee}
+        selectedTrainee={selectedTrainee}
+      />
     </div>
   )
 }
