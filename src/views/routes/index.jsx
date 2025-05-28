@@ -57,34 +57,7 @@ function AllRoutes() {
       {/* Routes accessible only by Admin and Manager */}
       <Route
         element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MANAGER]} />}
-      >
-        <Route
-          path="/course/:courseId/assignments/create"
-          element={
-            <MainLayout
-              component={() => (
-                <AssessmentCreation assessmentType="Assignment" />
-              )}
-            />
-          }
-        />
-        <Route
-          path="/course/:courseId/assignments"
-          element={<MainLayout component={Assignments} />}
-        />
-        <Route
-          path="/course/:courseId/exams/create"
-          element={
-            <MainLayout
-              component={() => <AssessmentCreation assessmentType="Exam" />}
-            />
-          }
-        />
-        <Route
-          path="/course/:courseId/exams"
-          element={<MainLayout component={Exams} />}
-        />
-      </Route>
+      ></Route>
 
       {/* Routes accessible only by MANAGER */}
       <Route element={<ProtectedRoute allowedRoles={[ROLES.MANAGER]} />}>
