@@ -27,6 +27,7 @@
 
     &-content {
         width: 100%;
+        max-width: $max-width;
         margin: 0 auto;
         margin-top: $layout-header-height;
         scrollbar-gutter: stable both-edges;
@@ -63,6 +64,32 @@
             background: radial-gradient(circle, rgba(234, 67, 53, 0.15), transparent 70%);
         }
 
+        @media (min-width: calc($max-width + 100px)) {
+            &::before,
+            &::after {
+                content: "";
+                display: block;
+                position: fixed;
+                width: 300px;
+                height: 300px;
+                border-radius: 50%;
+                z-index: -1;
+                opacity: 0.6;
+            }
+
+            &::before {
+                top: 20%;
+                left: 5%;
+                background: radial-gradient(circle, rgba(66, 133, 244, 0.2), transparent 70%);
+            }
+
+            &::after {
+                bottom: 15%;
+                right: 5%;
+                background: radial-gradient(circle, rgba(234, 67, 53, 0.2), transparent 70%);
+            }
+        }
+
         @media (max-width: $mobile-breakpoint) {
             margin-top: $header-mobile-height;
             min-height: calc(100vh - $header-mobile-height);
@@ -75,6 +102,9 @@
 body {
     overflow-y: auto;
     scrollbar-gutter: stable;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+    background-size: 25px 25px;
 }
 
 .ant-modal-wrap,
