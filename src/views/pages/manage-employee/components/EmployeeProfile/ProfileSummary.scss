@@ -1,0 +1,241 @@
+.manage-employees-container {
+    .profile-card {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+            text-align: center;
+
+            .profile-avatar-container {
+                position: relative;
+                margin-bottom: 16px;
+
+                .profile-avatar {
+                    border: 4px solid #f0f2f5;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                .avatar-badge {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    background-color: #52c41a;
+                    color: white;
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 2px solid #fff;
+
+                    .anticon {
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .profile-info {
+                .username {
+                    margin-bottom: 8px;
+                }
+            }
+        }
+
+        .progress-section {
+            margin-bottom: 16px;
+
+            .progress-container {
+                margin-bottom: 16px;
+
+                .progress-header {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 8px;
+                    align-items: center;
+
+                    .progress-percentage {
+                        font-size: 16px;
+                        font-weight: 500;
+                    }
+                }
+
+                .main-progress-bar {
+                    .ant-progress-bg {
+                        border-radius: 4px;
+                    }
+                }
+            }
+
+            .stats-row {
+                .stat-card {
+                    background-color: #f9f9f9;
+                    padding: 12px;
+                    border-radius: 8px;
+                    text-align: center;
+                    transition: transform 0.2s ease;
+
+                    &:hover {
+                        transform: translateY(-3px);
+                    }
+
+                    .stat-icon {
+                        font-size: 20px;
+                        margin-bottom: 4px;
+                    }
+
+                    &.completed .stat-icon {
+                        color: #52c41a;
+                    }
+
+                    &.in-progress .stat-icon {
+                        color: #1890ff;
+                    }
+
+                    &.pending .stat-icon {
+                        color: #faad14;
+                    }
+
+                    .ant-statistic-title {
+                        font-size: 12px;
+                        margin-bottom: 0;
+                    }
+
+                    .ant-statistic-content {
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+
+        .performance-section {
+            .section-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 16px;
+
+                .section-icon {
+                    color: #faad14;
+                    font-size: 18px;
+                    margin-right: 8px;
+                }
+
+                .section-title {
+                    font-size: 16px;
+                }
+            }
+
+            .score-display {
+                display: flex;
+                align-items: center;
+
+                .score-circle {
+                    margin-right: 24px;
+                }
+
+                .score-circle-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .score-percent {
+                        font-size: 20px;
+                        font-weight: 600;
+                        line-height: 1;
+                    }
+
+                    .score-label {
+                        font-size: 12px;
+                        color: rgba(0, 0, 0, 0.45);
+                    }
+                }
+
+                .score-details {
+                    flex: 1;
+
+                    .score-breakdown {
+                        .score-fraction {
+                            display: flex;
+                            align-items: baseline;
+                            margin-bottom: 4px;
+
+                            .current-score {
+                                font-size: 24px;
+                                font-weight: 600;
+                            }
+
+                            .total-score {
+                                font-size: 16px;
+                                margin-left: 4px;
+                            }
+                        }
+
+                        .score-description {
+                            margin-bottom: 0;
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .contact-section {
+            .section-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 16px;
+
+                .section-icon {
+                    color: #1890ff;
+                    font-size: 18px;
+                    margin-right: 8px;
+                }
+
+                .section-title {
+                    font-size: 16px;
+                }
+            }
+
+            .contact-details {
+                .detail-item {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 12px;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    .detail-icon {
+                        color: #8c8c8c;
+                        font-size: 16px;
+                        margin-right: 12px;
+                        width: 16px;
+                    }
+                }
+            }
+        }
+
+        @media (max-width: 768px) {
+            .performance-section {
+                .score-display {
+                    flex-direction: column;
+
+                    .score-circle {
+                        margin-right: 0;
+                        margin-bottom: 16px;
+                    }
+
+                    .score-details {
+                        width: 100%;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}

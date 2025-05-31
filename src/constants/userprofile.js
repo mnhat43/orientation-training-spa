@@ -13,3 +13,5 @@ export const DEPARTMENTS = {
   HR: 'HR',
   Finance: 'Finance',
 }
+
+export const DEPARTMENT_NAMES = Object.values(DEPARTMENTS)

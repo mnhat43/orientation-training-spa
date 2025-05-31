@@ -1,0 +1,517 @@
+.manage-employees-container {
+    .header {
+        display: flex;
+        align-items: center;
+        background: #001529;
+        padding: 0 24px;
+    }
+
+    h1 {
+        margin-bottom: 24px;
+        color: #333;
+    }
+
+    .content {
+        padding: 15px;
+        background: #f0f2f5;
+    }
+
+    .main-tabs {
+        background: white;
+        padding: 16px;
+        border-radius: 4px;
+
+        .ant-tabs-nav {
+            margin-bottom: 16px;
+        }
+    }
+
+    .overview-tab {
+        .dashboard-card {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+
+            .ant-card-head {
+                border-bottom: 1px solid #f0f0f0;
+                padding: 16px 24px;
+            }
+
+            .ant-card-body {
+                padding: 15px;
+            }
+        }
+
+        .employee-table {
+            .ant-table-thead > tr > th {
+                background-color: #fafafa;
+                font-weight: 600;
+            }
+
+            .no-learning-path-row {
+                background-color: #fafafa;
+            }
+        }
+
+        .stat-card {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            height: 100%;
+            transition: all 0.3s;
+
+            &:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transform: translateY(-2px);
+            }
+
+            .ant-statistic-title {
+                font-size: 16px;
+                margin-bottom: 16px;
+            }
+
+            .stat-footer {
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid #f0f0f0;
+            }
+        }
+
+        .schedule-overview {
+            .schedule-card {
+                text-align: center;
+                height: 100%;
+
+                .ant-statistic-title {
+                    font-size: 14px;
+                }
+
+                .ant-statistic-content {
+                    font-size: 28px;
+                }
+            }
+        }
+    }
+
+    .reviews-tab {
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+
+            .ant-typography {
+                margin-bottom: 0;
+                margin-right: 20px;
+            }
+
+            .reviews-toolbar {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+        }
+
+        .reviews-tabs {
+            .ant-tabs-nav {
+                margin-bottom: 20px;
+            }
+        }
+
+        .review-card {
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+
+            .review-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+
+            .submission-card,
+            .evaluation-card {
+                height: 100%;
+
+                .ant-card-head {
+                    padding: 0 16px;
+                    min-height: 40px;
+
+                    .ant-card-head-title {
+                        padding: 8px 0;
+                        font-size: 14px;
+                    }
+
+                    .ant-card-extra {
+                        padding: 8px 0;
+                    }
+                }
+
+                .ant-card-body {
+                    padding: 16px;
+                }
+            }
+        }
+
+        .review-collapse {
+            .ant-collapse-header {
+                font-weight: 500;
+            }
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+    }
+
+    .assessments-tab {
+        // Specific tab content styling if needed
+    }
+
+    .tabs {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+
+        .tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #555;
+
+            &:hover {
+                background-color: #f5f5f5;
+            }
+
+            &.active {
+                border-bottom: 3px solid #4285f4;
+                color: #4285f4;
+            }
+        }
+    }
+
+    .employee-list {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+
+            th,
+            td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #f8f9fa;
+                font-weight: 600;
+            }
+
+            tr:hover {
+                background-color: #f5f5f5;
+            }
+        }
+
+        .progress-bar {
+            width: 150px;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+
+            .progress {
+                height: 100%;
+                background-color: #4caf50;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+
+            span {
+                position: absolute;
+                width: 100%;
+                text-align: center;
+                font-size: 12px;
+                line-height: 20px;
+                color: #333;
+                font-weight: 500;
+            }
+        }
+
+        .btn-view {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #3367d6;
+            }
+        }
+    }
+
+    .review-card,
+    .assessment-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+
+        .review-header,
+        .assessment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+
+            h3 {
+                margin: 0;
+            }
+
+            .course-name,
+            .grade {
+                background-color: #e8f0fe;
+                color: #4285f4;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+        }
+
+        .review-info,
+        .assessment-info {
+            margin-bottom: 15px;
+
+            p {
+                margin: 5px 0;
+            }
+        }
+
+        .review-content {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+
+            h4 {
+                margin-top: 0;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 500;
+            }
+
+            input,
+            textarea {
+                width: 100%;
+                padding: 8px 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+
+                &:focus {
+                    outline: none;
+                    border-color: #4285f4;
+                }
+            }
+
+            textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+        }
+
+        .btn-submit {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #43a047;
+            }
+        }
+    }
+
+    .employee-profile {
+        .profile-stats {
+            display: flex;
+            margin-bottom: 30px;
+
+            .stat-card {
+                flex: 1;
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                text-align: center;
+
+                h3 {
+                    margin-top: 0;
+                }
+
+                .progress-bar.large {
+                    width: 100%;
+                    height: 24px;
+                    margin: 10px 0;
+                }
+            }
+        }
+
+        .learning-path {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+
+            .course-timeline {
+                position: relative;
+                padding-left: 30px;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    left: 10px;
+                    top: 0;
+                    height: 100%;
+                    width: 2px;
+                    background-color: #ddd;
+                }
+
+                .course-item {
+                    position: relative;
+                    margin-bottom: 30px;
+
+                    .status-circle {
+                        position: absolute;
+                        left: -30px;
+                        top: 0;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        background-color: #ddd;
+                        border: 2px solid white;
+                        z-index: 1;
+                    }
+
+                    &.completed .status-circle {
+                        background-color: #4caf50;
+                    }
+
+                    &.in-progress .status-circle {
+                        background-color: #ff9800;
+                    }
+
+                    .course-content {
+                        background-color: #f9f9f9;
+                        padding: 15px;
+                        border-radius: 4px;
+
+                        h4 {
+                            margin-top: 0;
+                        }
+
+                        .quiz-results {
+                            margin: 10px 0;
+
+                            .quiz-score {
+                                background-color: #e8f0fe;
+                                color: #4285f4;
+                                padding: 4px 8px;
+                                border-radius: 4px;
+                                font-size: 14px;
+                            }
+                        }
+
+                        .course-assessment {
+                            background-color: #f1f8e9;
+                            padding: 10px;
+                            border-radius: 4px;
+                            margin-top: 10px;
+
+                            h5 {
+                                margin-top: 0;
+                                margin-bottom: 5px;
+                            }
+
+                            p {
+                                font-style: italic;
+                                margin-bottom: 5px;
+                            }
+
+                            .manager-name {
+                                display: block;
+                                text-align: right;
+                                font-size: 12px;
+                                color: #666;
+                            }
+                        }
+
+                        .btn-view-details {
+                            background-color: #4285f4;
+                            color: white;
+                            border: none;
+                            padding: 6px 12px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            margin-top: 10px;
+
+                            &:hover {
+                                background-color: #3367d6;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .timeline-card {
+        &.completed {
+            border-left: 3px solid #52c41a;
+        }
+
+        &.in-progress {
+            border-left: 3px solid #1890ff;
+        }
+
+        &.locked {
+            border-left: 3px solid #d9d9d9;
+            opacity: 0.7;
+        }
+
+        .manager-assessment {
+            background-color: #f9f9f9;
+            padding: 8px;
+            border-radius: 4px;
+        }
+    }
+
+    .profile-card {
+        height: 100%;
+    }
+
+    .learning-path-card {
+        .ant-timeline-item-content {
+            margin-left: 12px;
+        }
+    }
+
+    // Let Ant Design handle most of the styling
+    // These are just minor customizations
+}

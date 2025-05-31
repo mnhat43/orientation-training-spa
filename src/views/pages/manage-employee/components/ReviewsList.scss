@@ -1,0 +1,152 @@
+.reviews-list {
+    .review-item-card {
+        margin-bottom: 16px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+
+        &.expanded {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 0;
+
+            .review-main-info {
+                display: flex;
+                align-items: center;
+
+                .review-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 40px;
+                    height: 40px;
+                    background-color: #e6f7ff;
+                    color: #1890ff;
+                    border-radius: 8px;
+                    margin-right: 16px;
+                    font-size: 18px;
+                }
+
+                .review-title-info {
+                    .review-title {
+                        margin-bottom: 4px;
+                    }
+
+                    .review-meta {
+                        display: flex;
+                        gap: 8px;
+                        align-items: center;
+                        flex-wrap: wrap;
+
+                        .ant-tag {
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        .review-expanded-content {
+            margin-top: 16px;
+
+            .section-divider {
+                margin: 16px 0;
+            }
+
+            .quiz-section,
+            .submission-section {
+                margin-bottom: 18px;
+
+                .section-label {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 12px;
+
+                    .section-icon {
+                        margin-right: 8px;
+                        color: #1890ff;
+                    }
+                }
+
+                .quiz-question-content,
+                .submission-content {
+                    background-color: #f9f9f9;
+                    padding: 16px;
+                    border-radius: 8px;
+                    border-left: 3px solid #1890ff;
+                }
+
+                .submission-content {
+                    border-left-color: #52c41a;
+                }
+            }
+
+            .grading-section--vertical {
+                background: #fafbfc;
+                border-radius: 8px;
+                padding: 16px 16px 8px 16px;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+                margin-top: 0;
+
+                .section-label {
+                    margin-bottom: 8px;
+                }
+
+                .grading-form {
+                    margin-top: 0;
+                }
+            }
+
+            .grading-form {
+                background-color: #fafafa;
+                padding: 16px;
+                border-radius: 8px;
+
+                .form-actions {
+                    margin-bottom: 0;
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+
+    .max-score-badge {
+        margin-left: 8px;
+    }
+
+    .score-progress {
+        margin: 8px 0 16px;
+    }
+}
+
+@media (max-width: 991px) {
+    .review-expanded-content .ant-row {
+        flex-direction: column;
+    }
+    .grading-section--vertical {
+        margin-top: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .review-card-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        .review-main-info {
+            margin-bottom: 12px;
+        }
+    }
+}
