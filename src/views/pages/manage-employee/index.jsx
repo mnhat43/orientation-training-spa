@@ -11,13 +11,13 @@ import { mockEmployees, mockPendingReviews } from './data/mockData'
 
 const ManageEmployees = () => {
   const [activeTab, setActiveTab] = useState(1)
-  const [employees, setEmployees] = useState([])
+  const [overviewData, setOverviewData] = useState([])
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null)
   const [pendingReviews, setPendingReviews] = useState([])
 
   useEffect(() => {
     const fetchEmployees = () => {
-      setEmployees(mockEmployees)
+      setOverviewData(mockEmployees)
     }
     const fetchPendingReviews = () => {
       setPendingReviews(mockPendingReviews)
@@ -46,8 +46,8 @@ const ManageEmployees = () => {
     setPendingReviews(updatedReviews)
   }
 
-  const selectEmployee = (employee) => {
-    setSelectedEmployeeId(employee.id)
+  const handleSelectEmployee = (employeeId) => {
+    setSelectedEmployeeId(employeeId)
     setActiveTab(3)
   }
 
@@ -70,8 +70,8 @@ const ManageEmployees = () => {
         ),
         children: (
           <EmployeeOverview
-            employees={employees}
-            selectEmployee={selectEmployee}
+            overviewData={overviewData}
+            onSelectEmployee={handleSelectEmployee}
           />
         ),
       },
@@ -93,8 +93,8 @@ const ManageEmployees = () => {
     ]
 
     if (selectedEmployeeId) {
-      const selectedEmployee = employees.find(
-        (emp) => emp.id === selectedEmployeeId,
+      const selectedEmployee = overviewData.find(
+        (emp) => emp.user_id === selectedEmployeeId,
       )
       items.push({
         key: 3,

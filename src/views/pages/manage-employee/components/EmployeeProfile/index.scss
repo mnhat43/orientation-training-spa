@@ -1,893 +1,907 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+
+  .loading-text {
+    margin-top: 16px;
+    color: #1890ff;
+    font-size: 14px;
+  }
+}
+
 .employee-profile {
-    .profile-header-card {
-        margin-bottom: 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  .profile-header-card {
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
-        .profile-header {
-            display: flex;
-            align-items: center;
+    .profile-header {
+      display: flex;
+      align-items: center;
 
-            @media (max-width: 768px) {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 16px;
-            }
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+      }
 
-            .profile-avatar {
-                position: relative;
-                margin-right: 24px;
+      .profile-avatar {
+        position: relative;
+        margin-right: 24px;
 
-                @media (max-width: 768px) {
-                    margin-right: 0;
-                }
-
-                .profile-avatar-img {
-                    border: 4px solid white;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                }
-
-                .profile-status-badge {
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                }
-            }
-
-            .profile-info {
-                flex: 1;
-
-                .profile-name-section {
-                    margin-bottom: 16px;
-
-                    h3 {
-                        margin-bottom: 8px;
-                    }
-                }
-
-                .profile-details {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 24px;
-
-                    @media (max-width: 768px) {
-                        justify-content: center;
-                    }
-
-                    .detail-item {
-                        display: flex;
-                        align-items: flex-start;
-
-                        .detail-icon {
-                            margin-right: 8px;
-                            font-size: 16px;
-                            color: #8c8c8c;
-                            margin-top: 4px;
-
-                            &.success {
-                                color: #52c41a;
-                            }
-                        }
-                    }
-                }
-            }
-
-            .profile-progress {
-                margin-left: 24px;
-
-                @media (max-width: 768px) {
-                    margin-left: 0;
-                    margin-top: 16px;
-                }
-            }
+        @media (max-width: 768px) {
+          margin-right: 0;
         }
+
+        .profile-avatar-img {
+          border: 4px solid white;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-status-badge {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+        }
+      }
+
+      .profile-info {
+        flex: 1;
+
+        .profile-name-section {
+          margin-bottom: 16px;
+
+          h3 {
+            margin-bottom: 8px;
+          }
+        }
+
+        .profile-details {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 24px;
+
+          @media (max-width: 768px) {
+            justify-content: center;
+          }
+
+          .detail-item {
+            display: flex;
+            align-items: flex-start;
+
+            .detail-icon {
+              margin-right: 8px;
+              font-size: 16px;
+              color: #8c8c8c;
+              margin-top: 4px;
+
+              &.success {
+                color: #52c41a;
+              }
+            }
+          }
+        }
+      }
+
+      .profile-progress {
+        margin-left: 24px;
+
+        @media (max-width: 768px) {
+          margin-left: 0;
+          margin-top: 16px;
+        }
+      }
+    }
+  }
+
+  .training-assessment-card,
+  .feedback-summary-card {
+    margin-bottom: 24px;
+
+    .section-title {
+      display: flex;
+      align-items: center;
+
+      .section-icon {
+        margin-right: 8px;
+        color: #1890ff;
+      }
     }
 
-    .training-assessment-card,
-    .feedback-summary-card {
-        margin-bottom: 24px;
+    .ant-card-head {
+      min-height: 48px;
 
-        .section-title {
+      .ant-card-head-title {
+        padding: 12px 0;
+      }
+    }
+  }
+
+  .summary-card {
+    height: 100%;
+
+    .training-summary {
+      margin: 16px 0;
+
+      h5 {
+        margin-bottom: 16px;
+      }
+
+      .stats-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .stat-item {
+          display: flex;
+          align-items: center;
+
+          .stat-icon {
             display: flex;
             align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-size: 18px;
 
-            .section-icon {
-                margin-right: 8px;
+            &.completed {
+              background-color: #f6ffed;
+              color: #52c41a;
+              border: 1px solid #b7eb8f;
+            }
+
+            &.in-progress {
+              background-color: #e6f7ff;
+              color: #1890ff;
+              border: 1px solid #91d5ff;
+            }
+
+            &.locked {
+              background-color: #f5f5f5;
+              color: #8c8c8c;
+              border: 1px solid #d9d9d9;
+            }
+          }
+
+          .stat-info {
+            .stat-value {
+              font-size: 18px;
+              font-weight: 600;
+            }
+
+            .stat-label {
+              font-size: 12px;
+              color: #8c8c8c;
+            }
+          }
+        }
+      }
+    }
+
+    .performance-metrics {
+      margin: 16px 0;
+
+      h5 {
+        margin-bottom: 16px;
+      }
+
+      .metric-item {
+        margin-bottom: 16px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .metric-label {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+
+          .metric-icon {
+            margin-right: 8px;
+            color: #1890ff;
+          }
+        }
+      }
+    }
+  }
+
+  .performance-summary-card {
+    height: 100%;
+
+    .performance-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .progress-display {
+        margin-bottom: 20px;
+
+        .progress-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .progress-value {
+            font-size: 24px;
+            font-weight: 600;
+          }
+
+          .progress-label {
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
+      }
+
+      .status-summary {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+
+        .status-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .status-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+
+            &.completed {
+              color: #52c41a;
+            }
+
+            &.in-progress {
+              color: #1890ff;
+            }
+
+            &.locked {
+              color: #d9d9d9;
+            }
+          }
+
+          .status-count {
+            font-size: 20px;
+            font-weight: 600;
+          }
+
+          .status-label {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
+      }
+    }
+
+    .performance-indicators {
+      .indicator-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .indicator-item {
+          display: flex;
+          align-items: center;
+
+          .indicator-icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 12px;
+
+            &.quiz {
+              background-color: #e6f7ff;
+
+              .indicator-icon {
                 color: #1890ff;
+              }
             }
-        }
 
-        .ant-card-head {
-            min-height: 48px;
+            &.completion {
+              background-color: #f6ffed;
 
-            .ant-card-head-title {
-                padding: 12px 0;
+              .indicator-icon {
+                color: #52c41a;
+              }
             }
+
+            &.score {
+              background-color: #fff7e6;
+
+              .indicator-icon {
+                color: #fa8c16;
+              }
+            }
+          }
+
+          .indicator-details {
+            flex: 1;
+
+            .indicator-title {
+              font-size: 14px;
+              font-weight: 500;
+              margin-bottom: 4px;
+            }
+
+            .score-display {
+              .score-value {
+                font-size: 18px;
+                font-weight: 600;
+                color: #fa8c16;
+              }
+
+              .score-max {
+                font-size: 14px;
+                color: rgba(0, 0, 0, 0.45);
+              }
+            }
+          }
         }
+      }
     }
+  }
 
-    .summary-card {
-        height: 100%;
+  .course-timeline {
+    &.compact {
+      padding: 0 12px;
 
-        .training-summary {
-            margin: 16px 0;
+      .ant-timeline-item-content {
+        padding: 0 8px;
+      }
 
-            h5 {
-                margin-bottom: 16px;
-            }
+      .timeline-course-card {
+        margin-bottom: 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
 
-            .stats-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-
-                .stat-item {
-                    display: flex;
-                    align-items: center;
-
-                    .stat-icon {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 40px;
-                        height: 40px;
-                        border-radius: 50%;
-                        margin-right: 12px;
-                        font-size: 18px;
-
-                        &.completed {
-                            background-color: #f6ffed;
-                            color: #52c41a;
-                            border: 1px solid #b7eb8f;
-                        }
-
-                        &.in-progress {
-                            background-color: #e6f7ff;
-                            color: #1890ff;
-                            border: 1px solid #91d5ff;
-                        }
-
-                        &.locked {
-                            background-color: #f5f5f5;
-                            color: #8c8c8c;
-                            border: 1px solid #d9d9d9;
-                        }
-                    }
-
-                    .stat-info {
-                        .stat-value {
-                            font-size: 18px;
-                            font-weight: 600;
-                        }
-
-                        .stat-label {
-                            font-size: 12px;
-                            color: #8c8c8c;
-                        }
-                    }
-                }
-            }
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .performance-metrics {
-            margin: 16px 0;
+        &.completed {
+          border-left: 3px solid #52c41a;
 
-            h5 {
-                margin-bottom: 16px;
-            }
-
-            .metric-item {
-                margin-bottom: 16px;
-
-                &:last-child {
-                    margin-bottom: 0;
-                }
-
-                .metric-label {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 8px;
-
-                    .metric-icon {
-                        margin-right: 8px;
-                        color: #1890ff;
-                    }
-                }
-            }
+          &.no-assessment {
+            border-left: 3px solid #faad14;
+          }
         }
-    }
 
-    .performance-summary-card {
-        height: 100%;
+        &.in-progress {
+          border-left: 3px solid #1890ff;
+        }
 
-        .performance-header {
+        &.locked {
+          border-left: 3px solid #d9d9d9;
+          opacity: 0.85;
+        }
+
+        .ant-card-body {
+          padding: 12px;
+        }
+
+        .course-content {
+          .course-header {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            text-align: center;
 
-            .progress-display {
-                margin-bottom: 20px;
+            .course-badge {
+              margin-right: 12px;
 
-                .progress-content {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-
-                    .progress-value {
-                        font-size: 24px;
-                        font-weight: 600;
-                    }
-
-                    .progress-label {
-                        font-size: 14px;
-                        color: rgba(0, 0, 0, 0.45);
-                    }
-                }
-            }
-
-            .status-summary {
+              .badge-icon {
                 display: flex;
-                justify-content: space-around;
-                width: 100%;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #f6ffed;
+                color: #52c41a;
+                font-size: 18px;
 
-                .status-item {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-
-                    .status-icon {
-                        font-size: 24px;
-                        margin-bottom: 8px;
-
-                        &.completed {
-                            color: #52c41a;
-                        }
-
-                        &.in-progress {
-                            color: #1890ff;
-                        }
-
-                        &.locked {
-                            color: #d9d9d9;
-                        }
-                    }
-
-                    .status-count {
-                        font-size: 20px;
-                        font-weight: 600;
-                    }
-
-                    .status-label {
-                        font-size: 12px;
-                        color: rgba(0, 0, 0, 0.45);
-                    }
-                }
-            }
-        }
-
-        .performance-indicators {
-            .indicator-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-
-                .indicator-item {
-                    display: flex;
-                    align-items: center;
-
-                    .indicator-icon-wrapper {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 36px;
-                        height: 36px;
-                        border-radius: 50%;
-                        margin-right: 12px;
-
-                        &.quiz {
-                            background-color: #e6f7ff;
-
-                            .indicator-icon {
-                                color: #1890ff;
-                            }
-                        }
-
-                        &.completion {
-                            background-color: #f6ffed;
-
-                            .indicator-icon {
-                                color: #52c41a;
-                            }
-                        }
-
-                        &.score {
-                            background-color: #fff7e6;
-
-                            .indicator-icon {
-                                color: #fa8c16;
-                            }
-                        }
-                    }
-
-                    .indicator-details {
-                        flex: 1;
-
-                        .indicator-title {
-                            font-size: 14px;
-                            font-weight: 500;
-                            margin-bottom: 4px;
-                        }
-
-                        .score-display {
-                            .score-value {
-                                font-size: 18px;
-                                font-weight: 600;
-                                color: #fa8c16;
-                            }
-
-                            .score-max {
-                                font-size: 14px;
-                                color: rgba(0, 0, 0, 0.45);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .course-timeline {
-        &.compact {
-            padding: 0 12px;
-
-            .ant-timeline-item-content {
-                padding: 0 8px;
-            }
-
-            .timeline-course-card {
-                margin-bottom: 0;
-                border-radius: 8px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-                transition: all 0.3s;
-
-                &:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                }
-
-                &.completed {
-                    border-left: 3px solid #52c41a;
-
-                    &.no-assessment {
-                        border-left: 3px solid #faad14;
-                    }
-                }
-
-                &.in-progress {
-                    border-left: 3px solid #1890ff;
+                &.progress {
+                  background-color: #e6f7ff;
+                  color: #1890ff;
                 }
 
                 &.locked {
-                    border-left: 3px solid #d9d9d9;
-                    opacity: 0.85;
+                  background-color: #f5f5f5;
+                  color: #bfbfbf;
                 }
-
-                .ant-card-body {
-                    padding: 12px;
-                }
-
-                .course-content {
-                    .course-header {
-                        display: flex;
-                        align-items: center;
-
-                        .course-badge {
-                            margin-right: 12px;
-
-                            .badge-icon {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 40px;
-                                height: 40px;
-                                border-radius: 50%;
-                                background-color: #f6ffed;
-                                color: #52c41a;
-                                font-size: 18px;
-
-                                &.progress {
-                                    background-color: #e6f7ff;
-                                    color: #1890ff;
-                                }
-
-                                &.locked {
-                                    background-color: #f5f5f5;
-                                    color: #bfbfbf;
-                                }
-                            }
-                        }
-
-                        .course-info {
-                            flex: 1;
-                            min-width: 0;
-
-                            .course-status {
-                                margin-bottom: 4px;
-
-                                .ant-tag {
-                                    margin-right: 0;
-                                    margin-bottom: 0;
-                                }
-                            }
-
-                            .course-title {
-                                display: block;
-                                font-size: 16px;
-                                margin-bottom: 4px;
-                                text-align: left;
-                                font-weight: 500;
-                            }
-
-                            .course-meta {
-                                display: flex;
-                                align-items: center;
-                                flex-wrap: wrap;
-                                gap: 8px;
-                                margin-top: 4px;
-
-                                .completion-date {
-                                    color: rgba(0, 0, 0, 0.45);
-                                    font-size: 12px;
-                                }
-                            }
-                        }
-
-                        .course-score,
-                        .course-progress-percent {
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            min-width: 60px;
-                            margin-left: 12px;
-                            background-color: #f8f8f8;
-                            padding: 4px 10px;
-                            border-radius: 6px;
-
-                            .score-value,
-                            .progress-value {
-                                font-size: 16px;
-                                font-weight: 600;
-                                color: #52c41a;
-                            }
-
-                            .score-label,
-                            .progress-label {
-                                font-size: 12px;
-                                color: rgba(0, 0, 0, 0.45);
-                            }
-                        }
-
-                        .course-progress-percent {
-                            .progress-value {
-                                color: #1890ff;
-                            }
-                        }
-                    }
-
-                    .assessment-section {
-                        background-color: #f9f9f9;
-                        border-radius: 6px;
-                        padding: 12px;
-
-                        .assessment-header {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            margin-bottom: 8px;
-
-                            .assessment-title {
-                                display: flex;
-                                align-items: center;
-
-                                .assessment-icon {
-                                    color: #1890ff;
-                                    margin-right: 6px;
-                                }
-                            }
-                        }
-
-                        .assessment-content {
-                            .rating-row {
-                                display: flex;
-                                align-items: center;
-                                justify-content: space-between;
-                                margin-bottom: 8px;
-                            }
-
-                            .feedback-box {
-                                background-color: white;
-                                border-radius: 4px;
-                                padding: 10px;
-                                border-left: 3px solid #1890ff;
-
-                                .feedback-text {
-                                    display: block;
-                                    margin-bottom: 8px;
-                                }
-
-                                .feedback-author {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: flex-end;
-
-                                    .author-icon {
-                                        margin-right: 4px;
-                                        font-size: 12px;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    .assessment-needed {
-                        padding: 12px;
-
-                        .assessment-placeholder {
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 12px;
-                            background-color: #fafafa;
-                            border: 1px dashed #d9d9d9;
-                            border-radius: 6px;
-                            padding: 16px;
-                            text-align: center;
-                        }
-                    }
-
-                    .progress-details {
-                        padding: 12px 0;
-
-                        .current-module {
-                            display: flex;
-                            justify-content: space-between;
-                            margin-bottom: 8px;
-                        }
-                    }
-
-                    .locked-message {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        height: 80px;
-                        text-align: center;
-                        padding: 16px;
-                    }
-                }
-            }
-        }
-    }
-
-    .profile-info-card {
-        height: 100%;
-
-        .profile-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-
-            .profile-avatar-container {
-                position: relative;
-                margin-bottom: 16px;
-
-                .profile-avatar-img {
-                    border: 4px solid white;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                }
-
-                .profile-status-badge {
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                }
+              }
             }
 
-            .profile-basic-info {
-                .ant-typography {
-                    margin-bottom: 8px;
+            .course-info {
+              flex: 1;
+              min-width: 0;
+
+              .course-status {
+                margin-bottom: 4px;
+
+                .ant-tag {
+                  margin-right: 0;
+                  margin-bottom: 0;
                 }
+              }
 
-                .profile-date-info {
-                    margin-top: 16px;
+              .course-title {
+                display: block;
+                font-size: 16px;
+                margin-bottom: 4px;
+                text-align: left;
+                font-weight: 500;
+              }
 
-                    .date-item {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        margin-bottom: 8px;
-
-                        .date-icon {
-                            margin-right: 8px;
-                            color: #8c8c8c;
-
-                            &.success {
-                                color: #52c41a;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        .performance-summary {
-            .progress-display {
+              .course-meta {
                 display: flex;
-                justify-content: center;
-                margin-bottom: 24px;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 4px;
 
-                .progress-content {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-
-                    .progress-value {
-                        font-size: 20px;
-                        font-weight: 600;
-                    }
-
-                    .progress-label {
-                        font-size: 12px;
-                        color: rgba(0, 0, 0, 0.45);
-                    }
+                .completion-date {
+                  color: rgba(0, 0, 0, 0.45);
+                  font-size: 12px;
                 }
+              }
             }
 
-            .status-grid {
+            .course-score,
+            .course-progress-percent {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              min-width: 60px;
+              margin-left: 12px;
+              background-color: #f8f8f8;
+              padding: 4px 10px;
+              border-radius: 6px;
+
+              .score-value,
+              .progress-value {
+                font-size: 16px;
+                font-weight: 600;
+                color: #52c41a;
+              }
+
+              .score-label,
+              .progress-label {
+                font-size: 12px;
+                color: rgba(0, 0, 0, 0.45);
+              }
+            }
+
+            .course-progress-percent {
+              .progress-value {
+                color: #1890ff;
+              }
+            }
+          }
+
+          .assessment-section {
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            padding: 12px;
+
+            .assessment-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 8px;
+
+              .assessment-title {
                 display: flex;
-                justify-content: space-around;
-                margin-bottom: 24px;
-
-                .status-item {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-
-                    .status-icon {
-                        font-size: 20px;
-                        margin-bottom: 4px;
-
-                        &.completed {
-                            color: #52c41a;
-                        }
-
-                        &.in-progress {
-                            color: #1890ff;
-                        }
-
-                        &.locked {
-                            color: #d9d9d9;
-                        }
-                    }
-
-                    .status-count {
-                        font-size: 18px;
-                        font-weight: 600;
-                    }
-
-                    .status-label {
-                        font-size: 12px;
-                        color: rgba(0, 0, 0, 0.45);
-                    }
-                }
-            }
-
-            .performance-metrics {
-                .metric-item {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 16px;
-
-                    &:last-child {
-                        margin-bottom: 0;
-                    }
-
-                    .metric-icon-container {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 32px;
-                        height: 32px;
-                        border-radius: 50%;
-                        margin-right: 12px;
-
-                        &.quiz {
-                            background-color: #e6f7ff;
-
-                            .metric-icon {
-                                color: #1890ff;
-                            }
-                        }
-
-                        &.completion {
-                            background-color: #f6ffed;
-
-                            .metric-icon {
-                                color: #52c41a;
-                            }
-                        }
-
-                        &.score {
-                            background-color: #fff7e6;
-
-                            .metric-icon {
-                                color: #fa8c16;
-                            }
-                        }
-                    }
-
-                    .metric-details {
-                        flex: 1;
-
-                        .metric-title {
-                            font-size: 14px;
-                            margin-bottom: 4px;
-                        }
-
-                        .score-display {
-                            .score-value {
-                                font-size: 16px;
-                                font-weight: 600;
-                                color: #fa8c16;
-                            }
-
-                            .score-max {
-                                font-size: 12px;
-                                color: rgba(0, 0, 0, 0.45);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .profile-info-card.compact {
-        padding: 0;
-
-        .ant-card-body {
-            padding: 16px;
-        }
-
-        .profile-header {
-            .profile-avatar-container {
-                margin-bottom: 12px;
-            }
-
-            .profile-basic-info {
-                .ant-typography {
-                    margin-bottom: 4px;
-                }
-
-                .profile-date-info {
-                    margin-top: 12px;
-                }
-            }
-        }
-
-        .performance-summary {
-            .progress-with-stats {
-                display: flex;
-                flex-direction: column;
                 align-items: center;
 
-                .progress-display {
-                    margin-bottom: 12px;
+                .assessment-icon {
+                  color: #1890ff;
+                  margin-right: 6px;
                 }
-
-                .status-grid {
-                    display: flex;
-                    justify-content: space-between;
-                    width: 100%;
-
-                    .status-item {
-                        text-align: center;
-                        padding: 0 4px;
-
-                        .status-icon {
-                            font-size: 16px;
-                        }
-
-                        .status-count {
-                            font-size: 16px;
-                        }
-
-                        .status-label {
-                            font-size: 11px;
-                        }
-                    }
-                }
+              }
             }
 
-            .performance-metrics {
-                margin-top: 12px;
+            .assessment-content {
+              .rating-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 8px;
+              }
 
-                .metric-item {
-                    margin-bottom: 12px;
+              .feedback-box {
+                background-color: white;
+                border-radius: 4px;
+                padding: 10px;
+                border-left: 3px solid #1890ff;
 
-                    .metric-icon-container {
-                        width: 28px;
-                        height: 28px;
-
-                        .metric-icon {
-                            font-size: 14px;
-                        }
-                    }
-
-                    .metric-details {
-                        .metric-title {
-                            font-size: 13px;
-                        }
-
-                        .score-display {
-                            .score-value {
-                                font-size: 14px;
-                            }
-
-                            .score-max {
-                                font-size: 11px;
-                            }
-                        }
-                    }
+                .feedback-text {
+                  display: block;
+                  margin-bottom: 8px;
                 }
+
+                .feedback-author {
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-end;
+
+                  .author-icon {
+                    margin-right: 4px;
+                    font-size: 12px;
+                  }
+                }
+              }
             }
-        }
-    }
+          }
 
-    .courses-card {
-        height: 100%;
+          .assessment-needed {
+            padding: 12px;
 
-        .ant-card-body {
-            padding: 16px 8px 16px 16px;
-        }
-
-        .course-timeline {
-            .timeline-course-card {
-                margin-right: 8px;
+            .assessment-placeholder {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              gap: 12px;
+              background-color: #fafafa;
+              border: 1px dashed #d9d9d9;
+              border-radius: 6px;
+              padding: 16px;
+              text-align: center;
             }
+          }
+
+          .progress-details {
+            padding: 12px 0;
+
+            .current-module {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 8px;
+            }
+          }
+
+          .locked-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            text-align: center;
+            padding: 16px;
+          }
         }
+      }
+    }
+  }
+
+  .profile-info-card {
+    height: 100%;
+
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .profile-avatar-container {
+        position: relative;
+        margin-bottom: 16px;
+
+        .profile-avatar-img {
+          border: 4px solid white;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-status-badge {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+        }
+      }
+
+      .profile-basic-info {
+        .ant-typography {
+          margin-bottom: 8px;
+        }
+
+        .profile-date-info {
+          margin-top: 16px;
+
+          .date-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+
+            .date-icon {
+              margin-right: 8px;
+              color: #8c8c8c;
+
+              &.success {
+                color: #52c41a;
+              }
+            }
+          }
+        }
+      }
     }
 
-    .form-actions {
-        text-align: right;
-        margin-bottom: 0;
-        margin-top: 24px;
+    .performance-summary {
+      .progress-display {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+
+        .progress-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .progress-value {
+            font-size: 20px;
+            font-weight: 600;
+          }
+
+          .progress-label {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
+      }
+
+      .status-grid {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 24px;
+
+        .status-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .status-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+
+            &.completed {
+              color: #52c41a;
+            }
+
+            &.in-progress {
+              color: #1890ff;
+            }
+
+            &.locked {
+              color: #d9d9d9;
+            }
+          }
+
+          .status-count {
+            font-size: 18px;
+            font-weight: 600;
+          }
+
+          .status-label {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
+      }
+
+      .performance-metrics {
+        .metric-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 16px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .metric-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 12px;
+
+            &.quiz {
+              background-color: #e6f7ff;
+
+              .metric-icon {
+                color: #1890ff;
+              }
+            }
+
+            &.completion {
+              background-color: #f6ffed;
+
+              .metric-icon {
+                color: #52c41a;
+              }
+            }
+
+            &.score {
+              background-color: #fff7e6;
+
+              .metric-icon {
+                color: #fa8c16;
+              }
+            }
+          }
+
+          .metric-details {
+            flex: 1;
+
+            .metric-title {
+              font-size: 14px;
+              margin-bottom: 4px;
+            }
+
+            .score-display {
+              .score-value {
+                font-size: 16px;
+                font-weight: 600;
+                color: #fa8c16;
+              }
+
+              .score-max {
+                font-size: 12px;
+                color: rgba(0, 0, 0, 0.45);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .profile-info-card.compact {
+    padding: 0;
+
+    .ant-card-body {
+      padding: 16px;
     }
 
-    .assessment-modal {
-        .ant-modal-content {
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    .profile-header {
+      .profile-avatar-container {
+        margin-bottom: 12px;
+      }
+
+      .profile-basic-info {
+        .ant-typography {
+          margin-bottom: 4px;
         }
 
-        .ant-modal-body {
-            padding: 0;
+        .profile-date-info {
+          margin-top: 12px;
         }
-
-        .ant-form-item-label > label {
-            font-weight: 500;
-        }
-
-        textarea {
-            border-radius: 6px;
-        }
-
-        .ant-divider {
-            margin: 16px 0;
-        }
+      }
     }
+
+    .performance-summary {
+      .progress-with-stats {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .progress-display {
+          margin-bottom: 12px;
+        }
+
+        .status-grid {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+
+          .status-item {
+            text-align: center;
+            padding: 0 4px;
+
+            .status-icon {
+              font-size: 16px;
+            }
+
+            .status-count {
+              font-size: 16px;
+            }
+
+            .status-label {
+              font-size: 11px;
+            }
+          }
+        }
+      }
+
+      .performance-metrics {
+        margin-top: 12px;
+
+        .metric-item {
+          margin-bottom: 12px;
+
+          .metric-icon-container {
+            width: 28px;
+            height: 28px;
+
+            .metric-icon {
+              font-size: 14px;
+            }
+          }
+
+          .metric-details {
+            .metric-title {
+              font-size: 13px;
+            }
+
+            .score-display {
+              .score-value {
+                font-size: 14px;
+              }
+
+              .score-max {
+                font-size: 11px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .courses-card {
+    height: 100%;
+
+    .ant-card-body {
+      padding: 16px 8px 16px 16px;
+    }
+
+    .course-timeline {
+      .timeline-course-card {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .form-actions {
+    text-align: right;
+    margin-bottom: 0;
+    margin-top: 24px;
+  }
+
+  .assessment-modal {
+    .ant-modal-content {
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-modal-body {
+      padding: 0;
+    }
+
+    .ant-form-item-label > label {
+      font-weight: 500;
+    }
+
+    textarea {
+      border-radius: 6px;
+    }
+
+    .ant-divider {
+      margin: 16px 0;
+    }
+  }
 }

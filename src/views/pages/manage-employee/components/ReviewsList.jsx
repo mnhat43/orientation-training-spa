@@ -40,7 +40,6 @@ const ReviewsList = ({
       <List.Item key={review.submission_id}>
         <Card
           className={`review-item-card ${expandedCards[review.submission_id] ? 'expanded' : ''}`}
-          bordered={false}
         >
           <div
             className="review-card-header"

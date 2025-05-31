@@ -32,16 +32,16 @@ import { DEPARTMENT_NAMES, STATUS_PROGRESS } from '@constants'
 
 const { Option } = Select
 
-const EmployeeOverview = ({ employees, selectEmployee }) => {
+const EmployeeOverview = ({ overviewData, onSelectEmployee }) => {
   const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
   const [departmentFilter, setDepartmentFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
-  const [filteredEmployees, setFilteredEmployees] = useState([])
+  const [filteredOverview, setFilteredOverview] = useState([])
   const [addEmployeeVisible, setAddEmployeeVisible] = useState(false)
 
   useEffect(() => {
-    let result = [...employees]
+    let result = [...overviewData]
 
     if (searchText) {
       result = result.filter(
@@ -61,8 +61,8 @@ const EmployeeOverview = ({ employees, selectEmployee }) => {
       result = result.filter((employee) => employee.status === statusFilter)
     }
 
-    setFilteredEmployees(result)
-  }, [searchText, departmentFilter, statusFilter, employees])
+    setFilteredOverview(result)
+  }, [searchText, departmentFilter, statusFilter, overviewData])
 
   const getStatusTag = (status) => {
     switch (status) {
@@ -136,7 +136,7 @@ const EmployeeOverview = ({ employees, selectEmployee }) => {
               icon={<PlusOutlined />}
               className="create-path-btn"
               onClick={() =>
-                navigate(`/learning-paths/create?employeeId=${record.id}`)
+                navigate(`/learning-paths/create?employeeId=${record.user_id}`)
               }
             >
               Create Path
@@ -144,7 +144,7 @@ const EmployeeOverview = ({ employees, selectEmployee }) => {
           ) : (
             <Button
               type="primary"
-              onClick={() => selectEmployee(record)}
+              onClick={() => onSelectEmployee(record.user_id)}
               icon={<SolutionOutlined />}
             >
               View Details
@@ -219,9 +219,9 @@ const EmployeeOverview = ({ employees, selectEmployee }) => {
         </Row>
 
         <Table
-          dataSource={filteredEmployees}
+          dataSource={filteredOverview}
           columns={employeeColumns}
-          rowKey="id"
+          rowKey="user_id"
           pagination={{
             pageSize: 5,
             showSizeChanger: true,
@@ -229,7 +229,6 @@ const EmployeeOverview = ({ employees, selectEmployee }) => {
             responsive: true,
           }}
           className="employee-table"
-          scroll={{ x: 'max-content' }}
           locale={{
             emptyText: (
               <Empty

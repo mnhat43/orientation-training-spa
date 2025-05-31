@@ -84,8 +84,6 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
         onFinish={handleSubmit}
         initialValues={{
           password,
-          role_id: 3,
-          role_name: 'Employee',
           gender: 1,
         }}
       >
@@ -167,7 +165,7 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
               </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
               .profile-picture-container {
                 display: flex;
                 flex-direction: column;
@@ -296,13 +294,13 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
         </Row>
 
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={9}>
             <Form.Item
               name="gender"
               label="Gender"
               rules={[{ required: true, message: 'Please select gender' }]}
             >
-              <Radio.Group buttonStyle="solid" defaultValue={1}>
+              <Radio.Group buttonStyle="solid">
                 <Radio.Button value={1}>
                   <Space>
                     <ManOutlined />
@@ -318,7 +316,7 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
               </Radio.Group>
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               name="department"
               label="Department"
@@ -336,14 +334,7 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
               </Select>
             </Form.Item>
           </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={8}>
-            <Form.Item name="phone_number" label="Phone Number">
-              <Input prefix={<PhoneOutlined />} placeholder="Phone Number" />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item name="birthday" label="Birthday">
               <DatePicker
                 style={{ width: '100%' }}
@@ -353,7 +344,15 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
               />
             </Form.Item>
           </Col>
+        </Row>
+        <Row gutter={16}>
           <Col span={8}>
+            <Form.Item name="phone_number" label="Phone Number">
+              <Input prefix={<PhoneOutlined />} placeholder="Phone Number" />
+            </Form.Item>
+          </Col>
+
+          <Col span={16}>
             <Form.Item
               name="password"
               label={

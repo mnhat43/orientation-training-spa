@@ -8,7 +8,6 @@ import './index.scss'
 const EmployeeProfile = ({ userId }) => {
   const [employeeData, setEmployeeData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [selectedCourse, setSelectedCourse] = useState(null)
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -41,13 +40,17 @@ const EmployeeProfile = ({ userId }) => {
       const { rating, feedback } = assessmentValues
       console.log('Assessment submitted for:', course, { rating, feedback })
     } else {
-      setSelectedCourse(course)
       form.resetFields()
     }
   }
 
   if (loading) {
-    return <Spin size="large" tip="Loading employee profile..." />
+    return (
+      <div className="loading-container">
+        <Spin size="large" />
+        <div className="loading-text">Loading employee profile...</div>
+      </div>
+    )
   }
 
   if (!employeeData) {

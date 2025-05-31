@@ -44,7 +44,7 @@ const ProfileSummary = ({ userInfo, processStats }) => {
   }
 
   return (
-    <Card className="profile-card" bordered={false}>
+    <Card className="profile-card">
       <div className="profile-header">
         <div className="profile-avatar-container">
           <Avatar
@@ -97,7 +97,6 @@ const ProfileSummary = ({ userInfo, processStats }) => {
                 percent={processStats.percent}
                 showInfo={false}
                 strokeColor={getProgressColor(processStats.percent)}
-                strokeWidth={8}
                 className="main-progress-bar"
               />
             </div>
