@@ -130,9 +130,9 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee }) => {
       className: 'action-column',
       render: (_, record) => (
         <Space>
-          {record.totalCourses === 0 ? (
+          {record.status === 'Not Assigned' ? (
             <Button
-              type="primary"
+              type="dashed"
               icon={<PlusOutlined />}
               className="create-path-btn"
               onClick={() =>
