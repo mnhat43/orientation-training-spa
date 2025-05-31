@@ -29,10 +29,11 @@ import { useNavigate } from 'react-router-dom'
 import './EmployeeOverview.scss'
 import AddEmployeeForm from './AddEmployeeForm'
 import { DEPARTMENT_NAMES, STATUS_PROGRESS } from '@constants'
+import userApi from '@api/user'
 
 const { Option } = Select
 
-const EmployeeOverview = ({ overviewData, onSelectEmployee }) => {
+const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
   const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
   const [departmentFilter, setDepartmentFilter] = useState('all')
@@ -84,10 +85,27 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee }) => {
         return <Tag>{status}</Tag>
     }
   }
-  const handleAddEmployee = (employeeData) => {
-    console.log('New employee data:', employeeData)
-    message.success(`Employee ${employeeData.fullname} created successfully!`)
-    setAddEmployeeVisible(false)
+  const handleAddEmployee = async (employeeData) => {
+    try {
+      const response = await userApi.register(employeeData)
+
+      if (response && response.data) {
+        message.success(
+          `Employee ${employeeData.first_name} ${employeeData.last_name} created successfully!`,
+        )
+        onRefresh()
+      } else {
+        message.error('Failed to create employee. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error creating employee:', error)
+      const errorMessage =
+        error.response?.data?.message ||
+        'Failed to create employee. Please try again.'
+      message.error(errorMessage)
+    } finally {
+      setAddEmployeeVisible(false)
+    }
   }
 
   const employeeColumns = [
@@ -247,6 +265,11 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee }) => {
       />
     </>
   )
+}
+
+// Set default props
+EmployeeOverview.defaultProps = {
+  onRefreshNeeded: () => {},
 }
 
 export default EmployeeOverview

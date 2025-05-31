@@ -28,6 +28,7 @@ import {
 } from '@ant-design/icons'
 import { DEPARTMENT_NAMES } from '@constants'
 import { generateRandomPassword } from '@helpers/common'
+import moment from 'moment'
 
 const { Title, Text } = Typography
 const { Option } = Select
@@ -52,7 +53,9 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
   const handleSubmit = (values) => {
     const employeeData = {
       ...values,
-      birthday: values.birthday ? values.birthday.toISOString() : null,
+      birthday: values.birthday
+        ? moment(values.birthday).format('YYYY-MM-DD')
+        : null,
       avatar: avatar || getRandomAvatarUrl(),
     }
 
@@ -281,7 +284,7 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
               </Col>
             </Row>
             <Form.Item
-              name="personnal_email"
+              name="email"
               label="Email"
               rules={[
                 { required: true, message: 'Please enter email' },

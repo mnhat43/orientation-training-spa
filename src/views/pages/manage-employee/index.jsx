@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Tabs } from 'antd'
-import { UserOutlined, FileTextOutlined } from '@ant-design/icons'
+import { Tabs, Spin } from 'antd'
+import {
+  UserOutlined,
+  FileTextOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons'
 import './index.scss'
 
 import EmployeeOverview from './components/EmployeeOverview'
@@ -19,21 +23,6 @@ const ManageEmployees = () => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      setLoading(true)
-      try {
-        const response = await userApi.getEmployeeOverview()
-        if (response.status === 1) {
-          setOverviewData(response.data)
-        }
-      } catch (error) {
-        console.error('Failed to fetch employee data:', error)
-        setOverviewData([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
     const fetchPendingReviews = () => {
       setPendingReviews(mockPendingReviews)
     }
@@ -41,6 +30,33 @@ const ManageEmployees = () => {
     fetchEmployees()
     fetchPendingReviews()
   }, [])
+
+  const fetchEmployees = async () => {
+    setLoading(true)
+    try {
+      const response = await userApi.getEmployeeOverview()
+      if (response.status === 1) {
+        setOverviewData(response.data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch employee data:', error)
+      setOverviewData([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const refreshData = async () => {
+    setLoading(true)
+    try {
+      const response = await userApi.getEmployeeOverview()
+      setOverviewData(response.data)
+    } catch (error) {
+      console.error('Failed to refresh employee data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleReviewSubmission = (values) => {
     console.log(`Review #${values.submission_id} graded:`, values)
@@ -80,14 +96,18 @@ const ManageEmployees = () => {
         label: (
           <span>
             <UserOutlined />
-            Overview
+            Overview{' '}
+            {loading && <LoadingOutlined spin style={{ marginLeft: 8 }} />}
           </span>
         ),
         children: (
-          <EmployeeOverview
-            overviewData={overviewData}
-            onSelectEmployee={handleSelectEmployee}
-          />
+          <Spin spinning={loading} tip="Loading employees...">
+            <EmployeeOverview
+              overviewData={overviewData}
+              onSelectEmployee={handleSelectEmployee}
+              onRefresh={refreshData}
+            />
+          </Spin>
         ),
       },
       {
