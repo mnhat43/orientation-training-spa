@@ -11,6 +11,8 @@ import {
   ConfirmModal,
 } from './quiz'
 
+import { formatCurrentDate } from '@helpers/common'
+
 import quizApi from '@api/quiz'
 
 const QuizModern = ({
@@ -97,6 +99,7 @@ const QuizModern = ({
               answer_text: essayAnswer,
             },
           ],
+          submitted_at: formatCurrentDate(),
         })
 
         if (response.status === 1) {
@@ -127,6 +130,7 @@ const QuizModern = ({
         const response = await quizApi.submitQuizAnswers({
           quiz_id: Number(quiz_id),
           answers: answers,
+          submitted_at: formatCurrentDate(),
         })
 
         if (response.status === 1) {
