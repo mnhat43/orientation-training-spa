@@ -7,18 +7,33 @@ import EmployeeOverview from './components/EmployeeOverview'
 import PendingReviews from './components/PendingReviews'
 import EmployeeProfile from './components/EmployeeProfile'
 
-import { mockEmployees, mockPendingReviews } from './data/mockData'
+import userApi from '@api/user'
+
+import { mockPendingReviews } from './data/mockData'
 
 const ManageEmployees = () => {
   const [activeTab, setActiveTab] = useState(1)
   const [overviewData, setOverviewData] = useState([])
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null)
   const [pendingReviews, setPendingReviews] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const fetchEmployees = () => {
-      setOverviewData(mockEmployees)
+    const fetchEmployees = async () => {
+      setLoading(true)
+      try {
+        const response = await userApi.getEmployeeOverview()
+        if (response.status === 1) {
+          setOverviewData(response.data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch employee data:', error)
+        setOverviewData([])
+      } finally {
+        setLoading(false)
+      }
     }
+
     const fetchPendingReviews = () => {
       setPendingReviews(mockPendingReviews)
     }
