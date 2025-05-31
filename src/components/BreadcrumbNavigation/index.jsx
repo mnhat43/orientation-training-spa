@@ -3,7 +3,7 @@ import { useNavigate, useLocation, useParams, Link } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useState, useEffect } from 'react'
 import useAuth from '@hooks/useAuth'
-import { ROLES } from '@constants/roles'
+import { ROLES } from '@constants'
 import './breadcrumb-navigation.scss'
 import courseApi from '@api/course'
 

@@ -6,7 +6,7 @@ import {
   ClearOutlined,
 } from '@ant-design/icons'
 
-import { DEPARTMENTS } from '@constants/userprofile'
+import { DEPARTMENTS } from '@constants'
 
 const { Option } = Select
 

@@ -23,7 +23,7 @@ import {
   FileTextOutlined,
 } from '@ant-design/icons'
 import { formatTime } from '@helpers/common'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants'
 import './CourseDetailModal.scss'
 
 const { Title, Paragraph, Text } = Typography

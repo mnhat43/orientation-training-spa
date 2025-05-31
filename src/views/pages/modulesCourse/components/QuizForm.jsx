@@ -29,7 +29,7 @@ import {
   CaretRightOutlined,
 } from '@ant-design/icons'
 import './QuizForm.scss'
-import { DIFFICULTY, QUESTION_TYPE } from '@/constants/quiz'
+import { DIFFICULTY, QUESTION_TYPE } from '@/constants'
 
 const { TextArea } = Input
 const { Text } = Typography

@@ -67,7 +67,6 @@ const HowItWorksSection = () => {
                   <Title level={4}>{step.title}</Title>
                   <Paragraph>{step.description}</Paragraph>
 
-                  {/* Animated roles indicator */}
                   <div className="role-indicator">
                     {index < 2 ? (
                       <Badge color="#5243AA" text="Manager" />

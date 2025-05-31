@@ -3,7 +3,7 @@ import { List, Card, Badge, Typography, Tag, Button, Tooltip } from 'antd'
 import { ClockCircleOutlined, EyeOutlined } from '@ant-design/icons'
 import { formatTime } from '@helpers/common'
 import './index.scss'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants'
 import CourseDetailModal from './CourseDetailModal'
 import apiCourse from '@api/course'
 

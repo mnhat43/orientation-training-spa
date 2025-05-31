@@ -9,7 +9,7 @@ import {
   BookOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons'
-import { CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORY_COLORS } from '@constants'
 import './next-action.scss'
 import { formatTime } from '@helpers/common'
 

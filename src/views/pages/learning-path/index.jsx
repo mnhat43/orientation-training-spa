@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import courseApi from '@api/course'
 import { toast } from 'react-toastify'
 import BannerComponent from '@components/Banner/index.jsx'
-import { ROLES } from '@constants/roles'
+import { ROLES } from '@constants'
 import './learning-path.scss'
 
 import LearningPathSteps from './components/LearningPathSteps'
@@ -153,7 +153,6 @@ const MyLearningPath = () => {
             </div>
 
             <div className="right-column">
-              {/* Wrap ProgressStats in its own card */}
               <div className="stat-card progress-card">
                 <ProgressStats
                   userProgress={userProgress}
@@ -161,7 +160,6 @@ const MyLearningPath = () => {
                 />
               </div>
 
-              {/* Next action in its own card */}
               <div className="stat-card next-action-card">
                 <NextAction
                   allCompleted={userProgress.allCompleted}

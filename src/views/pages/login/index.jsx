@@ -35,7 +35,6 @@ function LoginPage() {
 
   return (
     <div className="login-container">
-      {/* Background elements */}
       <div className="particle"></div>
       <div className="particle"></div>
       <div className="particle"></div>

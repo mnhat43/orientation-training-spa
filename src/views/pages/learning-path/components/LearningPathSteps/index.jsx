@@ -6,7 +6,7 @@ import {
   RightCircleOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons'
-import { CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORY_COLORS } from '@constants'
 import './learning-path-steps.scss'
 import { formatTime } from '@helpers/common'
 

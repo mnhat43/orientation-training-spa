@@ -17,7 +17,6 @@ const ProgressStats = ({ userProgress, totalCourses }) => {
           <Progress
             type="circle"
             percent={Math.round(userProgress.progressPercentage)}
-            width={90}
             strokeColor={{
               '0%': '#108ee9',
               '100%': '#87d068',

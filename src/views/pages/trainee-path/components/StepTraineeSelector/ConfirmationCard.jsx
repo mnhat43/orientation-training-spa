@@ -31,7 +31,6 @@ const ConfirmationCard = ({ selectedTrainee }) => {
       size="small"
     >
       <Row gutter={[8, 8]} className="card-wrapper">
-        {/* Avatar Column */}
         <Col xs={24} sm={5} md={4} className="avatar-column">
           <div className="avatar-container">
             <Avatar
@@ -46,9 +45,7 @@ const ConfirmationCard = ({ selectedTrainee }) => {
           </div>
         </Col>
 
-        {/* Info Column */}
         <Col xs={24} sm={19} md={20} className="info-column">
-          {/* Trainee Information Section */}
           <div className="info-section">
             <div className="section-header">
               <Text strong>Trainee Information</Text>
@@ -104,7 +101,6 @@ const ConfirmationCard = ({ selectedTrainee }) => {
             </Row>
           </div>
 
-          {/* Employment Details Section */}
           <div className="info-section">
             <div className="section-header">
               <Text strong>Employment Details</Text>

@@ -22,7 +22,7 @@ import {
   TagOutlined,
 } from '@ant-design/icons'
 import './CourseSelectionPanel.scss'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants'
 import courseApi from '@api/course'
 import { formatTime } from '@helpers/common'
 

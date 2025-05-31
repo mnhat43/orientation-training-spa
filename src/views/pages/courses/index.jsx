@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-  Button,
-  Row,
-  Col,
-  Spin,
-  Input,
-  Empty,
-  Select,
-  Pagination,
-  Tag,
-} from 'antd'
+import { Button, Row, Col, Spin, Input, Empty, Select, Pagination } from 'antd'
 import {
   SearchOutlined,
   PlusOutlined,
@@ -23,7 +13,6 @@ import AddCourseForm from './components/AddCourseForm.jsx'
 import './index.scss'
 import { toast } from 'react-toastify'
 import { convertFileToBase64 } from '@helpers/common.js'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
 import BannerComponent from '@components/Banner/index.jsx'
 
 const { Option } = Select

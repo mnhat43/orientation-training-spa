@@ -26,7 +26,7 @@ import {
   FilterOutlined,
   CloseCircleFilled,
 } from '@ant-design/icons'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORY_COLORS } from '@constants'
 import './index.scss'
 import TemplatePreviewModal from './TemplatePreviewModal'
 
@@ -217,7 +217,6 @@ const TemplateSelector = ({
       }}
     >
       <div className="template-selector">
-        {/* Search and Filter Controls */}
         <div className="filter-controls">
           <Row gutter={[16, 16]} align="middle">
             <Col flex="auto">
@@ -249,7 +248,6 @@ const TemplateSelector = ({
           </Row>
         </div>
 
-        {/* Tabs Navigation - Updated to use items prop */}
         <Tabs
           activeKey={activeTab}
           onChange={setActiveTab}
@@ -257,7 +255,6 @@ const TemplateSelector = ({
           items={tabItems}
         />
 
-        {/* Template List */}
         {loading ? (
           <div className="template-loading">
             <Spin size="large" />
@@ -405,7 +402,6 @@ const TemplateSelector = ({
           </div>
         )}
 
-        {/* Template Preview Modal */}
         <TemplatePreviewModal
           visible={previewVisible}
           template={previewTemplate}

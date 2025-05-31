@@ -7,8 +7,7 @@ import {
   LockOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
-import { ROLES } from '@constants/roles'
+import { CATEGORIES, CATEGORY_COLORS, ROLES } from '@constants'
 import './index.scss'
 import { formatTime } from '@helpers/common'
 

@@ -12,7 +12,7 @@ import { Draggable, DragDropContext } from 'react-beautiful-dnd'
 import StrictModeDroppable from './StrictModeDroppable'
 import { calculateTotalHours } from '@helpers/common'
 import './SelectedCoursesPanel.scss'
-import { CATEGORIES, CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORIES, CATEGORY_COLORS } from '@constants'
 import { formatTime } from '@helpers/common'
 
 const SelectedCoursesPanel = ({ selectedCourses, setSelectedCourses }) => {

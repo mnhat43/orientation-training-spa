@@ -12,7 +12,7 @@ import TraineePathCreator from '@views/pages/trainee-path'
 import TemplateFormPage from '@views/pages/template-form'
 import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
-import { ROLES } from '@constants/roles'
+import { ROLES } from '@constants'
 import MyLearningPath from '@views/pages/learning-path'
 
 function AllRoutes() {

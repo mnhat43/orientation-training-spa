@@ -6,7 +6,6 @@ import {
   Tag,
   List,
   Space,
-  Alert,
   Badge,
   Tooltip,
 } from 'antd'
@@ -14,14 +13,12 @@ import {
   FileTextOutlined,
   ClockCircleOutlined,
   CheckOutlined,
-  WarningOutlined,
-  InfoCircleOutlined,
   BookOutlined,
 } from '@ant-design/icons'
-import { CATEGORY_COLORS } from '@constants/categories'
+import { CATEGORY_COLORS } from '@constants'
 import './TemplatePreviewModal.scss'
 
-const { Text, Paragraph, Title } = Typography
+const { Text } = Typography
 
 const TemplatePreviewModal = ({
   visible,
@@ -66,7 +63,6 @@ const TemplatePreviewModal = ({
       footer={[
         <Button key="cancel" size="middle" onClick={onCancel}>
           {' '}
-          {/* Reduced button size */}
           Cancel
         </Button>,
         isSelected ? (
