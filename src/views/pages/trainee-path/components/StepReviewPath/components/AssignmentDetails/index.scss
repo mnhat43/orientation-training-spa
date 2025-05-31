@@ -1,11 +1,9 @@
-// Reset old styles
 .trainee-profile-container,
 .alt-assignment-card,
 .two-part-profile-container {
     display: none;
 }
 
-// New card-based layout
 .trainee-card-container {
     padding: 12px;
 
@@ -18,7 +16,6 @@
             padding: 0;
         }
 
-        // Card header with avatar and name
         .card-header {
             padding: 24px;
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
@@ -77,7 +74,6 @@
             margin: 0;
         }
 
-        // Details section
         .trainee-details {
             padding: 24px;
             background-color: #fff;
@@ -133,7 +129,6 @@
             }
         }
 
-        // Action buttons
         .action-area {
             padding: 24px;
             background-color: #f5f7fa;
@@ -168,7 +163,6 @@
     }
 }
 
-// Media query for responsive layout
 @media (max-width: 576px) {
     .trainee-card-container {
         .trainee-info-card {

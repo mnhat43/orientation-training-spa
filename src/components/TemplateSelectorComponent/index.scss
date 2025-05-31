@@ -9,13 +9,13 @@
         padding: 0 16px;
         margin-top: 12px;
         margin-bottom: 12px;
-        flex-shrink: 0; // Don't shrink, stay fixed
+        flex-shrink: 0;
     }
 
     .filter-controls {
         padding: 0 16px;
         margin-top: 16px;
-        flex-shrink: 0; // Don't shrink, stay fixed
+        flex-shrink: 0;
     }
 
     .template-loading {
@@ -31,22 +31,18 @@
         padding: 0 16px;
         display: flex;
         flex-direction: column;
-        overflow: hidden; // Don't scroll entire container
+        overflow: hidden;
 
-        // Make only the List grid scroll
         .ant-list {
             flex: 1;
-            overflow-y: auto; // This makes only the list scroll
+            overflow-y: auto;
             overflow-x: hidden;
-
-            // ...existing styles for list items...
         }
 
-        // Keep pagination fixed at the bottom
         .template-pagination {
             margin-top: 16px;
             margin-bottom: 16px;
-            flex-shrink: 0; // Prevent the pagination from shrinking
+            flex-shrink: 0;
             text-align: center;
         }
     }
@@ -87,7 +83,7 @@
                 display: flex;
                 align-items: center;
                 flex: 1;
-                min-width: 0; // Important for text-overflow to work
+                min-width: 0;
                 padding-right: 8px;
 
                 .template-icon {
@@ -130,7 +126,6 @@
     }
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
     .template-selector {
         .template-card {

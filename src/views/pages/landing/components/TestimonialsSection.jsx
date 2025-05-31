@@ -30,7 +30,6 @@ const TestimonialsSection = () => {
     },
   ]
 
-  // Function to render star ratings
   const renderStars = (count) => {
     return Array(count)
       .fill()
@@ -72,7 +71,7 @@ const TestimonialsSection = () => {
                           index === 0
                             ? '#0052CC'
                             : index === 1
-                              ? '#5243AA' // Manager color
+                              ? '#5243AA'
                               : '#00B8D9',
                       }}
                     />

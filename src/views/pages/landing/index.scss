@@ -1,5 +1,3 @@
-// Landing Page Styles - Enhanced Blue Theme Design with Animations
-// Mixins
 @mixin section-padding {
     padding: 80px 0;
 
@@ -24,7 +22,6 @@
     box-shadow: 0 8px 32px rgba(0, 82, 204, 0.1);
 }
 
-// Animation Keyframes
 @keyframes float {
     0% {
         transform: translateY(0) rotate(0deg);
@@ -127,7 +124,6 @@
     }
 }
 
-// Responsive Styles
 @media (max-width: 768px) {
     .landing-page {
         .section-header {

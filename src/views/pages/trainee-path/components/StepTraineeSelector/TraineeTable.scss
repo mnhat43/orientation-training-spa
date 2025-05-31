@@ -5,11 +5,11 @@
     padding: 16px;
     padding-bottom: 0;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    overflow-x: auto; // Add horizontal scrolling if needed
+    overflow-x: auto;
 
     .compact-trainee-table {
-        width: 100%; // Ensure table takes exactly 100% of container width
-        table-layout: fixed; // Fixed table layout prevents expansion
+        width: 100%;
+        table-layout: fixed;
 
         .ant-table-container {
             border-radius: 8px;
@@ -42,10 +42,9 @@
             }
         }
 
-        // Override the last column (action column) to prevent button overflow
         td:last-child {
             white-space: nowrap;
-            width: 110px; // Fixed width for action column
+            width: 110px;
             min-width: 110px;
         }
 
@@ -58,7 +57,7 @@
             font-size: 13px;
             height: 32px;
             padding: 0 12px;
-            width: 100px; // Fixed width for the button
+            width: 100px;
 
             .anticon {
                 font-size: 12px;
@@ -103,7 +102,6 @@
             }
         }
 
-        // Pagination controls
         .ant-pagination {
             margin: 16px 0;
 
@@ -135,7 +133,6 @@
             }
         }
 
-        // Add highlight effect on hover for non-selected rows
         .ant-table-tbody > tr:not(.selected-table-row):hover .select-trainee-btn {
             background-color: #e6f7ff;
             border-color: #1890ff;
@@ -143,7 +140,6 @@
         }
 
         .ant-table-tbody {
-            // Selected row styling
             tr.selected-table-row {
                 background-color: #f6ffed !important;
 
@@ -161,7 +157,6 @@
                 }
             }
 
-            // Hover state for non-selected rows
             tr:not(.selected-table-row):hover {
                 .select-trainee-btn {
                     background-color: #e6f7ff !important;
@@ -198,7 +193,6 @@
         }
     }
 
-    // Prevent the table from expanding horizontally
     .ant-spin-nested-loading,
     .ant-spin-container,
     .ant-table,
@@ -238,7 +232,6 @@
     }
 }
 
-// Add styles for responsive behavior
 @media (max-width: 768px) {
     .trainee-table-container {
         padding: 8px;
@@ -289,7 +282,6 @@
         }
     }
 
-    // Add highlight effect on hover for non-selected rows
     .ant-table-tbody > tr:not(.selected-table-row):hover .select-trainee-btn {
         background-color: #e6f7ff;
         border-color: #1890ff;
@@ -297,7 +289,6 @@
     }
 
     .ant-table-tbody {
-        // Selected row styling
         tr.selected-table-row {
             background-color: #f6ffed !important;
 
@@ -315,7 +306,6 @@
             }
         }
 
-        // Hover state for non-selected rows
         tr:not(.selected-table-row):hover {
             .select-trainee-btn {
                 background-color: #e6f7ff !important;
@@ -352,7 +342,6 @@
     }
 }
 
-// Pagination controls
 .ant-pagination {
     margin: 16px 0;
 

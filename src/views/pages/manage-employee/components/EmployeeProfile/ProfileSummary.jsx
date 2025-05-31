@@ -37,9 +37,9 @@ const ProfileSummary = ({ userInfo, processStats }) => {
   const scorePercentage = calculateScorePercentage()
 
   const getProgressColor = (percent) => {
-    if (percent >= 80) return '#52c41a' // Success green
-    if (percent >= 50) return '#1890ff' // Info blue
-    if (percent >= 30) return '#faad14' // Warning yellow
+    if (percent >= 80) return '#52c41a'
+    if (percent >= 50) return '#1890ff'
+    if (percent >= 30) return '#faad14'
     return '#ff4d4f'
   }
 

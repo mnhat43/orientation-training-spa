@@ -11,7 +11,6 @@ const { Content } = Layout
 const { Title, Paragraph } = Typography
 
 const FeaturesSection = () => {
-  // Feature icon array for different colors
   const featureIcons = [
     <ReadOutlined className="feature-icon" />,
     <RocketOutlined className="feature-icon" />,

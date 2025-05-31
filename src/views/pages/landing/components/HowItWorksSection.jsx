@@ -11,7 +11,6 @@ const { Content } = Layout
 const { Title, Paragraph } = Typography
 
 const HowItWorksSection = () => {
-  // Steps to reflect manager-employee workflow
   const steps = [
     {
       number: '01',

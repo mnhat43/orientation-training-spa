@@ -6,14 +6,11 @@ import 'react-toastify/dist/ReactToastify.css'
 const App = () => {
   return (
     <>
-      {/* <UserProvider> */}
       <AuthProvider>
         <BrowserRouter>
-          {/* <GlobalHistory /> */}
           <AllRoutes />
         </BrowserRouter>
       </AuthProvider>
-      {/* </UserProvider> */}
 
       <ToastContainer
         position="bottom-center"

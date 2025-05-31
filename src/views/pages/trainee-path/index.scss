@@ -381,7 +381,6 @@
         }
     }
 
-    // Success view styling
     .success-icon {
         font-size: 72px;
         color: #52c41a;
@@ -397,7 +396,6 @@
     }
 }
 
-// Success View Styling
 .success-view {
     .success-icon {
         font-size: 72px;
@@ -424,7 +422,6 @@
     }
 }
 
-// Add this to your existing CSS to make the components responsive
 @media (max-width: 768px) {
     .trainee-selector,
     .path-customizer,
@@ -447,7 +444,6 @@
     }
 }
 
-// Add responsive styles for the navigation buttons
 @media (max-width: 576px) {
     .trainee-path-creator {
         .steps-content {
@@ -470,7 +466,6 @@
     }
 }
 
-// Improve responsive styles for vertical steps layout
 @media (max-width: 767px) {
     .trainee-path-creator {
         .steps-container {

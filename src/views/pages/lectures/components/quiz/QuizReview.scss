@@ -429,13 +429,11 @@
         }
     }
 
-    // Remove old question section styles
     .quiz-status-container,
     .essay-question-section {
         display: none;
     }
 
-    // New combined layout
     .essay-question-header-row {
         display: flex;
         justify-content: space-between;
@@ -464,7 +462,7 @@
                     font-size: 15px;
                     line-height: 1.6;
                     display: block;
-                    white-space: pre-line; // Preserve line breaks
+                    white-space: pre-line;
                 }
 
                 .essay-question-limit {

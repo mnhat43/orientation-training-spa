@@ -41,7 +41,7 @@ const ManageEmployees = () => {
           reviews: updatedEmployeeReviews,
         }
       })
-      .filter((employee) => employee.reviews.length > 0) // Remove employees with no more reviews
+      .filter((employee) => employee.reviews.length > 0)
 
     setPendingReviews(updatedReviews)
   }

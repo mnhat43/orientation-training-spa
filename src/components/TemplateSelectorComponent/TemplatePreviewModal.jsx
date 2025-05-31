@@ -32,7 +32,6 @@ const TemplatePreviewModal = ({
 }) => {
   if (!template) return null
 
-  // Calculate total duration
   const totalDuration = template.courses.reduce((sum, course) => {
     const durationMatch = course.duration?.match(/(\d+)/)
     return sum + (durationMatch ? parseInt(durationMatch[1], 10) : 0)
@@ -57,10 +56,10 @@ const TemplatePreviewModal = ({
       }
       open={visible}
       onCancel={onCancel}
-      width={550} // Reduced width
+      width={550}
       centered
       bodyStyle={{
-        padding: '12px', // Reduced padding
+        padding: '12px',
         maxHeight: '70vh',
         overflow: 'hidden',
       }}
@@ -73,7 +72,7 @@ const TemplatePreviewModal = ({
         isSelected ? (
           <Button
             key="applied"
-            size="middle" // Reduced button size
+            size="middle"
             type="primary"
             disabled
             style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
@@ -83,7 +82,7 @@ const TemplatePreviewModal = ({
         ) : (
           <Button
             key="apply"
-            size="middle" // Reduced button size
+            size="middle"
             type="primary"
             onClick={() => onApply(template)}
             icon={<CheckOutlined />}
@@ -129,7 +128,7 @@ const TemplatePreviewModal = ({
 
         <div className="course-list-container-compact">
           <List
-            size="small" // Set list to small size
+            size="small"
             className="scrollable-course-list"
             itemLayout="horizontal"
             dataSource={template.courses}

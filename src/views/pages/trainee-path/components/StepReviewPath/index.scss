@@ -21,7 +21,6 @@
         border-radius: 6px;
     }
 
-    // Learning path summary section
     &-summary {
         &-card {
             border-radius: 8px;
@@ -44,7 +43,6 @@
             }
         }
 
-        // Timeline items
         &-timeline-dot {
             background: #1890ff;
             border-radius: 50%;
@@ -98,7 +96,6 @@
         }
     }
 
-    // Assignment details section
     &-details {
         &-card {
             border-radius: 8px;
@@ -198,7 +195,6 @@
     }
 }
 
-// Divider styling
 .review-path-divider {
     margin: 16px 0;
 }
@@ -212,5 +208,4 @@
 }
 
 .review-path-navigation-back-btn {
-    // You can keep existing button styling or modify as needed
 }

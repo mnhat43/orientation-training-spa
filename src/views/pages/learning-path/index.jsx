@@ -8,7 +8,6 @@ import BannerComponent from '@components/Banner/index.jsx'
 import { ROLES } from '@constants/roles'
 import './learning-path.scss'
 
-// Import new components
 import LearningPathSteps from './components/LearningPathSteps'
 import ProgressStats from './components/ProgressStats'
 import NextAction from './components/NextAction'

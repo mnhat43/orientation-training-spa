@@ -30,10 +30,7 @@ const ModuleItem = ({ item, moduleId, instructorAccess, removeModuleItem }) => {
 
   const navigate = useNavigate()
 
-  // const history = useHistory()
-
   const getActions = (item) => {
-    // if (instructorAccess)
     return (
       <span
         onClick={(event) => {
@@ -48,17 +45,13 @@ const ModuleItem = ({ item, moduleId, instructorAccess, removeModuleItem }) => {
         />
       </span>
     )
-    // return null
   }
 
   return (
     <HoverableListItem
       extra={getActions(item)}
       onClick={() => {
-        // if (item_type === 'file') window.open(url, '_parent')
-        // else {
         navigate(`/course/${courseId}/lectures/${moduleId}/${item.id}`)
-        // }
       }}
     >
       <Space size={20}>

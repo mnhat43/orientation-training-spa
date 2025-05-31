@@ -5,8 +5,6 @@ import './File.scss'
 const File = ({ filePath }) => {
   const [loadError, setLoadError] = useState(false)
 
-  // Get file extension to determine content type
-  // const fileExtension = filePath.split('.').pop().toLowerCase()
   const isPdf = true
 
   return (

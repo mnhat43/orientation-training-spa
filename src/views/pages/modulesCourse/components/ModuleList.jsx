@@ -63,7 +63,7 @@ const ModuleList = ({
       case 'video':
         return 'Video'
       case 'file':
-      case 'document': // Include this for backward compatibility
+      case 'document':
         return 'File'
       case 'link':
         return 'Link'

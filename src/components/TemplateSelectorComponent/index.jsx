@@ -45,26 +45,21 @@ const TemplateSelector = ({
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('all')
 
-  // State for filtering
   const [searchText, setSearchText] = useState('')
   const [categoryFilter, setCategoryFilter] = useState(null)
 
-  // State for pagination
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(6)
 
-  // State for template preview
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewTemplate, setPreviewTemplate] = useState(null)
 
-  // Fetch templates
   useEffect(() => {
     if (templateDrawerVisible) {
       const fetchTemplates = async () => {
         setLoading(true)
         try {
           setTimeout(() => {
-            // Generate a larger set of mock templates
             const categories = [
               'Engineering',
               'Marketing',
@@ -80,7 +75,7 @@ const TemplateSelector = ({
               .map((_, i) => {
                 const randomCategory =
                   categories[Math.floor(Math.random() * categories.length)]
-                const courseCount = Math.floor(Math.random() * 8) + 3 // 3-10 courses
+                const courseCount = Math.floor(Math.random() * 8) + 3
 
                 return {
                   id: `template-${i + 1}`,

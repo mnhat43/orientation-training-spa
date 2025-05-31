@@ -106,7 +106,6 @@ const LearningTimer = ({
     }
   }, [isFileContent, refs])
 
-  // Main timer logic
   useEffect(() => {
     if (refs.timer) {
       clearInterval(refs.timer)
@@ -149,7 +148,6 @@ const LearningTimer = ({
     }
   }, [isActive, required_time, completeProgress, refs])
 
-  // Simple debug display
   useEffect(() => {
     if (IS_DEV) {
       const debug = document.createElement('div')

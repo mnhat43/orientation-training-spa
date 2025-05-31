@@ -39,7 +39,7 @@
 
                 .left-column {
                     flex: 3;
-                    min-width: 0; // For proper flexbox behavior
+                    min-width: 0;
                 }
 
                 .right-column {
@@ -53,14 +53,14 @@
                         background: white;
                         border-radius: 8px;
                         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-                        overflow: hidden; // To ensure the border-radius applies to children
+                        overflow: hidden;
 
                         &.progress-card {
-                            border-top: 3px solid #1890ff; // Blue border for progress
+                            border-top: 3px solid #1890ff;
                         }
 
                         &.next-action-card {
-                            border-top: 3px solid #fa541c; // Orange border for next action
+                            border-top: 3px solid #fa541c;
                         }
                     }
                 }

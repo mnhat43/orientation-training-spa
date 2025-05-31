@@ -1,6 +1,6 @@
 .courses-list {
-    overflow-y: visible; // Changed from auto to visible
-    max-height: none; // Remove the max-height constraint
+    overflow-y: visible;
+    max-height: none;
     padding-right: 8px;
 
     .course-card-material {

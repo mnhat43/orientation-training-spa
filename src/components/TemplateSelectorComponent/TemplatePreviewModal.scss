@@ -156,7 +156,6 @@
     }
 }
 
-// Responsive adjustments
 @media (max-width: 576px) {
     .template-preview-modal {
         .template-preview-header {
@@ -194,7 +193,7 @@
 
 .template-preview-modal-simple {
     .ant-modal-content {
-        max-height: 90vh; // Prevent modal from exceeding viewport height
+        max-height: 90vh;
         display: flex;
         flex-direction: column;
     }
@@ -219,7 +218,7 @@
 
         .title-text {
             flex: 1;
-            min-width: 0; // Important for text-overflow to work
+            min-width: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -227,7 +226,7 @@
 
         .applied-badge {
             flex-shrink: 0;
-            margin-left: auto; // Push to the right
+            margin-left: auto;
         }
     }
 
@@ -533,7 +532,7 @@
             margin: 6px 0;
 
             .scrollable-course-list {
-                max-height: 48vh; // Slightly smaller
+                max-height: 48vh;
                 overflow-y: auto;
                 border: 1px solid #eee;
                 border-radius: 3px;
@@ -637,7 +636,7 @@
     .template-preview-modal-simple {
         .course-list-container {
             .scrollable-course-list {
-                max-height: 40vh; // Smaller on mobile
+                max-height: 40vh;
             }
         }
     }

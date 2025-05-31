@@ -1,11 +1,9 @@
 $max-width: 1440px;
 $min-width: 1250px;
 
-// Layout
-$layout-header-height: 60px; // Reduced from 70px
+$layout-header-height: 60px;
 $layout-header-padding: 0 20px;
 
-// Header specific
 $header-background: #ffffff;
 $header-border-color: #f0f0f0;
 $header-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -13,34 +11,27 @@ $header-text-color: #333333;
 $header-logo-max-width: 150px;
 $header-mobile-height: 56px;
 
-// Header specific refinements
 $header-inner-padding: 0 24px;
 $header-item-spacing: 24px;
 $header-menu-item-spacing-large: 20px;
 $header-menu-item-spacing-xlarge: 24px;
 
-// Responsive breakpoints
 $mobile-breakpoint: 768px;
 $tablet-breakpoint: 992px;
 
-// Additional responsive breakpoints
 $small-mobile-breakpoint: 480px;
 $medium-tablet-breakpoint: 840px;
 $large-desktop-breakpoint: 1366px;
 
-// Media query helpers
 $media-xs: "max-width: #{$small-mobile-breakpoint}";
 $media-sm: "max-width: #{$mobile-breakpoint}";
 $media-md: "max-width: #{$tablet-breakpoint}";
 $media-lg: "max-width: #{$min-width}";
 $media-xl: "min-width: #{$min-width + 1px}";
 
-// Course Navigation heights
 $course-nav-height-desktop: 50px;
 
-// User menu
 $avatar-size: 32px;
 $avatar-size-mobile: 40px;
 
-// Mobile drawer
 $mobile-drawer-width: 280px;

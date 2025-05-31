@@ -1,5 +1,3 @@
-// Global Styles
-
 .landing-page {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: $text-color;
@@ -64,7 +62,6 @@
         }
     }
 
-    // Placeholder for images with blue gradient animation
     .placeholder-image {
         background: linear-gradient(-45deg, $deep-blue, $primary-blue, $medium-blue, $accent-teal);
         background-size: 400% 400%;
@@ -75,7 +72,6 @@
         box-shadow: 0 20px 40px rgba(0, 82, 204, 0.15);
     }
 
-    // Floating shapes animation for visual interest
     .floating-shapes {
         position: absolute;
         width: 100%;
@@ -120,7 +116,6 @@
         }
     }
 
-    // On-scroll animation classes
     .animate-on-scroll {
         opacity: 0;
         transform: translateY(30px);
@@ -134,7 +129,6 @@
         }
     }
 
-    // Delay classes for animations
     @for $i from 1 through 6 {
         .card-delay-#{$i} {
             transition-delay: #{$i * 0.1}s;

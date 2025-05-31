@@ -10,19 +10,17 @@ import {
 
 const { Title, Text, Paragraph } = Typography
 
-// Color scheme constants
 const colors = {
-  primary: '#1e4d8c', // Deep navy blue
-  secondary: '#6096ba', // Medium blue
-  accent: '#a3cef1', // Light blue
-  light: '#e1eefb', // Very light blue
-  dark: '#0c2340', // Very dark blue
-  text: '#333333', // Dark text
-  textLight: '#666666', // Light text
-  background: '#f8fafd', // Off-white with blue tint
+  primary: '#1e4d8c',
+  secondary: '#6096ba',
+  accent: '#a3cef1',
+  light: '#e1eefb',
+  dark: '#0c2340',
+  text: '#333333',
+  textLight: '#666666',
+  background: '#f8fafd',
 }
 
-// Premium modern certificate styles with blue color scheme
 const certificateStyle = {
   container: {
     width: '100%',
@@ -34,21 +32,21 @@ const certificateStyle = {
   certificate: {
     width: '100%',
     maxWidth: '900px',
-    aspectRatio: '1.414 / 1', // A4 landscape ratio
+    aspectRatio: '1.414 / 1',
     padding: 0,
     background: '#ffffff',
     boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
     position: 'relative',
     overflow: 'hidden',
   },
-  // Use grid layout to ensure proper spacing and placement
+
   certificateContent: {
     position: 'relative',
     height: '100%',
     background: `linear-gradient(to right, #ffffff 0%, ${colors.background} 100%)`,
     padding: '30px',
     display: 'grid',
-    gridTemplateRows: 'auto auto 1fr auto auto', // Header, title, content, signatures, footer
+    gridTemplateRows: 'auto auto 1fr auto auto',
     gridGap: '5px',
     boxSizing: 'border-box',
   },
@@ -137,7 +135,7 @@ const certificateStyle = {
   },
   titleText: {
     fontSize: '32px',
-    fontWeight: 300, // Light weight for modern look
+    fontWeight: 300,
     color: colors.primary,
     textTransform: 'uppercase',
     letterSpacing: '4px',
@@ -148,12 +146,12 @@ const certificateStyle = {
     color: colors.textLight,
     letterSpacing: '1px',
   },
-  // Content section with scrolling if needed
+
   contentSection: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    overflow: 'auto', // Allow scrolling if content is too large
+    overflow: 'auto',
     padding: '0 20px',
     position: 'relative',
     zIndex: 2,
@@ -206,7 +204,7 @@ const certificateStyle = {
     margin: '0 auto',
     lineHeight: '1.4',
   },
-  // Fixed position signatures section
+
   signaturesSection: {
     display: 'flex',
     justifyContent: 'space-evenly',
@@ -242,7 +240,7 @@ const certificateStyle = {
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
-  // Footer section
+
   footer: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -341,9 +339,7 @@ const CertificateView = ({
   userName = 'John Doe',
   completionDate = 'November 15, 2023',
 }) => {
-  // Generate a unique certificate ID
   const certificateId = useMemo(() => {
-    // Combine course ID and timestamp for uniqueness
     const timestamp = new Date().getTime().toString(36).toUpperCase()
     return `CERT-${courseId || '001'}-${timestamp.slice(-6)}`
   }, [courseId])

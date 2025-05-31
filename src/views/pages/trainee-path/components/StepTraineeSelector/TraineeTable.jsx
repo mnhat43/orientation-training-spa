@@ -74,7 +74,7 @@ const TraineeTable = ({
                 size="small"
                 className="select-btn"
                 onClick={(e) => {
-                  e.stopPropagation() // Prevent row click event
+                  e.stopPropagation()
                   setSelectedTrainee(record)
                 }}
               >

@@ -19,7 +19,6 @@
                 padding-bottom: 0;
             }
 
-            // Add border to the step content
             .ant-steps-item-content {
                 border: 1px solid #f0f0f0;
                 border-radius: 8px;
@@ -67,14 +66,13 @@
             }
 
             .step-course-details {
-                display: flex; // Added to create a flex layout
-                justify-content: space-between; // Space between content and button
-                align-items: center; // Center items vertically
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
 
                 .course-content {
-                    // New wrapper for description and meta
-                    flex: 1; // Take available space
-                    margin-right: 16px; // Add some space between content and button
+                    flex: 1;
+                    margin-right: 16px;
                 }
 
                 .course-description {
@@ -108,10 +106,10 @@
                 .course-actions {
                     display: flex;
                     align-items: center;
-                    justify-content: flex-end; // Align button to the right
+                    justify-content: flex-end;
                     flex-wrap: wrap;
                     gap: 8px;
-                    margin-top: 0; // Remove top margin since we're using flex alignment
+                    margin-top: 0;
 
                     button {
                         min-width: 80px;

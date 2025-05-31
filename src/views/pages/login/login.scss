@@ -15,7 +15,6 @@
   position: relative;
   overflow: hidden;
 
-  // Background shapes
   &::before,
   &::after {
     content: "";
@@ -41,7 +40,6 @@
     animation: floating-2 20s infinite ease-in-out;
   }
 
-  // Background particles
   .particle {
     position: absolute;
     border-radius: 50%;
@@ -80,7 +78,6 @@
     }
   }
 
-  // Gradient overlay
   .bg-gradient {
     position: absolute;
     top: 0;
@@ -123,7 +120,6 @@
   }
 }
 
-// Login card
 .login-card {
   width: 420px;
   background-color: white;
@@ -146,7 +142,6 @@
   }
 }
 
-// Logo section
 .login-logo {
   display: flex;
   align-items: center;
@@ -181,7 +176,6 @@
   }
 }
 
-// Form container
 .login-form-container {
   padding: 30px;
 }
@@ -201,7 +195,6 @@
   text-align: center;
 }
 
-// Form styles
 .login-form {
   .ant-form-item {
     margin-bottom: 20px;
@@ -267,7 +260,6 @@
   }
 }
 
-// For tablets and mobile devices
 @media (max-width: 768px) {
   .login-card {
     width: 90%;

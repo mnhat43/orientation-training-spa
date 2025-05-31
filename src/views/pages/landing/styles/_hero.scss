@@ -1,5 +1,3 @@
-// Hero Section Styles
-
 .hero-section {
     background: linear-gradient(135deg, $deep-blue 0%, $primary-blue 100%);
     color: $white;
@@ -19,7 +17,6 @@
         background-size: cover;
     }
 
-    // Wave separator at the bottom
     &:after {
         content: "";
         position: absolute;
@@ -31,7 +28,6 @@
         background-size: cover;
     }
 
-    // Bubbles animation
     .bubbles {
         position: absolute;
         width: 100%;

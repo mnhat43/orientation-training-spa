@@ -12,9 +12,4 @@ export const CATEGORY_COLORS = {
   Technical: 'green',
   Soft: 'purple',
   Compliance: 'cyan',
-  // For example:
-  // Marketing: 'pink',
-  // Sales: 'gold',
-  // HR: 'cyan',
-  // Operations: 'magenta',
 }

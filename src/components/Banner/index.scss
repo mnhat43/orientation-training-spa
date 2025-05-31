@@ -30,7 +30,6 @@
         transform: rotate(30deg);
     }
 
-    // Ocean wave decoration
     &::after {
         content: "";
         position: absolute;
@@ -44,7 +43,6 @@
         z-index: 1;
     }
 
-    // Add a subtle animated wave effect
     .wave-animation {
         position: absolute;
         bottom: 0;
@@ -112,7 +110,6 @@
         }
     }
 
-    // Add stats container styling
     .stats-container {
         display: flex;
         margin-top: 15px;

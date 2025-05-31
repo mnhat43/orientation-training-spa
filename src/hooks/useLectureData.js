@@ -37,9 +37,6 @@ const useLectureData = () => {
 
       const completeLecture = {
         ...targetLecture,
-        // module_id: targetModule.module_id,
-        // module_position: targetModule.module_position,
-        // module_title: targetModule.module_title,
       }
       setSelectedModule({
         module_id: targetModule.module_id,
@@ -232,9 +229,6 @@ const useLectureData = () => {
 
     return {
       ...lastLecture,
-      // module_id: lastModule.module_id,
-      // module_position: lastModule.module_position,
-      // module_title: lastModule.module_title,
     }
   }, [lectures])
 

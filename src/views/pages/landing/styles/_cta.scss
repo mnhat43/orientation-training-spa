@@ -1,4 +1,3 @@
-// Footer Section with blue gradient and animation
 .footer-section {
     background: linear-gradient(135deg, $deep-blue 0%, $primary-blue 50%, $medium-blue 100%);
     color: $white;
@@ -18,7 +17,6 @@
         z-index: 0;
     }
 
-    // Subtle floating particles
     .particles {
         position: absolute;
         top: 0;

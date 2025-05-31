@@ -60,14 +60,14 @@
         }
 
         &.completed.needs-assessment {
-            border-left: 4px solid #fa8c16; // Use orange color for emphasis
+            border-left: 4px solid #fa8c16;
 
             .badge-icon {
                 background-color: rgba(250, 140, 22, 0.1);
             }
 
             .assessment-needed {
-                background-color: #fffbe6; // Light yellow background
+                background-color: #fffbe6;
                 padding: 16px;
                 border-radius: 4px;
                 text-align: center;
@@ -77,7 +77,7 @@
                 }
 
                 .assessment-button {
-                    background-color: #fa541c; // Bright orange button
+                    background-color: #fa541c;
                     border-color: #fa541c;
 
                     &:hover {
@@ -421,7 +421,6 @@
         }
     }
 
-    // Media query for better mobile display
     @media (max-width: 576px) {
         .inline-assessment-form {
             padding: 12px;

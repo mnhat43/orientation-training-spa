@@ -46,11 +46,10 @@ $quiz-max-height: calc(100vh - 110px);
 
     &-question {
         margin-bottom: 24px;
-        overflow-y: auto; // Make this area scrollable
-        flex-grow: 1; // Let this area take up available space
-        padding-right: 8px; // Add some padding for the scrollbar
+        overflow-y: auto;
+        flex-grow: 1;
+        padding-right: 8px;
 
-        // Customize scrollbar
         &::-webkit-scrollbar {
             width: 6px;
         }
@@ -141,7 +140,7 @@ $quiz-max-height: calc(100vh - 110px);
         display: flex;
         justify-content: space-between;
         margin-top: 16px;
-        flex-shrink: 0; // Prevent footer from shrinking
+        flex-shrink: 0;
         padding-top: 16px;
         border-top: 1px solid #f0f0f0;
 
@@ -240,9 +239,8 @@ $quiz-max-height: calc(100vh - 110px);
     }
 }
 
-// Results screen styles
 .quiz-modern-results {
-    width: 100%; // Ensure it takes full width
+    width: 100%;
 
     .quiz-results-card {
         border-radius: 8px;
@@ -250,7 +248,6 @@ $quiz-max-height: calc(100vh - 110px);
         max-height: $quiz-max-height;
         overflow-y: auto;
 
-        // Same scrollbar styling
         &::-webkit-scrollbar {
             width: 6px;
         }

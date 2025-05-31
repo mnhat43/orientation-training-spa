@@ -10,17 +10,18 @@ const SpinnerContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: ${props => props.fullHeight ? '100%' : 'auto'};
+  height: ${(props) => (props.fullHeight ? '100%' : 'auto')};
   width: 100%;
-  padding: ${props => props.padding || '20px'};
-  background-color: ${props => props.overlay ? 'rgba(255, 255, 255, 0.8)' : 'transparent'};
-  position: ${props => props.overlay ? 'absolute' : 'relative'};
+  padding: ${(props) => props.padding || '20px'};
+  background-color: ${(props) =>
+    props.overlay ? 'rgba(255, 255, 255, 0.8)' : 'transparent'};
+  position: ${(props) => (props.overlay ? 'absolute' : 'relative')};
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: ${props => props.overlay ? 1000 : 'auto'};
-  border-radius: ${props => props.borderRadius || '0'};
+  z-index: ${(props) => (props.overlay ? 1000 : 'auto')};
+  border-radius: ${(props) => props.borderRadius || '0'};
 `
 
 const MessageContainer = styled.div`
@@ -39,18 +40,25 @@ const Spinner = ({
   color = '#1890ff',
   ...props
 }) => {
-  // Create custom spinner icon with the specified color
-  const antIcon = <LoadingOutlined style={{ fontSize: size === 'small' ? 24 : size === 'large' ? 40 : 32, color }} spin />
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: size === 'small' ? 24 : size === 'large' ? 40 : 32,
+        color,
+      }}
+      spin
+    />
+  )
 
   return (
-    <SpinnerContainer 
-      fullHeight={fullHeight} 
+    <SpinnerContainer
+      fullHeight={fullHeight}
       overlay={overlay}
       padding={padding}
       borderRadius={borderRadius}
     >
       <Spin indicator={antIcon} tip={tip} {...props} />
-      
+
       {message && (
         <MessageContainer>
           <Text>{message}</Text>
