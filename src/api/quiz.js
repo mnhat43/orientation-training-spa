@@ -8,6 +8,10 @@ const quiz = {
   getQuizResult(params) {
     return API.post('/quiz/result', params)
   },
+
+  getQuizPendingReview() {
+    return API.get('/quiz/pending-review')
+  },
 }
 
 export default quiz

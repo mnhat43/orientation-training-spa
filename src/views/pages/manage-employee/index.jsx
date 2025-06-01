@@ -12,8 +12,7 @@ import PendingReviews from './components/PendingReviews'
 import EmployeeProfile from './components/EmployeeProfile'
 
 import userApi from '@api/user'
-
-import { mockPendingReviews } from './data/mockData'
+import quizApi from '@api/quiz'
 
 const ManageEmployees = () => {
   const [activeTab, setActiveTab] = useState(1)
@@ -21,15 +20,29 @@ const ManageEmployees = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null)
   const [pendingReviews, setPendingReviews] = useState([])
   const [loading, setLoading] = useState(false)
+  const [reviewsLoading, setReviewsLoading] = useState(false)
 
   useEffect(() => {
-    const fetchPendingReviews = () => {
-      setPendingReviews(mockPendingReviews)
-    }
-
     fetchEmployees()
     fetchPendingReviews()
   }, [])
+
+  const fetchPendingReviews = async () => {
+    setReviewsLoading(true)
+    try {
+      const response = await quizApi.getQuizPendingReview()
+      if (response.status === 1 && response.data && response.data.length > 0) {
+        setPendingReviews(response.data)
+      } else {
+        setPendingReviews([])
+      }
+    } catch (error) {
+      console.error('Failed to fetch pending reviews:', error)
+      setPendingReviews([])
+    } finally {
+      setReviewsLoading(false)
+    }
+  }
 
   const fetchEmployees = async () => {
     setLoading(true)
@@ -90,6 +103,12 @@ const ManageEmployees = () => {
   }
 
   const getTabItems = () => {
+    const totalReviews = pendingReviews.reduce(
+      (total, employee) =>
+        total + (employee.reviews ? employee.reviews.length : 0),
+      0,
+    )
+
     const items = [
       {
         key: 1,
@@ -115,14 +134,19 @@ const ManageEmployees = () => {
         label: (
           <span>
             <FileTextOutlined />
-            Reviews ({pendingReviews.length})
+            Reviews ({totalReviews}){' '}
+            {reviewsLoading && (
+              <LoadingOutlined spin style={{ marginLeft: 8 }} />
+            )}
           </span>
         ),
         children: (
-          <PendingReviews
-            pendingReviews={pendingReviews}
-            handleReviewSubmission={handleReviewSubmission}
-          />
+          <Spin spinning={reviewsLoading} tip="Loading reviews...">
+            <PendingReviews
+              pendingReviews={pendingReviews}
+              handleReviewSubmission={handleReviewSubmission}
+            />
+          </Spin>
         ),
       },
     ]
