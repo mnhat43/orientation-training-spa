@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Tabs, Spin } from 'antd'
+import { Tabs, Spin, message } from 'antd'
 import {
   UserOutlined,
   FileTextOutlined,
@@ -71,23 +71,37 @@ const ManageEmployees = () => {
     }
   }
 
-  const handleReviewSubmission = (values) => {
-    console.log(`Review #${values.submission_id} graded:`, values)
+  const handleReviewSubmission = async (values) => {
+    try {
+      const response = await quizApi.reviewSubmission(values)
 
-    const updatedReviews = pendingReviews
-      .map((employee) => {
-        const updatedEmployeeReviews = employee.reviews.filter(
-          (review) => review.submission_id !== values.submission_id,
+      if (response.status === 1) {
+        message.success('Review submitted successfully')
+
+        const updatedReviews = pendingReviews
+          .map((employee) => {
+            const updatedEmployeeReviews = employee.reviews.filter(
+              (review) => review.submission_id !== values.submission_id,
+            )
+
+            return {
+              ...employee,
+              reviews: updatedEmployeeReviews,
+            }
+          })
+          .filter((employee) => employee.reviews.length > 0)
+
+        setPendingReviews(updatedReviews)
+      } else {
+        message.error(
+          `Failed to submit review: ${response.message || 'Unknown error'}`,
         )
-
-        return {
-          ...employee,
-          reviews: updatedEmployeeReviews,
-        }
-      })
-      .filter((employee) => employee.reviews.length > 0)
-
-    setPendingReviews(updatedReviews)
+        console.error('Failed to submit review:', response.message)
+      }
+    } catch (error) {
+      message.error('Error submitting review')
+      console.error('Error submitting review:', error)
+    }
   }
 
   const handleSelectEmployee = (employeeId) => {
