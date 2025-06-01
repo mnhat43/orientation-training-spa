@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import lectureApi from '@api/lecture'
 import userprogress from '@api/userprogress'
 import { useParams } from 'react-router-dom'
+import { formatCurrentDate } from '@helpers/common'
 
 const useLectureData = () => {
   const navigate = useNavigate()
@@ -128,6 +129,7 @@ const useLectureData = () => {
       const response = await userprogress.updateUserProgress({
         course_id: parseInt(courseId),
         completed: true,
+        completed_date: formatCurrentDate(),
       })
       if (response.status === 1 && response.data) {
         setCourseCompleted(true)
