@@ -55,20 +55,13 @@ const TraineeSelector = ({ selectedTrainee, setSelectedTrainee, onNext }) => {
     setSearchText(value)
   }
 
-  const resetFilters = () => {
-    setSearchText('')
-    setDepartmentFilter(null)
-  }
-
   return (
-    <div className="simple-trainee-selector">
+    <>
       <FilterBar
         searchText={searchText}
         departmentFilter={departmentFilter}
         setDepartmentFilter={setDepartmentFilter}
         onSearch={handleSearch}
-        onResetFilters={resetFilters}
-        hasActiveFilters={!!searchText || !!departmentFilter}
       />
       <TraineeTable
         trainees={filteredTrainees}
@@ -76,7 +69,7 @@ const TraineeSelector = ({ selectedTrainee, setSelectedTrainee, onNext }) => {
         setSelectedTrainee={setSelectedTrainee}
         selectedTrainee={selectedTrainee}
       />
-    </div>
+    </>
   )
 }
 

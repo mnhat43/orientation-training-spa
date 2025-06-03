@@ -1,6 +1,6 @@
 import React from 'react'
 import { Empty, Table, Button, Tooltip, Tag } from 'antd'
-import { CheckOutlined, CheckCircleFilled } from '@ant-design/icons'
+import { CheckCircleFilled } from '@ant-design/icons'
 import './TraineeTable.scss'
 
 const TraineeTable = ({
@@ -88,7 +88,7 @@ const TraineeTable = ({
   ]
 
   return (
-    <div className="trainee-table-container">
+    <div>
       <Table
         rowKey="email"
         columns={columns}
@@ -109,9 +109,7 @@ const TraineeTable = ({
           showSizeChanger: true,
           pageSizeOptions: ['5', '10', '20', '50'],
           showTotal: (total) => `Total ${total} trainees`,
-          size: 'small',
         }}
-        size="small"
         className="compact-trainee-table"
         locale={{
           emptyText: <Empty description="No trainees found" />,

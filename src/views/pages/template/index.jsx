@@ -10,6 +10,8 @@ import {
   Tooltip,
   Tag,
   Modal,
+  Row,
+  Col,
 } from 'antd'
 import {
   PlusOutlined,
@@ -20,6 +22,7 @@ import {
   BookOutlined,
   FileTextOutlined,
   ExclamationCircleOutlined,
+  SearchOutlined,
 } from '@ant-design/icons'
 import templatepath from '@api/templatepath'
 import TemplateDetails from './components/TemplateDetails'
@@ -27,7 +30,6 @@ import { formatTime } from '@helpers/common'
 import './index.scss'
 
 const { Title, Text } = Typography
-const { Search } = Input
 const { confirm } = Modal
 
 const TemplatePage = () => {
@@ -212,61 +214,56 @@ const TemplatePage = () => {
 
   return (
     <div className="template-page-container">
-      <div className="templates-content-section">
-        <div className="templates-toolbar">
-          <Search
+      <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
+        <Col xs={24} sm={24} md={16} lg={16} xl={16}>
+          <Input
             placeholder="Search templates"
             allowClear
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            onSearch={(value) => setSearchText(value)}
-            className="template-search"
-            size="middle"
+            prefix={<SearchOutlined />}
+            style={{ height: '42px' }}
           />
+        </Col>
+        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={handleAdd}
-            className="create-template-btn"
-            size="middle"
+            style={{ height: '42px' }}
           >
             Create Template
           </Button>
-        </div>
+        </Col>
+      </Row>
 
-        <div className="templates-table-container">
-          <Table
-            columns={columns}
-            dataSource={filteredTemplates}
-            rowKey="id"
-            loading={loading}
-            pagination={pagination}
-            onChange={handleTableChange}
-            className="templates-table compact-table"
-            size="small"
-            locale={{
-              emptyText: (
-                <div className="empty-table-content">
-                  <FileTextOutlined className="empty-icon" />
-                  <Title level={5}>No Templates Found</Title>
-                  <Text type="secondary">
-                    Create your first template or adjust your search criteria
-                  </Text>
-                  <Button
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    onClick={handleAdd}
-                    className="create-first-template"
-                  >
-                    Create Template
-                  </Button>
-                </div>
-              ),
-            }}
-          />
-        </div>
-      </div>
-
+      <Table
+        columns={columns}
+        dataSource={filteredTemplates}
+        rowKey="id"
+        loading={loading}
+        pagination={pagination}
+        onChange={handleTableChange}
+        locale={{
+          emptyText: (
+            <div className="empty-table-content">
+              <FileTextOutlined className="empty-icon" />
+              <Title level={5}>No Templates Found</Title>
+              <Text type="secondary">
+                Create your first template or adjust your search criteria
+              </Text>
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={handleAdd}
+                className="create-first-template"
+              >
+                Create Template
+              </Button>
+            </div>
+          ),
+        }}
+      />
       <TemplateDetails
         template={currentTemplate}
         drawerVisible={drawerVisible}

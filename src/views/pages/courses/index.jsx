@@ -173,54 +173,50 @@ const Courses = () => {
   return (
     <div className="courses-main">
       <div className="courses-container">
-        <BannerComponent
+        {/* <BannerComponent
           title="Welcome to the Training Courses"
           description="Create and manage employee orientation and training courses for your organization."
           icon={BookOutlined}
-        />
+        /> */}
 
-        <div className="filters-section">
-          <div className="filters-wrapper">
-            <div className="filters-top">
-              <div className="search-box">
-                <Input
-                  placeholder="Search courses..."
-                  prefix={<SearchOutlined />}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  value={searchQuery}
-                  allowClear
-                />
-              </div>
-
-              <div className="filters-right">
-                <div className="category-select">
-                  <Select
-                    value={filterCategory}
-                    onChange={(value) => setFilterCategory(value)}
-                    placeholder="Category"
-                    suffixIcon={<FilterOutlined />}
-                  >
-                    <Option value="all">All Categories</Option>
-                    <Option value="Onboarding">Onboarding Essentials</Option>
-                    <Option value="Company">Company Policies</Option>
-                    <Option value="Technical">Technical Skills</Option>
-                    <Option value="Soft">Soft Skills</Option>
-                    <Option value="Compliance">Compliance</Option>
-                  </Select>
-                </div>
-
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => setIsModalOpen(true)}
-                  className="create-btn"
-                >
-                  {!isMobile && 'Create Course'}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
+          <Col xs={24} sm={14} md={16} lg={16} xl={16}>
+            <Input
+              placeholder="Search courses..."
+              prefix={<SearchOutlined />}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
+              allowClear
+              style={{ height: '42px' }}
+            />
+          </Col>
+          <Col xs={12} sm={5} md={4} lg={4} xl={4}>
+            <Select
+              value={filterCategory}
+              onChange={(value) => setFilterCategory(value)}
+              placeholder="Category"
+              suffixIcon={<FilterOutlined />}
+              style={{ height: '42px', width: '100%' }}
+            >
+              <Option value="all">All Categories</Option>
+              <Option value="Onboarding">Onboarding Essentials</Option>
+              <Option value="Company">Company Policies</Option>
+              <Option value="Technical">Technical Skills</Option>
+              <Option value="Soft">Soft Skills</Option>
+              <Option value="Compliance">Compliance</Option>
+            </Select>
+          </Col>
+          <Col xs={12} sm={5} md={4} lg={4} xl={4}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalOpen(true)}
+              style={{ height: '42px' }}
+            >
+              {!isMobile && 'Create Course'}
+            </Button>
+          </Col>
+        </Row>
 
         <div className="courses-content">
           {loading ? (

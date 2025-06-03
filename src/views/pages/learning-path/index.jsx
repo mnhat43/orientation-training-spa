@@ -100,11 +100,11 @@ const MyLearningPath = () => {
   if (loading) {
     return (
       <div className="learning-path-container">
-        <BannerComponent
+        {/* <BannerComponent
           title="Your Learning Path"
           description="Follow the recommended sequence to complete your training"
           icon={CompassOutlined}
-        />
+        /> */}
         <div className="loading-container">
           <Spin size="large" />
           <p>Loading your learning path...</p>
@@ -116,11 +116,11 @@ const MyLearningPath = () => {
   if (courses.length === 0) {
     return (
       <div className="learning-path-container">
-        <BannerComponent
+        {/* <BannerComponent
           title="Your Learning Path"
           description="Follow the recommended sequence to complete your training"
           icon={CompassOutlined}
-        />
+        /> */}
         <div className="empty-path">
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -134,11 +134,11 @@ const MyLearningPath = () => {
 
   return (
     <div className="learning-path-container">
-      <BannerComponent
+      {/* <BannerComponent
         title="Your Learning Path"
         description="Follow the recommended sequence to complete your training"
         icon={CompassOutlined}
-      />
+      /> */}
 
       <div className="learning-path-content">
         <div className="progress-overview">

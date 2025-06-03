@@ -3,7 +3,7 @@
 .courses-container {
     max-width: $max-width;
     padding: 16px;
-    background-color: #f7f9fc;
+    background-color: #fff;
     box-sizing: border-box;
     margin: 0 auto;
     position: relative;
@@ -36,104 +36,6 @@
             @media (max-width: 576px) {
                 font-size: 14px;
                 text-align: center;
-            }
-        }
-    }
-
-    .filters-section {
-        margin-bottom: 24px;
-
-        .filters-wrapper {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-
-            .filters-top {
-                display: flex;
-                padding: 16px;
-                gap: 16px;
-
-                @media (max-width: 768px) {
-                    flex-direction: column;
-                }
-
-                .search-box {
-                    flex: 1;
-                    max-width: 100%;
-
-                    .ant-input-affix-wrapper {
-                        border-radius: 8px;
-                        height: 42px;
-
-                        .ant-input {
-                            font-size: 15px;
-                        }
-
-                        .ant-input-prefix {
-                            margin-right: 8px;
-                            color: #bbb;
-                        }
-                    }
-                }
-
-                .filters-right {
-                    display: flex;
-                    gap: 12px;
-
-                    @media (max-width: 480px) {
-                        flex-direction: column;
-                    }
-
-                    .category-select {
-                        width: 220px;
-
-                        @media (max-width: 768px) {
-                            width: 100%;
-                        }
-
-                        .ant-select {
-                            width: 100%;
-
-                            .ant-select-selector {
-                                height: 42px;
-                                border-radius: 8px;
-                                padding: 0 12px;
-                                display: flex;
-                                align-items: center;
-                            }
-                        }
-                    }
-
-                    .create-btn {
-                        height: 42px;
-                        min-width: 42px;
-                        border-radius: 8px;
-                        background-color: #4caf50;
-                        border-color: #4caf50;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        padding: 0 16px;
-                        font-weight: 500;
-                        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-
-                        &:hover {
-                            background-color: #388e3c;
-                            border-color: #388e3c;
-                            transform: translateY(-2px);
-                            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
-                        }
-
-                        &:active {
-                            transform: translateY(0);
-                        }
-
-                        @media (max-width: 480px) {
-                            width: 100%;
-                        }
-                    }
-                }
             }
         }
     }

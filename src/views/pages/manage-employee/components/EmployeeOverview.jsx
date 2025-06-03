@@ -175,14 +175,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
 
   return (
     <>
-      <Card
-        title={
-          <Space>
-            <DashboardOutlined />
-            <span>Employee Management</span>
-          </Space>
-        }
-      >
+      <>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Input
@@ -191,6 +184,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               allowClear
+              style={{ height: '42px' }}
             />
           </Col>
           <Col xs={8} sm={8} md={4} lg={4} xl={4}>
@@ -199,7 +193,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
               value={departmentFilter}
               onChange={setDepartmentFilter}
               suffixIcon={<BarsOutlined />}
-              style={{ width: '100%' }}
+              style={{ height: '42px', width: '100%' }}
             >
               <Option value="all">All Departments</Option>
               {DEPARTMENT_NAMES.map((dept) => (
@@ -215,7 +209,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
               value={statusFilter}
               onChange={setStatusFilter}
               suffixIcon={<FilterOutlined />}
-              style={{ width: '100%' }}
+              style={{ height: '42px', width: '100%' }}
             >
               <Option value="all">All Statuses</Option>
               {Object.values(STATUS_PROGRESS).map((status) => (
@@ -230,6 +224,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
               type="primary"
               icon={<UserAddOutlined />}
               onClick={() => setAddEmployeeVisible(true)}
+              style={{ height: '42px' }}
             >
               Add Employee
             </Button>
@@ -256,7 +251,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
             ),
           }}
         />
-      </Card>
+      </>
 
       <AddEmployeeForm
         visible={addEmployeeVisible}
