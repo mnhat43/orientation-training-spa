@@ -19,9 +19,7 @@ import {
   CalendarOutlined,
   TrophyOutlined,
   BookOutlined,
-  ClockCircleOutlined,
   CheckCircleOutlined,
-  BarChartOutlined,
   FieldTimeOutlined,
 } from '@ant-design/icons'
 import './ProfileSummary.scss'
@@ -108,13 +106,11 @@ const ProfileSummary = ({ userInfo, processStats }) => {
                 }
                 strokeColor={getProgressColor(processStats.percent)}
                 strokeWidth={10}
-                width={160}
                 format={(percent) => (
                   <div className="progress-circle-content">
                     <span className="progress-percent">
                       {percent.toFixed(2)}%
                     </span>
-                    <span className="progress-label">Completed</span>
                   </div>
                 )}
                 className="main-progress-circle"
@@ -147,7 +143,6 @@ const ProfileSummary = ({ userInfo, processStats }) => {
           <Progress
             type="circle"
             percent={+scorePercentage.toFixed(2)}
-            width={100}
             format={(percent) => (
               <div className="score-circle-content">
                 <span className="score-percent">{percent.toFixed(2)}%</span>

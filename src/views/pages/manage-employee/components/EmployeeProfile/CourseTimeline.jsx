@@ -374,7 +374,6 @@ const CourseTimeline = ({
         </div>
       }
       className="courses-card"
-      bordered={false}
     >
       <Timeline
         mode="left"

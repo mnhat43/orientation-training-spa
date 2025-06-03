@@ -267,9 +267,4 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
   )
 }
 
-// Set default props
-EmployeeOverview.defaultProps = {
-  onRefreshNeeded: () => {},
-}
-
 export default EmployeeOverview
