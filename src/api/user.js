@@ -17,6 +17,10 @@ const user = {
     const url = '/user/register'
     return API.post(url, credentials)
   },
+  employeeDetails: (user_id) => {
+    const url = `/user/employee-detail`
+    return API.post(url, user_id)
+  },
   logout: () => {
     localStorage.removeItem('user')
     localStorage.removeItem('token')

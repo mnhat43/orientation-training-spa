@@ -22,12 +22,18 @@ import {
   BookOutlined,
   CommentOutlined,
   EditOutlined,
+  FileSearchOutlined,
+  InfoCircleOutlined,
 } from '@ant-design/icons'
 import './CourseTimeline.scss'
 
 const { Text } = Typography
 
-const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
+const CourseTimeline = ({
+  processInfo,
+  handleCreateAssessment,
+  setActiveTab,
+}) => {
   const [assessingCourseId, setAssessingCourseId] = useState(null)
   const [form] = Form.useForm()
 
@@ -41,28 +47,11 @@ const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
           </div>
         }
         className="courses-card"
-        bordered={false}
       >
         <Empty description="No courses found for this employee" />
       </Card>
     )
   }
-
-  const completedCourses = processInfo.filter(
-    (course) => course.status === 'completed',
-  )
-  const inProgressCourses = processInfo.filter(
-    (course) => course.status === 'in_progress',
-  )
-  const lockedCourses = processInfo.filter(
-    (course) => course.status === 'locked' || course.status === 'not_started',
-  )
-
-  const orderedCourses = [
-    ...completedCourses,
-    ...inProgressCourses,
-    ...lockedCourses,
-  ]
 
   const submitAssessment = (courseTitle, values) => {
     handleCreateAssessment(courseTitle, values)
@@ -122,18 +111,28 @@ const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
   }
 
   const generateTimelineItems = () => {
-    return orderedCourses.map((course, index) => {
+    return processInfo.map((course, index) => {
       const isAvailable =
-        index === 0 || orderedCourses[index - 1].status === 'completed'
+        index === 0 || processInfo[index - 1].status === 'completed'
 
       if (course.status === 'completed') {
+        const hasPendingReviews = course.pendingReviews > 0
+        // Check if course has score information
+        const hasScoreInfo =
+          typeof course.userScore === 'number' &&
+          typeof course.totalScore === 'number'
+
         return {
           key: course.course_id,
           dot: <CheckCircleOutlined className="timeline-dot completed" />,
-          color: course.hasAssessment ? 'green' : 'orange',
+          color: course.hasAssessment
+            ? 'green'
+            : hasPendingReviews
+              ? 'gold'
+              : 'orange',
           children: (
             <Card
-              className={`timeline-course-card completed ${!course.hasAssessment ? 'needs-assessment' : ''}`}
+              className={`timeline-course-card completed ${!course.hasAssessment ? 'needs-assessment' : ''} ${hasPendingReviews ? 'has-pending-reviews' : ''}`}
             >
               <div className="course-header">
                 <div className="course-badge">
@@ -149,21 +148,33 @@ const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
                     ) : (
                       <Tag color="warning">Needs Assessment</Tag>
                     )}
+                    {hasPendingReviews && (
+                      <Tag color="volcano">
+                        Pending Reviews: {course.pendingReviews}
+                      </Tag>
+                    )}
                   </div>
                   <Text strong className="course-title">
                     {course.course_title}
                   </Text>
                   <div className="course-meta">
-                    <Badge
-                      status={
-                        course.userScore / course.totalScore >= 0.8
-                          ? 'success'
-                          : course.userScore / course.totalScore >= 0.6
-                            ? 'warning'
-                            : 'error'
-                      }
-                      text={`Score: ${course.userScore}/${course.totalScore}`}
-                    />
+                    {hasPendingReviews ? (
+                      <Badge
+                        status="warning"
+                        text={`${course.pendingReviews} submissions need review`}
+                      />
+                    ) : hasScoreInfo ? (
+                      <Badge
+                        status={
+                          course.userScore / course.totalScore >= 0.8
+                            ? 'success'
+                            : course.userScore / course.totalScore >= 0.6
+                              ? 'warning'
+                              : 'error'
+                        }
+                        text={`Score: ${course.userScore}/${course.totalScore}`}
+                      />
+                    ) : null}
                     <span className="completion-date">
                       Completed: {course.completedDate}
                     </span>
@@ -187,7 +198,7 @@ const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
                       <Text type="secondary">Performance Rating:</Text>
                       <Rate
                         disabled
-                        defaultValue={course.assessment.rating}
+                        defaultValue={course.assessment.performance_rating}
                         allowHalf
                         className="learner-rating"
                       />
@@ -195,14 +206,30 @@ const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
 
                     <div className="feedback-box">
                       <Text italic className="feedback-text">
-                        "{course.assessment.feedback}"
+                        "{course.assessment.performance_comment}"
                       </Text>
                       <div className="feedback-author">
                         <UserOutlined className="author-icon" />
-                        <Text type="secondary">{course.assessment.author}</Text>
+                        <Text type="secondary">
+                          {course.assessment.reviewer_name}
+                        </Text>
                       </div>
                     </div>
                   </div>
+
+                  {hasPendingReviews && (
+                    <div className="pending-reviews-notice">
+                      <Divider style={{ margin: '12px 0' }} />
+                      <Button
+                        type="primary"
+                        icon={<FileSearchOutlined />}
+                        onClick={() => setActiveTab(2)}
+                        block
+                      >
+                        Review {course.pendingReviews} Pending Submissions
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="assessment-section">
@@ -210,21 +237,43 @@ const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
                     renderAssessmentForm(course)
                   ) : (
                     <div className="assessment-needed compact">
-                      <Space>
-                        <Text className="assessment-prompt">
-                          Please provide your assessment for this completed
-                          course
-                        </Text>
-                        <Button
-                          type="primary"
-                          size="small"
-                          icon={<EditOutlined />}
-                          onClick={() => setAssessingCourseId(course.course_id)}
-                          className="assessment-button"
-                        >
-                          Assess
-                        </Button>
-                      </Space>
+                      {hasPendingReviews ? (
+                        <div className="pending-review-notice">
+                          <Text type="warning">
+                            <InfoCircleOutlined
+                              style={{ marginRight: '8px' }}
+                            />
+                            You must complete all pending reviews before
+                            assessment.
+                          </Text>
+                          <Button
+                            type="primary"
+                            icon={<FileSearchOutlined />}
+                            onClick={() => setActiveTab(2)}
+                            className="review-first-button"
+                          >
+                            Review {course.pendingReviews} Submissions First
+                          </Button>
+                        </div>
+                      ) : (
+                        <Space>
+                          <Text className="assessment-prompt">
+                            Please provide your assessment for this completed
+                            course
+                          </Text>
+                          <Button
+                            type="primary"
+                            size="small"
+                            icon={<EditOutlined />}
+                            onClick={() =>
+                              setAssessingCourseId(course.course_id)
+                            }
+                            className="assessment-button"
+                          >
+                            Assess
+                          </Button>
+                        </Space>
+                      )}
                     </div>
                   )}
                 </div>
@@ -305,7 +354,7 @@ const CourseTimeline = ({ processInfo, handleCreateAssessment }) => {
               <div className="locked-message">
                 <Text type="secondary">
                   {index > 0
-                    ? `Complete "${orderedCourses[index - 1].course_title}" to unlock this course`
+                    ? `Complete "${processInfo[index - 1].course_title}" to unlock this course`
                     : 'This course is currently locked'}
                 </Text>
               </div>

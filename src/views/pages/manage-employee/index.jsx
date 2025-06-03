@@ -179,7 +179,12 @@ const ManageEmployees = () => {
               : `Employee #${selectedEmployeeId}`}
           </span>
         ),
-        children: <EmployeeProfile userId={selectedEmployeeId} />,
+        children: (
+          <EmployeeProfile
+            userId={selectedEmployeeId}
+            setActiveTab={setActiveTab}
+          />
+        ),
         closable: true,
       })
     }

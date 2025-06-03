@@ -82,58 +82,53 @@ const ProfileSummary = ({ userInfo, processStats }) => {
       </div>
 
       <div className="progress-section">
-        <Row gutter={[0, 24]} justify="center" align="middle">
-          <Col span={24}>
-            <div className="progress-container">
-              <div className="progress-header">
-                <Text strong className="section-title">
-                  <BookOutlined /> Learning Progress
-                </Text>
-                <Text className="progress-percentage">
-                  {processStats.percent}%
-                </Text>
-              </div>
-              <Progress
-                percent={processStats.percent}
-                showInfo={false}
-                strokeColor={getProgressColor(processStats.percent)}
-                className="main-progress-bar"
-              />
-            </div>
-          </Col>
-        </Row>
+        <div className="section-header">
+          <BookOutlined className="section-icon" />
+          <Text strong className="section-title">
+            Learning Progress
+          </Text>
+        </div>
 
-        <Row gutter={[16, 16]} className="stats-row">
-          <Col span={8}>
-            <div className="stat-card completed">
-              <CheckCircleOutlined className="stat-icon" />
-              <Statistic
-                title="Completed"
-                value={processStats.completedCourses}
-                suffix={`/${processStats.completedCourses + processStats.inProgressCourses + processStats.pendingProgress}`}
-                valueStyle={{ color: '#52c41a' }}
+        <Row
+          gutter={[24, 24]}
+          justify="center"
+          align="middle"
+          className="progress-content"
+        >
+          <Col xs={24} sm={16} md={14} className="progress-circle-col">
+            <div className="progress-container">
+              <Progress
+                type="circle"
+                percent={
+                  +(
+                    (processStats.completedCourses /
+                      processStats.totalCourses) *
+                    100
+                  ).toFixed(2)
+                }
+                strokeColor={getProgressColor(processStats.percent)}
+                strokeWidth={10}
+                width={160}
+                format={(percent) => (
+                  <div className="progress-circle-content">
+                    <span className="progress-percent">
+                      {percent.toFixed(2)}%
+                    </span>
+                    <span className="progress-label">Completed</span>
+                  </div>
+                )}
+                className="main-progress-circle"
               />
             </div>
           </Col>
-          <Col span={8}>
-            <div className="stat-card in-progress">
-              <BarChartOutlined className="stat-icon" />
-              <Statistic
-                title="In Progress"
-                value={processStats.inProgressCourses}
-                valueStyle={{ color: '#1890ff' }}
-              />
-            </div>
-          </Col>
-          <Col span={8}>
-            <div className="stat-card pending">
-              <ClockCircleOutlined className="stat-icon" />
-              <Statistic
-                title="Pending"
-                value={processStats.pendingProgress}
-                valueStyle={{ color: '#faad14' }}
-              />
-            </div>
+          <Col xs={24} sm={8} md={10} className="progress-stats">
+            <CheckCircleOutlined className="stat-icon" />
+            <Statistic
+              title="Courses Completed"
+              value={processStats.completedCourses}
+              suffix={`/${processStats.totalCourses}`}
+              valueStyle={{ color: '#52c41a' }}
+            />
           </Col>
         </Row>
       </div>
@@ -151,12 +146,11 @@ const ProfileSummary = ({ userInfo, processStats }) => {
         <div className="score-display">
           <Progress
             type="circle"
-            percent={scorePercentage}
+            percent={+scorePercentage.toFixed(2)}
             width={100}
             format={(percent) => (
               <div className="score-circle-content">
-                <span className="score-percent">{percent}%</span>
-                <span className="score-label">Score</span>
+                <span className="score-percent">{percent.toFixed(2)}%</span>
               </div>
             )}
             strokeColor={getProgressColor(scorePercentage)}
@@ -204,10 +198,10 @@ const ProfileSummary = ({ userInfo, processStats }) => {
             <CalendarOutlined className="detail-icon" />
             <Text>Joined: {userInfo.joinedDate || 'Not available'}</Text>
           </div>
-          {userInfo.completionDate && (
+          {processStats.completedDate && (
             <div className="detail-item">
               <CheckCircleOutlined className="detail-icon" />
-              <Text>Completed: {userInfo.completionDate}</Text>
+              <Text>Completed: {processStats.completedDate}</Text>
             </div>
           )}
         </div>

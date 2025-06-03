@@ -12,102 +12,126 @@
 
             .profile-avatar-container {
                 position: relative;
-                margin-bottom: 16px;
 
                 .profile-avatar {
                     border: 4px solid #f0f2f5;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 }
-
-                .avatar-badge {
-                    position: absolute;
-                    bottom: 0;
-                    right: 0;
-                    background-color: #52c41a;
-                    color: white;
-                    width: 28px;
-                    height: 28px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border: 2px solid #fff;
-
-                    .anticon {
-                        font-size: 14px;
-                    }
-                }
-            }
-
-            .profile-info {
-                .username {
-                    margin-bottom: 8px;
-                }
             }
         }
 
         .progress-section {
-            margin-bottom: 16px;
+            margin-bottom: 30px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.03);
+
+            .section-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+
+                .section-icon {
+                    color: #1890ff;
+                    font-size: 20px;
+                    margin-right: 10px;
+                }
+
+                .section-title {
+                    font-size: 18px;
+                    color: #333;
+                }
+            }
+
+            .progress-content {
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .progress-circle-col {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-right: 1px solid #f0f0f0;
+
+                @media (max-width: 576px) {
+                    border-right: none;
+                    border-bottom: 1px solid #f0f0f0;
+                    padding-bottom: 20px;
+                    margin-bottom: 20px;
+                }
+            }
 
             .progress-container {
-                margin-bottom: 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
 
-                .progress-header {
+                .progress-circle-content {
                     display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 8px;
+                    flex-direction: column;
                     align-items: center;
 
-                    .progress-percentage {
-                        font-size: 16px;
-                        font-weight: 500;
+                    .progress-percent {
+                        font-size: 28px;
+                        font-weight: 600;
+                        line-height: 1.2;
+                    }
+
+                    .progress-label {
+                        font-size: 14px;
+                        color: rgba(0, 0, 0, 0.45);
                     }
                 }
 
-                .main-progress-bar {
-                    .ant-progress-bg {
-                        border-radius: 4px;
+                .main-progress-circle {
+                    .ant-progress-text {
+                        font-family: "Roboto", sans-serif;
                     }
                 }
             }
 
-            .stats-row {
-                .stat-card {
-                    background-color: #f9f9f9;
-                    padding: 12px;
-                    border-radius: 8px;
-                    text-align: center;
-                    transition: transform 0.2s ease;
+            .progress-stats {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
 
-                    &:hover {
-                        transform: translateY(-3px);
-                    }
+                .stat-icon {
+                    font-size: 32px;
+                    color: #52c41a;
+                    margin-bottom: 12px;
+                }
 
-                    .stat-icon {
-                        font-size: 20px;
-                        margin-bottom: 4px;
-                    }
-
-                    &.completed .stat-icon {
-                        color: #52c41a;
-                    }
-
-                    &.in-progress .stat-icon {
-                        color: #1890ff;
-                    }
-
-                    &.pending .stat-icon {
-                        color: #faad14;
-                    }
+                .ant-statistic {
+                    margin-bottom: 16px;
 
                     .ant-statistic-title {
-                        font-size: 12px;
-                        margin-bottom: 0;
+                        font-size: 16px;
+                        margin-bottom: 8px;
+                        color: #555;
                     }
 
                     .ant-statistic-content {
-                        font-size: 16px;
+                        font-size: 24px;
+
+                        .ant-statistic-content-suffix {
+                            font-size: 16px;
+                            color: rgba(0, 0, 0, 0.45);
+                            margin-left: 4px;
+                        }
                     }
+                }
+
+                .completion-status {
+                    padding: 6px 12px;
+                    border-radius: 15px;
+                    font-size: 14px;
                 }
             }
         }

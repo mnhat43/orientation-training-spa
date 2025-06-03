@@ -2,25 +2,23 @@ import React, { useState, useEffect } from 'react'
 import { Row, Col, Form, Spin } from 'antd'
 import ProfileSummary from './ProfileSummary'
 import CourseTimeline from './CourseTimeline'
-import { mockEmployeeDetail } from '../../data/mockData'
 import './index.scss'
+import userApi from '@/api/user'
 
-const EmployeeProfile = ({ userId }) => {
+const EmployeeProfile = ({ userId, setActiveTab }) => {
   const [employeeData, setEmployeeData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [form] = Form.useForm()
 
   useEffect(() => {
     if (userId) {
-      const fetchEmployeeData = () => {
+      const fetchEmployeeData = async () => {
         setLoading(true)
         try {
-          const foundEmployee = mockEmployeeDetail.find(
-            (emp) => emp.userInfo.id === userId,
-          )
+          const response = await userApi.employeeDetails({ user_id: userId })
 
-          if (foundEmployee) {
-            setEmployeeData(foundEmployee)
+          if (response && response.data && response.status === 1) {
+            setEmployeeData(response.data)
           } else {
             console.error(`Employee data with ID ${userId} not found`)
           }
@@ -71,6 +69,7 @@ const EmployeeProfile = ({ userId }) => {
           <CourseTimeline
             processInfo={employeeData.processInfo}
             handleCreateAssessment={handleCreateAssessment}
+            setActiveTab={setActiveTab}
           />
         </Col>
       </Row>
