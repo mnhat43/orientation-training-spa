@@ -25,6 +25,10 @@ const userprogress = {
     const url = '/user-progress/add-list-trainee-to-course'
     return API.post(url, courseID)
   },
+  reviewProgress: (progressData) => {
+    const url = '/user-progress/review-progress'
+    return API.post(url, progressData)
+  },
 }
 
 export default userprogress

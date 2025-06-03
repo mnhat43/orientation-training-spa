@@ -53,8 +53,8 @@ const CourseTimeline = ({
     )
   }
 
-  const submitAssessment = (courseTitle, values) => {
-    handleCreateAssessment(courseTitle, values)
+  const submitAssessment = (courseId, values) => {
+    handleCreateAssessment(courseId, values)
     setAssessingCourseId(null)
     form.resetFields()
   }
@@ -70,11 +70,11 @@ const CourseTimeline = ({
         <Form
           form={form}
           layout="vertical"
-          onFinish={(values) => submitAssessment(course.course_title, values)}
-          initialValues={{ rating: 4 }}
+          onFinish={(values) => submitAssessment(course.course_id, values)}
+          initialValues={{ performance_rating: 4 }}
         >
           <Form.Item
-            name="rating"
+            name="performance_rating"
             label={
               <span className="rating-label">
                 How would you rate this course completion?
@@ -86,7 +86,7 @@ const CourseTimeline = ({
           </Form.Item>
 
           <Form.Item
-            name="feedback"
+            name="performance_comment"
             label={<span className="feedback-label">Feedback</span>}
             rules={[{ required: true, message: 'Please provide feedback' }]}
           >
@@ -117,7 +117,6 @@ const CourseTimeline = ({
 
       if (course.status === 'completed') {
         const hasPendingReviews = course.pendingReviews > 0
-        // Check if course has score information
         const hasScoreInfo =
           typeof course.userScore === 'number' &&
           typeof course.totalScore === 'number'
