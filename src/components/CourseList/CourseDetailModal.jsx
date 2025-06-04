@@ -39,21 +39,25 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
         return <FilePdfOutlined style={{ color: '#f5222d' }} />
       case 'document':
         return <FileTextOutlined style={{ color: '#52c41a' }} />
+      case 'quiz':
+        return <FileOutlined style={{ color: '#722ed1' }} />
       case 'file':
       default:
         return <FileOutlined style={{ color: '#52c41a' }} />
     }
   }
 
-  const totalModules = course.modules?.length || 0
+  const { title, description, category, duration, modules } = course
+
+  const totalModules = modules?.length || 0
   const totalItems =
-    course.modules?.reduce(
+    modules?.reduce(
       (count, module) => count + (module.module_items?.length || 0),
       0,
     ) || 0
 
   const collapseItems =
-    course?.modules?.map((module, moduleIndex) => ({
+    modules?.map((module, moduleIndex) => ({
       key: moduleIndex.toString(),
       label: (
         <Space className="module-header">
@@ -80,12 +84,14 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
                     <span className="item-name">
                       {item.position}. {item.title}
                     </span>
-                    <Tooltip title="Duration">
-                      <span className="item-duration">
-                        <ClockCircleOutlined style={{ marginRight: 4 }} />
-                        {formatTime(item.duration)}
-                      </span>
-                    </Tooltip>
+                    {item.item_type !== 'quiz' && (
+                      <Tooltip title="Duration">
+                        <span className="item-duration">
+                          <ClockCircleOutlined style={{ marginRight: 4 }} />
+                          {formatTime(item.duration)}
+                        </span>
+                      </Tooltip>
+                    )}
                   </div>
                 }
                 description={
@@ -98,7 +104,9 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
                             ? 'blue'
                             : item.item_type === 'pdf'
                               ? 'red'
-                              : 'green'
+                              : item.item_type === 'quiz'
+                                ? 'purple'
+                                : 'green'
                         }
                         className="item-type-tag"
                         icon={
@@ -151,20 +159,17 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
         <div className="course-header">
           <Title level={4} className="course-title">
             {' '}
-            {course.title}
+            {title}
           </Title>
 
           <Space size="small" className="course-meta-info">
             {' '}
-            <Tag
-              color={CATEGORY_COLORS[course.category]}
-              className="category-tag"
-            >
-              {CATEGORIES[course.category]}
+            <Tag color={CATEGORY_COLORS[category]} className="category-tag">
+              {CATEGORIES[category]}
             </Tag>
             <span className="duration-info">
               <ClockCircleOutlined className="meta-icon" />{' '}
-              {formatTime(course.duration)}
+              {formatTime(duration)}
             </span>
             {totalModules > 0 && (
               <span className="modules-info">
@@ -181,15 +186,13 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
           </Space>
         </div>
 
-        {course.description && (
+        {description && (
           <div className="course-description">
             <Divider orientation="left" orientationMargin="0" plain>
               {' '}
               <span className="divider-title">Description</span>
             </Divider>
-            <Paragraph className="description-text">
-              {course.description}
-            </Paragraph>
+            <Paragraph className="description-text">{description}</Paragraph>
           </div>
         )}
 
