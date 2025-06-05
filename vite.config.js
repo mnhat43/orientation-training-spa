@@ -22,7 +22,7 @@ export default defineConfig({
   },
   plugins: [react()],
   server: {
-    allowedHosts: ['orientation-training.local'],
+    allowedHosts: ['orientation-training.local', 'dungct.navistar.io'],
     watch: {
       usePolling: true,
     },
