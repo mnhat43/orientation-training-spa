@@ -37,7 +37,7 @@ const BreadcrumbNavigation = () => {
     if (currentUser && currentUser.role_id === ROLES.MANAGER) {
       navigate('/courses')
     } else {
-      navigate('/my-learning-path')
+      navigate('/dashboard')
     }
   }
 
@@ -54,7 +54,7 @@ const BreadcrumbNavigation = () => {
         })
       } else {
         breadcrumbItems.push({
-          title: <Link to="/my-learning-path">My Learning Path</Link>,
+          title: <Link to="/dashboard">My Learning Path</Link>,
         })
       }
     }

@@ -24,8 +24,6 @@ const Lectures = () => {
   const lastUnlockedLecture = handleGetLastUnlockedLecture()
   const lastLecture = handleGetLastLecture()
 
-  console.log('lastUnlockedLecture:', lastUnlockedLecture)
-
   const itemType = selectedLecture?.item_type || ''
 
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
