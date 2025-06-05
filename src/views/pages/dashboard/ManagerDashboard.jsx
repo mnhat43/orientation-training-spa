@@ -254,7 +254,7 @@ const ManagerDashboard = () => {
 
       <Row gutter={[16, 16]} className="stats-row">
         <Col xs={24} md={8}>
-          <Card bordered={false} className="stat-card">
+          <Card className="stat-card">
             <Statistic
               title="Course Management"
               value={courseStatistics.total}
@@ -279,7 +279,7 @@ const ManagerDashboard = () => {
         </Col>
 
         <Col xs={24} md={8}>
-          <Card bordered={false} className="stat-card">
+          <Card className="stat-card">
             <Statistic
               title="User Enrollment"
               value={userStatistics.total}
@@ -300,7 +300,7 @@ const ManagerDashboard = () => {
         </Col>
 
         <Col xs={24} md={8}>
-          <Card bordered={false} className="stat-card">
+          <Card className="stat-card">
             <Statistic
               title="Quiz Performance"
               value={quizStatistics.avgScore}
@@ -330,7 +330,6 @@ const ManagerDashboard = () => {
                 <span>Top Courses</span>
               </Space>
             }
-            bordered={false}
           >
             <Table
               dataSource={topCourses.slice(0, 3)}
@@ -350,7 +349,6 @@ const ManagerDashboard = () => {
                 <span>Quiz Performance</span>
               </Space>
             }
-            bordered={false}
           >
             <Table
               dataSource={quizPerformanceData.slice(0, 3)}
@@ -372,7 +370,6 @@ const ManagerDashboard = () => {
                 <span>Employee Progress</span>
               </Space>
             }
-            bordered={false}
           >
             <Table
               dataSource={userProgressData.slice(0, 4)}
@@ -392,12 +389,11 @@ const ManagerDashboard = () => {
                 <span>Module Completion</span>
               </Space>
             }
-            bordered={false}
           >
             <Row gutter={[16, 16]}>
               {moduleCompletionData.slice(0, 4).map((module, index) => (
                 <Col xs={24} sm={12} key={index}>
-                  <Card size="small" bordered={false} className="module-card">
+                  <Card size="small" className="module-card">
                     <Text strong>{module.module}</Text>
                     <div
                       style={{
@@ -434,7 +430,6 @@ const ManagerDashboard = () => {
                 <span>Course Engagement Overview</span>
               </Space>
             }
-            bordered={false}
           >
             <Row gutter={[32, 16]}>
               <Col xs={24} sm={8}>

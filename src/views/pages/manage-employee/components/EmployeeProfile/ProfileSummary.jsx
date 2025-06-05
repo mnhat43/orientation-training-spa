@@ -53,7 +53,6 @@ const ProfileSummary = ({ userInfo, processStats }) => {
   return (
     <Card
       className="profile-card"
-      bordered={false}
       style={{
         borderRadius: '12px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.08)',

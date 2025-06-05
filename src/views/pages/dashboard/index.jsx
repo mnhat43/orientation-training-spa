@@ -11,8 +11,22 @@ const Dashboard = () => {
 
   if (!currentUser) {
     return (
-      <div className="dashboard-loading">
-        <Spin size="large" tip="Loading dashboard..." />
+      <div
+        className="dashboard-loading"
+        style={{ textAlign: 'center', padding: '50px' }}
+      >
+        <Spin size="large">
+          <div
+            className="loading-content"
+            style={{
+              padding: '50px',
+              background: 'rgba(0, 0, 0, 0.05)',
+              borderRadius: '4px',
+            }}
+          >
+            Loading dashboard...
+          </div>
+        </Spin>
       </div>
     )
   }

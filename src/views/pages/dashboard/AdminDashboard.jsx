@@ -42,7 +42,7 @@ const AdminDashboard = () => {
 
       <Row gutter={[16, 16]} className="stats-row">
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false} className="stat-card">
+          <Card className="stat-card">
             <Statistic
               title="Total Users"
               value={248}
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false} className="stat-card">
+          <Card className="stat-card">
             <Statistic
               title="New Employees"
               value={18}
@@ -66,7 +66,7 @@ const AdminDashboard = () => {
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false} className="stat-card">
+          <Card className="stat-card">
             <Statistic
               title="Departments"
               value={12}
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card bordered={false} className="stat-card">
+          <Card className="stat-card">
             <Statistic
               title="System Health"
               value={99.8}
@@ -91,11 +91,7 @@ const AdminDashboard = () => {
 
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
-          <Card
-            title="User Management"
-            bordered={false}
-            className="action-card"
-          >
+          <Card title="User Management" className="action-card">
             <Space direction="vertical" style={{ width: '100%' }}>
               <Button type="primary" icon={<PlusOutlined />} block>
                 Add User
@@ -111,7 +107,6 @@ const AdminDashboard = () => {
 
           <Card
             title="Recent Activity"
-            bordered={false}
             className="recent-activity-card"
             style={{ marginTop: '16px' }}
           >
@@ -132,11 +127,7 @@ const AdminDashboard = () => {
         </Col>
 
         <Col xs={24} lg={12}>
-          <Card
-            title="System Overview"
-            bordered={false}
-            className="system-overview-card"
-          >
+          <Card title="System Overview" className="system-overview-card">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={8}>
                 <Card className="system-status-card">
