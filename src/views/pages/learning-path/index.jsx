@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Spin, Empty } from 'antd'
-import { CompassOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import courseApi from '@api/course'
 import { toast } from 'react-toastify'
-import BannerComponent from '@components/Banner/index.jsx'
 import { ROLES } from '@constants'
 import './learning-path.scss'
 
@@ -100,11 +98,6 @@ const MyLearningPath = () => {
   if (loading) {
     return (
       <div className="learning-path-container">
-        {/* <BannerComponent
-          title="Your Learning Path"
-          description="Follow the recommended sequence to complete your training"
-          icon={CompassOutlined}
-        /> */}
         <div className="loading-container">
           <Spin size="large" />
           <p>Loading your learning path...</p>
@@ -116,11 +109,6 @@ const MyLearningPath = () => {
   if (courses.length === 0) {
     return (
       <div className="learning-path-container">
-        {/* <BannerComponent
-          title="Your Learning Path"
-          description="Follow the recommended sequence to complete your training"
-          icon={CompassOutlined}
-        /> */}
         <div className="empty-path">
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -134,12 +122,6 @@ const MyLearningPath = () => {
 
   return (
     <div className="learning-path-container">
-      {/* <BannerComponent
-        title="Your Learning Path"
-        description="Follow the recommended sequence to complete your training"
-        icon={CompassOutlined}
-      /> */}
-
       <div className="learning-path-content">
         <div className="progress-overview">
           <div className="overview-layout">

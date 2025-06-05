@@ -118,7 +118,45 @@
             }
         }
     }
+
+    .course-assessment {
+        margin-top: 12px;
+        padding: 8px;
+        background-color: #f9f9f9;
+        border-left: 3px solid #1890ff;
+        border-radius: 3px;
+
+        h4 {
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .assessment-rating {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .assessment-comment {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 6px;
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+
+        .assessment-reviewer {
+            text-align: right;
+            font-size: 0.9em;
+            color: #888;
+        }
+    }
 }
+
 #root
     > div.ant-layout.main-layout.css-dev-only-do-not-override-1m63z2v
     > main

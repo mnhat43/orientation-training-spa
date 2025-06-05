@@ -5,9 +5,8 @@ const auth = {
     const url = '/auth/login'
     return API.post(url, params)
   },
-  register: (credentials) => {
-    const url = '/auth/signup'
-    return API.post(url, credentials)
+  logout: () => {
+    localStorage.removeItem('token')
   },
 }
 

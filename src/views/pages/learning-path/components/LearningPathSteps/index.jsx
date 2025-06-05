@@ -1,10 +1,11 @@
 import React from 'react'
-import { Steps, Tag, Tooltip, Button } from 'antd'
+import { Steps, Tag, Tooltip, Button, Rate } from 'antd'
 import {
   LockOutlined,
   CheckCircleOutlined,
   RightCircleOutlined,
   ClockCircleOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
 import { CATEGORY_COLORS } from '@constants'
 import './learning-path-steps.scss'
@@ -60,6 +61,11 @@ const LearningPathSteps = ({
       >
         {courses.map((course, index) => {
           const courseStatus = getCourseStatus(course, index)
+          const hasAssessment =
+            courseStatus.status === 'completed' &&
+            course.assessment &&
+            course.assessment.performance_rating
+
           return (
             <Step
               key={course.course_id}
@@ -107,6 +113,29 @@ const LearningPathSteps = ({
                         </span>
                       )}
                     </div>
+
+                    {hasAssessment && (
+                      <div className="course-assessment">
+                        <h4>Trainer Assessment</h4>
+                        <div className="assessment-rating">
+                          <span>Performance Rating: </span>
+                          <Rate
+                            disabled
+                            defaultValue={course.assessment.performance_rating}
+                          />
+                        </div>
+                        {course.assessment.performance_comment && (
+                          <div className="assessment-comment">
+                            <p>"{course.assessment.performance_comment}"</p>
+                          </div>
+                        )}
+                        {course.assessment.reviewer_name && (
+                          <div className="assessment-reviewer">
+                            <UserOutlined /> {course.assessment.reviewer_name}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="course-actions">
                     {!courseStatus.locked && (
