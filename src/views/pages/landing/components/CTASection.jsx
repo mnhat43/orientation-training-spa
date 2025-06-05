@@ -47,9 +47,9 @@ const CTASection = () => {
 
           <Col xs={24} sm={24} md={8} lg={8}>
             <div className="footer-about">
-              <Title level={3}>About OrienHub</Title>
+              <Title level={3}>About OrientHub</Title>
               <Paragraph>
-                OrienHub provides a comprehensive training platform that makes
+                OrientHub provides a comprehensive training platform that makes
                 learning accessible, engaging, and effective for organizations
                 of all sizes.
               </Paragraph>
@@ -94,7 +94,7 @@ const CTASection = () => {
         </Row>
 
         <div className="footer-copyright">
-          <Text>OrienHub © 2025 All Rights Reserved</Text>
+          <Text>OrientHub © 2025 All Rights Reserved</Text>
         </div>
       </div>
     </Footer>

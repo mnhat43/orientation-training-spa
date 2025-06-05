@@ -44,12 +44,12 @@ function LoginPage() {
       <div className="login-card">
         <div className="login-logo">
           <CompassOutlined className="logo-icon" />
-          <h1 className="logo-text">OrienHub</h1>
+          <h1 className="logo-text">OrientHub</h1>
         </div>
 
         <div className="login-form-container">
           <h2 className="login-heading">Welcome Back</h2>
-          <p className="login-subheading">Sign in to your OrienHub account</p>
+          <p className="login-subheading">Sign in to your OrientHub account</p>
 
           <Form
             layout="vertical"
