@@ -3,7 +3,7 @@ import useAuth from '@hooks/useAuth'
 import { ROLES } from '@constants'
 import AdminDashboard from './AdminDashboard'
 import { Spin } from 'antd'
-import MyLearningPath from '@views/pages/learning-path'
+import MyLearningPath from '@views/learning-path'
 import { Navigate } from 'react-router-dom'
 
 const Dashboard = () => {

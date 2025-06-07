@@ -1,4 +1,4 @@
-import AllRoutes from '@views/routes'
+import AllRoutes from './routes'
 import { BrowserRouter } from 'react-router-dom'
 import AuthProvider from '@providers/AuthProvider'
 import { ToastContainer } from 'react-toastify'
