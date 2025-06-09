@@ -5,7 +5,7 @@ import BreadcrumbNavigation from '@components/BreadcrumbNavigation'
 import HeaderRender from '@components/header'
 import './main-layout.scss'
 
-const { Content, Header } = Layout
+const { Content, Header, Footer } = Layout
 
 const MainLayout = ({ component: Component }) => {
   const location = useLocation()
@@ -19,6 +19,9 @@ const MainLayout = ({ component: Component }) => {
       <Content className="main-layout-content">
         <Component />
       </Content>
+      <Footer className="main-layout-footer">
+        <FooterRender />
+      </Footer>
     </Layout>
   )
 }
