@@ -21,6 +21,7 @@ import {
   PlayCircleOutlined,
   FilePdfOutlined,
   FileTextOutlined,
+  FileImageOutlined,
 } from '@ant-design/icons'
 import { formatTime } from '@helpers/common'
 import { CATEGORIES, CATEGORY_COLORS } from '@constants'
@@ -30,7 +31,6 @@ const { Title, Paragraph, Text } = Typography
 
 const CourseDetailModal = ({ visible, course, onClose }) => {
   if (!course) return null
-
   const getItemTypeIcon = (type) => {
     switch (type) {
       case 'video':
@@ -39,6 +39,8 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
         return <FilePdfOutlined style={{ color: '#f5222d' }} />
       case 'document':
         return <FileTextOutlined style={{ color: '#52c41a' }} />
+      case 'slide':
+        return <FileImageOutlined style={{ color: '#fa8c16' }} />
       case 'quiz':
         return <FileOutlined style={{ color: '#722ed1' }} />
       case 'file':
@@ -97,6 +99,7 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
                 description={
                   <div>
                     <div className="item-meta">
+                      {' '}
                       <Tag
                         size="small"
                         color={
@@ -104,9 +107,11 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
                             ? 'blue'
                             : item.item_type === 'pdf'
                               ? 'red'
-                              : item.item_type === 'quiz'
-                                ? 'purple'
-                                : 'green'
+                              : item.item_type === 'slide'
+                                ? 'orange'
+                                : item.item_type === 'quiz'
+                                  ? 'purple'
+                                  : 'green'
                         }
                         className="item-type-tag"
                         icon={
@@ -117,7 +122,6 @@ const CourseDetailModal = ({ visible, course, onClose }) => {
                       >
                         {item.item_type}
                       </Tag>
-
                       {item.completed && (
                         <span className="item-status">
                           <CheckCircleOutlined style={{ color: '#52c41a' }} />{' '}

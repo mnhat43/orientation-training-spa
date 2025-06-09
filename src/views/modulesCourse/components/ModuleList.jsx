@@ -21,6 +21,7 @@ import {
   QuestionCircleOutlined,
   MoreOutlined,
   InfoCircleOutlined,
+  FileImageOutlined,
 } from '@ant-design/icons'
 import ModuleForm from './ModuleForm'
 import ContentDrawer from './ContentDrawer'
@@ -57,7 +58,6 @@ const ModuleList = ({
     })
     setContentDrawerVisible(false)
   }
-
   const getItemLabel = (type) => {
     switch (type?.toLowerCase()) {
       case 'video':
@@ -65,6 +65,8 @@ const ModuleList = ({
       case 'file':
       case 'document':
         return 'File'
+      case 'slide':
+        return 'Slide'
       case 'link':
         return 'Link'
       case 'quiz':
@@ -73,7 +75,6 @@ const ModuleList = ({
         return 'Content'
     }
   }
-
   const getItemTagColor = (type) => {
     switch (type?.toLowerCase()) {
       case 'video':
@@ -81,10 +82,12 @@ const ModuleList = ({
       case 'file':
       case 'document':
         return '#52c41a'
+      case 'slide':
+        return '#fa8c16'
       case 'link':
         return '#722ed1'
       case 'quiz':
-        return '#fa8c16'
+        return '#faad14'
       default:
         return '#d9d9d9'
     }
@@ -134,7 +137,6 @@ const ModuleList = ({
       },
     ].filter(Boolean),
   }
-
   const ItemTypeIcon = ({ type }) => {
     const lowerType = type?.toLowerCase()
     let iconComponent
@@ -149,6 +151,10 @@ const ModuleList = ({
       case 'document':
         iconComponent = <FileTextOutlined />
         className = 'module-item__icon--file'
+        break
+      case 'slide':
+        iconComponent = <FileImageOutlined />
+        className = 'module-item__icon--slide'
         break
       case 'link':
         iconComponent = <LinkOutlined />
@@ -258,10 +264,11 @@ const ModuleList = ({
           <div className="module-empty-state">
             <div className="module-empty-state__icon">
               <InfoCircleOutlined />
-            </div>
+            </div>{' '}
             <h4 className="module-empty-state__title">No content yet</h4>
             <p className="module-empty-state__description">
-              Add videos, files, or quizzes to this module to get started
+              Add videos, files, slides, or quizzes to this module to get
+              started
             </p>
             <Button
               type="primary"

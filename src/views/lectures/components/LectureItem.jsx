@@ -8,6 +8,7 @@ import {
   RightCircleFilled,
   FilePdfOutlined,
   FileTextOutlined,
+  FileImageOutlined,
 } from '@ant-design/icons'
 import './LectureItem.scss'
 import { formatTime } from '@helpers/common'
@@ -31,14 +32,13 @@ const LectureItem = ({
     if (isCompleted) classNames += ' lecture-item--completed'
     return classNames
   }
-
   const getDuration = () => {
     if (item_type === 'video') return content.duration
     if (item_type === 'file') return formatTime(content.duration)
+    if (item_type === 'slide') return formatTime(content.duration)
     if (item_type === 'quiz') return formatTime(content.time_limit)
     return null
   }
-
   const getMetaItem = () => {
     if (item_type === 'video')
       return (
@@ -50,6 +50,12 @@ const LectureItem = ({
       return (
         <>
           <FilePdfOutlined /> File
+        </>
+      )
+    if (item_type === 'slide')
+      return (
+        <>
+          <FileImageOutlined /> Slide
         </>
       )
     if (item_type === 'quiz')

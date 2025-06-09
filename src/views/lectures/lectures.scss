@@ -4,9 +4,20 @@
     max-width: $max-width;
     margin: 0 auto;
     overflow: hidden;
+    height: calc(100vh - #{$layout-header-height} - 50px);
+    position: relative;
+
+    .ant-row {
+        height: 100%;
+        margin: 0 !important;
+    }
+
+    .ant-col {
+        height: 100%;
+    }
     &__content-container {
         padding: 0px !important;
-        max-height: calc(100vh - 112px);
+        height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
 
@@ -23,9 +34,8 @@
             background: #c1c1c1;
             border-radius: 4px;
         }
-
         @media (max-width: 992px) {
-            height: 60vh;
+            height: calc(40vh);
             order: 1;
             padding-right: 16px;
         }
@@ -35,9 +45,11 @@
             max-width: 100%;
         }
     }
-
+    @media (max-width: 992px) {
+        height: calc(100vh - #{$header-mobile-height} - 80px);
+    }
     &__playlist-container {
-        height: calc(100vh - 112px);
+        height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
         padding: 0px !important;

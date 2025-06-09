@@ -4,27 +4,29 @@ import {
   VideoCameraOutlined,
   FileTextOutlined,
   QuestionCircleOutlined,
+  FileImageOutlined,
   CloseOutlined,
 } from '@ant-design/icons'
 import VideoForm from './VideoForm'
 import FileForm from './FileForm'
 import QuizForm from './QuizForm'
+import SlideForm from './SlideForm'
 import './ContentDrawer.scss'
 
 const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
   const [videoForm] = Form.useForm()
   const [fileForm] = Form.useForm()
   const [quizForm] = Form.useForm()
-  const [activeTab, setActiveTab] = useState('video') //video, file, quiz
-
+  const [slideForm] = Form.useForm()
+  const [activeTab, setActiveTab] = useState('video') //video, file, quiz, slide
   useEffect(() => {
     if (visible) {
       videoForm.resetFields()
       fileForm.resetFields()
       quizForm.resetFields()
+      slideForm.resetFields()
     }
-  }, [visible, videoForm, fileForm, quizForm])
-
+  }, [visible, videoForm, fileForm, quizForm, slideForm])
   const getCurrentForm = () => {
     switch (activeTab) {
       case 'video':
@@ -33,6 +35,8 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
         return fileForm
       case 'quiz':
         return quizForm
+      case 'slide':
+        return slideForm
       default:
         return videoForm
     }
@@ -75,7 +79,6 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
   const handleTabChange = (key) => {
     setActiveTab(key)
   }
-
   const getDrawerTitle = () => {
     switch (activeTab) {
       case 'video':
@@ -84,11 +87,12 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
         return 'Add File Content'
       case 'quiz':
         return 'Add Quiz Content'
+      case 'slide':
+        return 'Add Slide Content'
       default:
         return 'Add Content'
     }
   }
-
   const tabItems = [
     {
       key: 'video',
@@ -120,6 +124,16 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
       ),
       children: <QuizForm form={quizForm} onSubmit={handleSubmit} />,
     },
+    {
+      key: 'slide',
+      label: (
+        <span className="content-drawer__tab">
+          <FileImageOutlined />
+          <span className="content-drawer__tab-text">Slide</span>
+        </span>
+      ),
+      children: <SlideForm form={slideForm} onSubmit={handleSubmit} />,
+    },
   ]
 
   return (
@@ -130,6 +144,7 @@ const ContentDrawer = ({ visible, onClose, onSubmit, moduleId }) => {
             {activeTab === 'video' && <VideoCameraOutlined />}
             {activeTab === 'file' && <FileTextOutlined />}
             {activeTab === 'quiz' && <QuestionCircleOutlined />}
+            {activeTab === 'slide' && <FileImageOutlined />}
           </div>
           <span>{getDrawerTitle()}</span>
         </div>

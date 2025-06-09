@@ -5,6 +5,7 @@ import {
   FileOutlined,
   YoutubeOutlined,
   DeleteOutlined,
+  FileImageOutlined,
 } from '@ant-design/icons'
 import { useParams } from 'react-router'
 import { useNavigate } from 'react-router-dom'
@@ -22,6 +23,7 @@ const HoverableListItem = styled(List.Item)`
 const getIcon = (item) => {
   if (item.item_type === 'video') return <YoutubeOutlined />
   if (item.item_type === 'file') return <FileOutlined />
+  if (item.item_type === 'slide') return <FileImageOutlined />
 }
 
 const ModuleItem = ({ item, moduleId, instructorAccess, removeModuleItem }) => {

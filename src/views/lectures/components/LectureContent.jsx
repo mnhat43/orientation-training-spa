@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Video from './Video'
 import File from './File'
+import Slide from './Slide'
 import QuizModern from './QuizModern'
 import './LectureContent.scss'
 import { QuizReview } from './quiz'
@@ -81,16 +82,17 @@ const LectureContent = ({
           </div>
         </div>
       ) : item_type === 'quiz' ? (
-        <div className="quiz-container">
-          {loading ? (
-            <div className="loading-quiz">Loading quiz...</div>
-          ) : (
-            renderQuizContent()
-          )}
-        </div>
+        <div className="quiz-container">{renderQuizContent()}</div>
       ) : item_type === 'file' ? (
         <div className="file-container">
           <File filePath={content.file_path} />
+        </div>
+      ) : item_type === 'slide' ? (
+        <div className="slide-container">
+          <Slide
+            filePath={content.file_path}
+            requiredTime={content.required_time}
+          />
         </div>
       ) : null}
     </div>
