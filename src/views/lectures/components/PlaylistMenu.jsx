@@ -8,7 +8,7 @@ import {
   ReadOutlined,
 } from '@ant-design/icons'
 import LectureItem from './LectureItem'
-import { formatTime } from '@helpers/common'
+import { formatTime, timeStringToSeconds } from '@helpers/common'
 import './PlaylistMenu.scss'
 import _ from 'lodash'
 
@@ -98,8 +98,21 @@ const PlaylistMenu = ({
 
       <div className="module-list">
         {lectures.map((module) => {
-          const { module_id, lecture, module_title, duration } = module
+          const { module_id, lecture, module_title } = module
           const isExpanded = expandedModules.includes(module_id)
+
+          // Tính tổng duration cho module
+          const totalDurationSeconds = lecture.reduce((sum, item) => {
+            if (item.item_type === 'video') {
+              return sum + timeStringToSeconds(item.content?.duration)
+            } else {
+              // Nếu là file hoặc loại khác, giả sử duration là số giây hoặc phút
+              // Nếu duration là phút, đổi sang giây: * 60
+              // Nếu duration là giây, giữ nguyên
+              // Ở đây tôi giữ nguyên như bạn yêu cầu
+              return sum + (parseInt(item.content?.duration, 10) || 0)
+            }
+          }, 0)
 
           const completedInModule = lecture.filter(
             (item) =>
@@ -130,7 +143,7 @@ const PlaylistMenu = ({
                     </span>
                     <span className="subtitle-separator">|</span>
                     <span className="time-indicator">
-                      <ClockCircleOutlined /> {formatTime(duration)}
+                      <ClockCircleOutlined /> {formatTime(totalDurationSeconds)}
                     </span>
                   </div>
                 </div>

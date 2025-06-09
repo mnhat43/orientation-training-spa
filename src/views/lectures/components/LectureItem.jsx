@@ -33,7 +33,7 @@ const LectureItem = ({
   }
 
   const getDuration = () => {
-    if (item_type === 'video') return formatTime(content.duration)
+    if (item_type === 'video') return content.duration
     if (item_type === 'file') return formatTime(content.duration)
     if (item_type === 'quiz') return formatTime(content.time_limit)
     return null
