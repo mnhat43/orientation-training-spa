@@ -82,20 +82,6 @@ const CourseCard = ({
     onDelete(course_id)
   }
 
-  const processedThumbnail = (thumbUrl) => {
-    if (!thumbUrl) return DEFAULT_IMAGE_URL
-
-    if (thumbUrl.startsWith('data:image')) {
-      return thumbUrl
-    }
-
-    if (thumbUrl.match(/^[A-Za-z0-9+/=]+$/)) {
-      return `data:image/jpeg;base64,${thumbUrl}`
-    }
-
-    return thumbUrl
-  }
-
   const handleImageError = (e) => {
     e.target.onerror = null
     e.target.src = DEFAULT_IMAGE_URL
@@ -119,7 +105,7 @@ const CourseCard = ({
       >
         <div className="card-thumbnail">
           <img
-            src={processedThumbnail(thumbnail)}
+            src={thumbnail || DEFAULT_IMAGE_URL}
             alt={title}
             onError={handleImageError}
           />
