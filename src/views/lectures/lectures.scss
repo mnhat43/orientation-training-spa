@@ -6,7 +6,7 @@
     overflow: hidden;
     &__content-container {
         padding: 0px !important;
-        max-height: calc(100vh - 70px);
+        max-height: calc(100vh - 112px);
         overflow-y: auto;
         overflow-x: hidden;
 
@@ -37,7 +37,7 @@
     }
 
     &__playlist-container {
-        height: calc(100vh - 70px);
+        height: calc(100vh - 112px);
         overflow-y: auto;
         overflow-x: hidden;
         padding: 0px !important;

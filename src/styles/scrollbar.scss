@@ -20,7 +20,7 @@
     }
 
     /* For Firefox */
-    scrollbar-width: thin;
+    // scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
@@ -39,7 +39,7 @@ body {
 /* For any scrollable containers */
 .scrollable-container {
     overflow-y: auto;
-    scrollbar-width: thin;
+    // scrollbar-width: thin;
 
     &::-webkit-scrollbar {
         width: 8px;

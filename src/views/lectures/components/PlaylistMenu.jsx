@@ -64,7 +64,6 @@ const PlaylistMenu = ({
                   style={{ width: `${percent}%` }}
                 ></div>
               </div>
-              <span>{percent}% Complete</span>
             </div>
           </div>
         </div>
