@@ -71,7 +71,6 @@ const AuthProvider = ({ children }) => {
       return false
     }
   }
-
   const handleLogout = async () => {
     try {
       await apiAuth.logout()
@@ -81,6 +80,13 @@ const AuthProvider = ({ children }) => {
       setAuthToken(null)
       setCurrentUser(null)
     }
+  }
+
+  const updateCurrentUser = (updatedUserData) => {
+    setCurrentUser((prev) => ({
+      ...prev,
+      ...updatedUserData,
+    }))
   }
 
   const isAuthenticated = () => {
@@ -94,6 +100,7 @@ const AuthProvider = ({ children }) => {
         currentUser,
         handleLogin,
         handleLogout,
+        updateCurrentUser,
         isAuthenticated,
       }}
     >

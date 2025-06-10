@@ -9,6 +9,10 @@ const user = {
     const url = `/user/${user_id}`
     return API.put(url, params)
   },
+  changePassword: (params) => {
+    const url = '/user/change-password'
+    return API.post(url, params)
+  },
   getEmployeeOverview: () => {
     const url = '/user/employee-overview'
     return API.get(url)

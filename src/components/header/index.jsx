@@ -11,7 +11,7 @@ import MobileDrawer from './MobileDrawer'
 import './header.scss'
 
 const HeaderRender = () => {
-  const { currentUser, handleLogout } = useAuth()
+  const { currentUser, handleLogout, updateCurrentUser } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false)
@@ -40,19 +40,17 @@ const HeaderRender = () => {
           <div className="header-logo">
             <Logo />
           </div>
-
           <div className="header-main">
             <Navigation navItems={navItems} currentPath={location.pathname} />
-          </div>
-
+          </div>{' '}
           <div className="header-user">
             <UserMenu
               currentUser={currentUser}
               onLogout={onLogout}
               navigate={navigate}
+              onUpdateUser={updateCurrentUser}
             />
           </div>
-
           <div className="mobile-menu-button">
             <Button
               icon={<MenuOutlined />}
@@ -61,8 +59,7 @@ const HeaderRender = () => {
             />
           </div>
         </div>
-      </div>
-
+      </div>{' '}
       <MobileDrawer
         visible={mobileMenuVisible}
         onClose={closeMobileMenu}
@@ -71,6 +68,7 @@ const HeaderRender = () => {
         currentPath={location.pathname}
         onLogout={onLogout}
         navigate={navigate}
+        onUpdateUser={updateCurrentUser}
       />
     </>
   )

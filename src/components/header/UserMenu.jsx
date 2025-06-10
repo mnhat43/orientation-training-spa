@@ -1,9 +1,15 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { Dropdown, Button, Avatar } from 'antd'
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import {
+  UserOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
+import ProfileDrawer from './ProfileDrawer'
 
-const UserMenu = ({ currentUser, onLogout, navigate }) => {
+const UserMenu = ({ currentUser, onLogout, navigate, onUpdateUser }) => {
+  const [profileDrawerVisible, setProfileDrawerVisible] = useState(false)
+
   if (!currentUser) {
     return (
       <Button type="primary" size="middle" onClick={() => navigate('/login')}>
@@ -12,11 +18,20 @@ const UserMenu = ({ currentUser, onLogout, navigate }) => {
     )
   }
 
+  const handleOpenProfile = () => {
+    setProfileDrawerVisible(true)
+  }
+
+  const handleCloseProfile = () => {
+    setProfileDrawerVisible(false)
+  }
+
   const menuItems = [
     {
       key: 'profile',
-      icon: <UserOutlined />,
-      label: <Link to="/profile">Profile</Link>,
+      icon: <SettingOutlined />,
+      label: 'Profile Settings',
+      onClick: handleOpenProfile,
     },
     {
       type: 'divider',
@@ -30,12 +45,30 @@ const UserMenu = ({ currentUser, onLogout, navigate }) => {
   ]
 
   return (
-    <Dropdown menu={{ items: menuItems }} trigger={['click']}>
-      <div className="user-dropdown-trigger">
-        <Avatar size="small" icon={<UserOutlined />} />
-        <span className="username">{currentUser.fullname || 'User'}</span>
-      </div>
-    </Dropdown>
+    <>
+      <Dropdown
+        menu={{ items: menuItems }}
+        trigger={['click']}
+        placement="bottomRight"
+        overlayClassName="user-dropdown-overlay"
+      >
+        <div className="user-dropdown-trigger">
+          <Avatar
+            size="small"
+            src={currentUser.avatar}
+            icon={!currentUser.avatar && <UserOutlined />}
+          />
+          <span className="username">{currentUser.fullname || 'User'}</span>
+        </div>
+      </Dropdown>
+
+      <ProfileDrawer
+        visible={profileDrawerVisible}
+        onClose={handleCloseProfile}
+        currentUser={currentUser}
+        onUpdateUser={onUpdateUser}
+      />
+    </>
   )
 }
 
