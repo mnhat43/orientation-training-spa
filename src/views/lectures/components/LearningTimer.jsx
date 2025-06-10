@@ -15,9 +15,9 @@ const LearningTimer = ({
   onCompleteCourse,
 }) => {
   if (courseCompleted) return null
-
   const [isUserActive, setIsUserActive] = useState(false)
   const [timeSpent, setTimeSpent] = useState(0)
+  const [isCompleted, setIsCompleted] = useState(false)
   const { courseId } = useParams()
 
   const { module_item_id, content, item_type } = selectedLecture
@@ -35,10 +35,10 @@ const LearningTimer = ({
     accumulatedTime: 0,
     lastPauseTime: null,
   }).current
-
   const completeProgress = useCallback(() => {
     if (refs.completed) return
     refs.completed = true
+    setIsCompleted(true)
 
     if (_.isEqual(selectedLecture, lastLecture)) {
       onCompleteCourse()
@@ -67,6 +67,7 @@ const LearningTimer = ({
       refs.lastPauseTime = null
       setTimeSpent(0)
       setIsUserActive(false)
+      setIsCompleted(false)
     }
 
     resetTimer()
@@ -149,32 +150,57 @@ const LearningTimer = ({
   }, [isActive, required_time, completeProgress, refs])
 
   useEffect(() => {
-    if (IS_DEV) {
-      const debug = document.createElement('div')
-      Object.assign(debug.style, {
+    if (IS_DEV && !isCompleted) {
+      const debugContainer = document.createElement('div')
+      Object.assign(debugContainer.style, {
         position: 'fixed',
         bottom: '10px',
         right: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        zIndex: 9999,
+      })
+
+      const debug = document.createElement('div')
+      Object.assign(debug.style, {
         padding: '8px',
         background: isActive ? 'rgba(0,128,0,0.7)' : 'rgba(0,0,0,0.7)',
         color: 'white',
         borderRadius: '4px',
-        zIndex: 9999,
         fontSize: '12px',
       })
+
+      const completeButton = document.createElement('button')
+      Object.assign(completeButton.style, {
+        padding: '6px 12px',
+        background: 'rgba(255,165,0,0.8)',
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        fontSize: '11px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+      })
+      completeButton.textContent = 'Complete'
+      completeButton.onclick = () => {
+        completeProgress()
+      }
 
       const update = () => {
         debug.textContent = `${isFileContent ? 'File' : 'Video'}: ${timeSpent}/${required_time}s (${isActive ? 'ACTIVE' : 'PAUSED'})`
       }
 
       update()
-      document.body.appendChild(debug)
+      debugContainer.appendChild(debug)
+      debugContainer.appendChild(completeButton)
+      document.body.appendChild(debugContainer)
 
       const interval = setInterval(update, 1000)
 
       return () => {
         clearInterval(interval)
-        document.body.removeChild(debug)
+        document.body.removeChild(debugContainer)
       }
     }
   }, [
@@ -184,6 +210,8 @@ const LearningTimer = ({
     required_time,
     refs.accumulatedTime,
     lastLecture,
+    isCompleted,
+    completeProgress,
   ])
 
   return null
