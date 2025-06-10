@@ -56,8 +56,15 @@ const CourseCard = ({
   status = {},
   position,
 }) => {
-  const { course_id, title, thumbnail, description, category, duration } =
-    course
+  const {
+    course_id,
+    title,
+    thumbnail,
+    description,
+    category,
+    duration,
+    skill_keyword,
+  } = course
   const { locked = false, completed = false } = status
 
   const getCategoryName = (categoryKey) => {
@@ -153,57 +160,71 @@ const CourseCard = ({
             <p className="card-description">
               {description || 'No description available'}
             </p>
-          </Tooltip>
-
+          </Tooltip>{' '}
           <div className="card-footer">
-            <div className="card-duration">
-              <ClockCircleOutlined /> {formatTime(duration)}
-            </div>
+            {skill_keyword && skill_keyword.length > 0 && (
+              <div className="skill-keywords">
+                {skill_keyword.map((skill, index) => (
+                  <span key={index} className="skill-tag">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            )}
 
-            {role === ROLES.MANAGER && (
-              <div className="card-actions">
-                <Tooltip title="Edit course">
-                  <button className="action-btn edit" onClick={handleEditClick}>
-                    <EditOutlined />
-                  </button>
-                </Tooltip>
+            <div className="footer-bottom">
+              <div className="card-duration">
+                <ClockCircleOutlined /> {formatTime(duration)}
+              </div>
 
-                <Tooltip title="Delete course">
-                  <Popconfirm
-                    title="Delete this course?"
-                    description="All course content and progress will be permanently removed."
-                    onConfirm={confirmDelete}
-                    okText="Delete"
-                    cancelText="Cancel"
-                    okButtonProps={{ danger: true }}
-                    placement="topRight"
-                  >
+              {role === ROLES.MANAGER && (
+                <div className="card-actions">
+                  <Tooltip title="Edit course">
                     <button
-                      className="action-btn delete"
-                      onClick={handleDeleteClick}
+                      className="action-btn edit"
+                      onClick={handleEditClick}
                     >
-                      <DeleteOutlined />
+                      <EditOutlined />
                     </button>
-                  </Popconfirm>
-                </Tooltip>
-              </div>
-            )}
+                  </Tooltip>
 
-            {role === ROLES.EMPLOYEE && (
-              <div className="course-status">
-                {locked ? (
-                  <span className="status locked">
-                    <LockOutlined /> Locked
-                  </span>
-                ) : completed ? (
-                  <span className="status completed">
-                    <CheckCircleOutlined /> Completed
-                  </span>
-                ) : (
-                  <span className="status in-progress">Available</span>
-                )}
-              </div>
-            )}
+                  <Tooltip title="Delete course">
+                    <Popconfirm
+                      title="Delete this course?"
+                      description="All course content and progress will be permanently removed."
+                      onConfirm={confirmDelete}
+                      okText="Delete"
+                      cancelText="Cancel"
+                      okButtonProps={{ danger: true }}
+                      placement="topRight"
+                    >
+                      <button
+                        className="action-btn delete"
+                        onClick={handleDeleteClick}
+                      >
+                        <DeleteOutlined />
+                      </button>
+                    </Popconfirm>
+                  </Tooltip>
+                </div>
+              )}
+
+              {role === ROLES.EMPLOYEE && (
+                <div className="course-status">
+                  {locked ? (
+                    <span className="status locked">
+                      <LockOutlined /> Locked
+                    </span>
+                  ) : completed ? (
+                    <span className="status completed">
+                      <CheckCircleOutlined /> Completed
+                    </span>
+                  ) : (
+                    <span className="status in-progress">Available</span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

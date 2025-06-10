@@ -149,7 +149,6 @@ const Courses = () => {
   const handleEditCourse = async (courseID) => {
     console.log('Edit course:', courseID)
   }
-
   const filteredCourses = courseList.filter((course) => {
     const matchesSearch =
       course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -158,7 +157,22 @@ const Courses = () => {
     const matchesCategory =
       filterCategory === 'all' || course.category === filterCategory
 
-    return matchesSearch && matchesCategory
+    const matchesSkillKeywords =
+      filterSkillKeywords.length === 0 ||
+      (course.skill_keyword &&
+        filterSkillKeywords.some((selectedSkillId) =>
+          course.skill_keyword.some((skill) => {
+            const skillKeyword = skillKeywords.find(
+              (sk) => sk.id === selectedSkillId,
+            )
+            return (
+              skillKeyword &&
+              skill.toLowerCase().includes(skillKeyword.name.toLowerCase())
+            )
+          }),
+        ))
+
+    return matchesSearch && matchesCategory && matchesSkillKeywords
   })
 
   const paginatedCourses = filteredCourses.slice(
