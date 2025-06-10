@@ -66,13 +66,6 @@ const ModuleForm = ({
         >
           <Input placeholder="Enter module title" autoFocus />
         </Form.Item>
-
-        <Form.Item name="description" label="Description (Optional)">
-          <Input.TextArea
-            placeholder="Brief description of the module"
-            autoSize={{ minRows: 3, maxRows: 5 }}
-          />
-        </Form.Item>
       </Form>
     </Modal>
   )

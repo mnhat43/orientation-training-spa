@@ -28,11 +28,7 @@ const NextAction = ({ allCompleted, nextCourse, navigate }) => {
               <Avatar
                 shape="square"
                 size={64}
-                src={
-                  nextCourse.thumbnail
-                    ? `data:image/jpeg;base64,${nextCourse.thumbnail}`
-                    : null
-                }
+                src={nextCourse.thumbnail}
                 icon={!nextCourse.thumbnail && <BookOutlined />}
                 className="course-avatar"
               />
