@@ -3,6 +3,7 @@ import { Button, Row, Col, Spin, Input, Empty, Select, Pagination } from 'antd'
 import { SearchOutlined, PlusOutlined, FilterOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import courseApi from '@api/course'
+import skillkeywordApi from '@api/skillkeyword'
 import CourseCard from '@components/CourseCard'
 import AddCourseDrawer from './components/AddCourseDrawer.jsx'
 import './index.scss'
@@ -42,15 +43,17 @@ const Courses = () => {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterCategory, setFilterCategory] = useState('all')
+  const [skillKeywords, setSkillKeywords] = useState([])
+  const [filterSkillKeywords, setFilterSkillKeywords] = useState([])
   const navigate = useNavigate()
 
   const { isMobile, isTablet } = useResponsive()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(8)
-
   useEffect(() => {
     fetchCourses()
+    fetchSkillKeywords()
   }, [])
 
   useEffect(() => {
@@ -62,11 +65,9 @@ const Courses = () => {
       setPageSize(8)
     }
   }, [isMobile, isTablet])
-
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, filterCategory])
-
+  }, [searchQuery, filterCategory, filterSkillKeywords])
   const fetchCourses = async () => {
     try {
       setLoading(true)
@@ -80,6 +81,17 @@ const Courses = () => {
       )
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchSkillKeywords = async () => {
+    try {
+      const response = await skillkeywordApi.list()
+      if (response && response.data) {
+        setSkillKeywords(response.data)
+      }
+    } catch (error) {
+      console.error('Error fetching skill keywords:', error)
     }
   }
 
@@ -165,11 +177,11 @@ const Courses = () => {
   }
 
   const showPagination = filteredCourses.length > 0
-
   return (
     <div className="courses-container">
+      {' '}
       <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
-        <Col xs={24} sm={14} md={16} lg={16} xl={16}>
+        <Col xs={24} sm={24} md={10} lg={8} xl={7}>
           <Input
             placeholder="Search courses..."
             prefix={<SearchOutlined />}
@@ -179,7 +191,7 @@ const Courses = () => {
             style={{ height: '42px' }}
           />
         </Col>
-        <Col xs={12} sm={5} md={4} lg={4} xl={4}>
+        <Col xs={9} sm={7} md={6} lg={5} xl={4}>
           <Select
             value={filterCategory}
             onChange={(value) => setFilterCategory(value)}
@@ -195,18 +207,38 @@ const Courses = () => {
             <Option value="Compliance">Compliance</Option>
           </Select>
         </Col>
-        <Col xs={12} sm={5} md={4} lg={4} xl={4}>
+        <Col xs={6} sm={11} md={5} lg={7} xl={9}>
+          <Select
+            mode="multiple"
+            value={filterSkillKeywords}
+            onChange={(value) => setFilterSkillKeywords(value)}
+            placeholder="Skill Keywords"
+            style={{ height: '42px', width: '100%' }}
+            maxTagCount="responsive"
+            allowClear
+            showSearch
+            filterOption={(input, option) =>
+              option.children.toLowerCase().includes(input.toLowerCase())
+            }
+          >
+            {skillKeywords.map((keyword) => (
+              <Option key={keyword.id} value={keyword.id}>
+                {keyword.name}
+              </Option>
+            ))}
+          </Select>
+        </Col>
+        <Col xs={6} sm={6} md={3} lg={4} xl={4}>
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setIsDrawerOpen(true)}
             style={{ height: '42px' }}
           >
-            {!isMobile && 'Create Course'}
+            {isMobile ? '+' : 'Create course'}
           </Button>
         </Col>
       </Row>
-
       <div className="courses-content">
         {loading ? (
           <div className="courses-loading">
@@ -260,7 +292,9 @@ const Courses = () => {
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={
-                searchQuery || filterCategory !== 'all'
+                searchQuery ||
+                filterCategory !== 'all' ||
+                filterSkillKeywords.length > 0
                   ? 'No training courses match your search criteria'
                   : 'No employee training courses available yet'
               }
@@ -268,7 +302,6 @@ const Courses = () => {
           </div>
         )}
       </div>
-
       {isDrawerOpen && (
         <AddCourseDrawer
           isDrawerOpen={isDrawerOpen}

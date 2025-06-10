@@ -61,4 +61,75 @@
             max-width: 280px;
         }
     }
+
+    // Filter section
+    .ant-row {
+        &:first-child {
+            .ant-col {
+                @media (max-width: 768px) {
+                    margin-bottom: 8px;
+                }
+            }
+        }
+    }
+
+    .ant-select {
+        .ant-select-selection-item {
+            background-color: #f0f7ff;
+            border-color: #91d5ff;
+            color: #1890ff;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+
+        &.ant-select-multiple {
+            .ant-select-selection-overflow {
+                flex-wrap: wrap;
+            }
+
+            .ant-select-selection-overflow-item {
+                max-width: 120px;
+
+                @media (max-width: 768px) {
+                    max-width: 80px;
+                }
+            }
+        }
+
+        .ant-select-selector {
+            @media (max-width: 576px) {
+                font-size: 12px;
+            }
+        }
+    }
+
+    .ant-input {
+        &:focus,
+        &:hover {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+    }
+
+    // Filter and button improvements
+    .ant-btn {
+        &.ant-btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+
+            @media (max-width: 576px) {
+                padding: 0 8px;
+
+                .anticon {
+                    font-size: 16px;
+                }
+            }
+
+            @media (min-width: 577px) and (max-width: 768px) {
+                font-size: 13px;
+            }
+        }
+    }
 }
