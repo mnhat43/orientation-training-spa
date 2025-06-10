@@ -1,19 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Button, Row, Col, Spin, Input, Empty, Select, Pagination } from 'antd'
-import {
-  SearchOutlined,
-  PlusOutlined,
-  FilterOutlined,
-  BookOutlined,
-} from '@ant-design/icons'
+import { SearchOutlined, PlusOutlined, FilterOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import courseApi from '@api/course'
 import CourseCard from '@components/CourseCard'
-import AddCourseForm from './components/AddCourseForm.jsx'
+import AddCourseDrawer from './components/AddCourseDrawer.jsx'
 import './index.scss'
 import { toast } from 'react-toastify'
 import { convertFileToBase64 } from '@helpers/common.js'
-import BannerComponent from '@components/Banner/index.jsx'
 
 const { Option } = Select
 
@@ -43,7 +37,7 @@ const useResponsive = () => {
 }
 
 const Courses = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [courseList, setCourseList] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -110,7 +104,8 @@ const Courses = () => {
   const handleAddCourse = async (values) => {
     try {
       let base64String = ''
-      const { title, description = '', thumbnail, category, duration } = values
+      const { title, description, thumbnail, category, skill_keyword_ids } =
+        values
 
       if (thumbnail && thumbnail[0]?.originFileObj) {
         const file = thumbnail[0].originFileObj
@@ -119,9 +114,10 @@ const Courses = () => {
 
       const payload = {
         title,
-        description,
+        description: description || '',
         thumbnail: base64String,
         category: category,
+        skill_keyword_ids: skill_keyword_ids || [],
       }
 
       const response = await courseApi.addCourse(payload)
@@ -129,7 +125,7 @@ const Courses = () => {
       if (response.status === 1) {
         toast.success('Course added successfully!')
         fetchCourses()
-        setIsModalOpen(false)
+        setIsDrawerOpen(false)
       } else {
         toast.error('Error: ' + response.message)
       }
@@ -171,134 +167,115 @@ const Courses = () => {
   const showPagination = filteredCourses.length > 0
 
   return (
-    <div className="courses-main">
-      <div className="courses-container">
-        {/* <BannerComponent
-          title="Welcome to the Training Courses"
-          description="Create and manage employee orientation and training courses for your organization."
-          icon={BookOutlined}
-        /> */}
-
-        <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
-          <Col xs={24} sm={14} md={16} lg={16} xl={16}>
-            <Input
-              placeholder="Search courses..."
-              prefix={<SearchOutlined />}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              value={searchQuery}
-              allowClear
-              style={{ height: '42px' }}
-            />
-          </Col>
-          <Col xs={12} sm={5} md={4} lg={4} xl={4}>
-            <Select
-              value={filterCategory}
-              onChange={(value) => setFilterCategory(value)}
-              placeholder="Category"
-              suffixIcon={<FilterOutlined />}
-              style={{ height: '42px', width: '100%' }}
-            >
-              <Option value="all">All Categories</Option>
-              <Option value="Onboarding">Onboarding Essentials</Option>
-              <Option value="Company">Company Policies</Option>
-              <Option value="Technical">Technical Skills</Option>
-              <Option value="Soft">Soft Skills</Option>
-              <Option value="Compliance">Compliance</Option>
-            </Select>
-          </Col>
-          <Col xs={12} sm={5} md={4} lg={4} xl={4}>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => setIsModalOpen(true)}
-              style={{ height: '42px' }}
-            >
-              {!isMobile && 'Create Course'}
-            </Button>
-          </Col>
-        </Row>
-
-        <div className="courses-content">
-          {loading ? (
-            <div className="courses-loading">
-              <Spin size="large" />
-              <p>Loading training courses...</p>
-            </div>
-          ) : filteredCourses.length > 0 ? (
-            <div>
-              <Row gutter={[16, 16]} className="courses-grid">
-                {paginatedCourses.map((courseItem) => (
-                  <Col
-                    xs={24}
-                    sm={12}
-                    md={8}
-                    lg={6}
-                    key={courseItem.course_id}
-                    className="course-card-wrapper"
-                  >
-                    <CourseCard
-                      course={courseItem}
-                      onDelete={handleDeleteCourse}
-                      onEdit={handleEditCourse}
-                      onClick={() => handleClickCard(courseItem.course_id)}
-                    />
-                  </Col>
-                ))}
-              </Row>
-              {showPagination && (
-                <div className="pagination-container">
-                  <Pagination
-                    current={currentPage}
-                    pageSize={pageSize}
-                    total={filteredCourses.length}
-                    onChange={handlePageChange}
-                    showSizeChanger
-                    pageSizeOptions={
-                      isMobile ? ['4', '8', '12'] : ['4', '8', '12', '16']
-                    }
-                    showTotal={(total, range) =>
-                      `${range[0]}-${range[1]} of ${total} courses`
-                    }
-                    responsive
-                    aria-label="Course pagination"
-                    showQuickJumper={!isMobile}
-                  />
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="courses-empty">
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={
-                  searchQuery || filterCategory !== 'all'
-                    ? 'No training courses match your search criteria'
-                    : 'No employee training courses available yet'
-                }
-              />
-              {!searchQuery && filterCategory === 'all' && (
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => setIsModalOpen(true)}
-                  className="create-course-btn empty-btn"
-                  size="large"
-                >
-                  Create Your First Course
-                </Button>
-              )}
-            </div>
-          )}
-        </div>
-
-        {isModalOpen && (
-          <AddCourseForm
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-            handleAddCourse={handleAddCourse}
+    <div className="courses-container">
+      <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
+        <Col xs={24} sm={14} md={16} lg={16} xl={16}>
+          <Input
+            placeholder="Search courses..."
+            prefix={<SearchOutlined />}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+            allowClear
+            style={{ height: '42px' }}
           />
+        </Col>
+        <Col xs={12} sm={5} md={4} lg={4} xl={4}>
+          <Select
+            value={filterCategory}
+            onChange={(value) => setFilterCategory(value)}
+            placeholder="Category"
+            suffixIcon={<FilterOutlined />}
+            style={{ height: '42px', width: '100%' }}
+          >
+            <Option value="all">All Categories</Option>
+            <Option value="Onboarding">Onboarding Essentials</Option>
+            <Option value="Company">Company Policies</Option>
+            <Option value="Technical">Technical Skills</Option>
+            <Option value="Soft">Soft Skills</Option>
+            <Option value="Compliance">Compliance</Option>
+          </Select>
+        </Col>
+        <Col xs={12} sm={5} md={4} lg={4} xl={4}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setIsDrawerOpen(true)}
+            style={{ height: '42px' }}
+          >
+            {!isMobile && 'Create Course'}
+          </Button>
+        </Col>
+      </Row>
+
+      <div className="courses-content">
+        {loading ? (
+          <div className="courses-loading">
+            <Spin size="large" />
+            <p>Loading training courses...</p>
+          </div>
+        ) : filteredCourses.length > 0 ? (
+          <div>
+            <Row gutter={[16, 16]} className="courses-grid">
+              {paginatedCourses.map((courseItem) => (
+                <Col
+                  xs={24}
+                  sm={12}
+                  md={8}
+                  lg={6}
+                  key={courseItem.course_id}
+                  className="course-card-wrapper"
+                >
+                  <CourseCard
+                    course={courseItem}
+                    onDelete={handleDeleteCourse}
+                    onEdit={handleEditCourse}
+                    onClick={() => handleClickCard(courseItem.course_id)}
+                  />
+                </Col>
+              ))}
+            </Row>
+            {showPagination && (
+              <div className="pagination-container">
+                <Pagination
+                  current={currentPage}
+                  pageSize={pageSize}
+                  total={filteredCourses.length}
+                  onChange={handlePageChange}
+                  showSizeChanger
+                  pageSizeOptions={
+                    isMobile ? ['4', '8', '12'] : ['4', '8', '12', '16']
+                  }
+                  showTotal={(total, range) =>
+                    `${range[0]}-${range[1]} of ${total} courses`
+                  }
+                  responsive
+                  aria-label="Course pagination"
+                  showQuickJumper={!isMobile}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="courses-empty">
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={
+                searchQuery || filterCategory !== 'all'
+                  ? 'No training courses match your search criteria'
+                  : 'No employee training courses available yet'
+              }
+            />
+          </div>
         )}
       </div>
+
+      {isDrawerOpen && (
+        <AddCourseDrawer
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          handleAddCourse={handleAddCourse}
+        />
+      )}
     </div>
   )
 }

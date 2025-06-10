@@ -1,0 +1,90 @@
+.add-course-drawer {
+    .add-course-drawer-header {
+        h4 {
+            margin-bottom: 4px;
+        }
+    }
+
+    .ant-drawer-body {
+        padding: 24px;
+        overflow-y: auto;
+        height: calc(100vh - 120px);
+    }
+
+    .drawer-footer {
+        padding: 16px 24px;
+        border-top: 1px solid #f0f0f0;
+        text-align: right;
+        background: #fff;
+    }
+
+    .course-form {
+        .ant-form-item {
+            margin-bottom: 20px;
+        }
+
+        .ant-form-item-label {
+            font-weight: 500;
+            padding-bottom: 4px;
+        }
+
+        .course-thumbnail-upload {
+            .ant-upload.ant-upload-select-picture-card {
+                width: 100%;
+                height: 120px;
+                margin: 0;
+                border-radius: 4px;
+                border: 1px dashed #d9d9d9;
+                background-color: #fafafa;
+                transition: all 0.3s;
+
+                &:hover {
+                    border-color: #1890ff;
+                    background-color: #f0f7ff;
+                }
+            }
+        }
+        .skill-keywords-section {
+            .ant-select-multiple {
+                .ant-select-selection-item {
+                    background-color: #f6f8fa;
+                    border: 1px solid #e1e4e8;
+                    border-radius: 3px;
+                    color: #24292e;
+                    font-size: 12px;
+                }
+            }
+
+            .selected-keywords-display {
+                background-color: #f9f9f9;
+                border: 1px solid #e8e8e8;
+                border-radius: 4px;
+                padding: 8px;
+                margin-top: 12px;
+
+                .ant-tag {
+                    margin-right: 4px;
+                    margin-bottom: 4px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                    background-color: #e6f7ff;
+                    border-color: #91d5ff;
+                    color: #1890ff;
+                }
+            }
+        }
+
+        .create-keyword-section {
+            .ant-input-group-compact {
+                .ant-input {
+                    border-radius: 4px 0 0 4px;
+                }
+
+                .ant-btn {
+                    border-radius: 0 4px 4px 0;
+                    border-left: none;
+                }
+            }
+        }
+    }
+}
