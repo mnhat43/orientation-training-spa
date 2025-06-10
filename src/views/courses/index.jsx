@@ -204,9 +204,10 @@ const Courses = () => {
             allowClear
             style={{ height: '42px' }}
           />
-        </Col>
+        </Col>{' '}
         <Col xs={9} sm={7} md={6} lg={5} xl={4}>
           <Select
+            className="filter-category-select"
             value={filterCategory}
             onChange={(value) => setFilterCategory(value)}
             placeholder="Category"
@@ -223,6 +224,7 @@ const Courses = () => {
         </Col>
         <Col xs={6} sm={11} md={5} lg={7} xl={9}>
           <Select
+            className="filter-skill-select"
             mode="multiple"
             value={filterSkillKeywords}
             onChange={(value) => setFilterSkillKeywords(value)}
@@ -292,7 +294,7 @@ const Courses = () => {
                     isMobile ? ['4', '8', '12'] : ['4', '8', '12', '16']
                   }
                   showTotal={(total, range) =>
-                    `${range[0]}-${range[1]} of ${total} courses`
+                    `${range[0]} - ${range[1]} of ${total} courses`
                   }
                   responsive
                   aria-label="Course pagination"

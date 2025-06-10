@@ -185,20 +185,18 @@
                 overflow: hidden;
                 line-height: 1.4;
             }
-
             .card-description {
                 font-size: 14px;
                 color: #666;
                 margin-bottom: 15px;
                 flex-grow: 1;
-                display: -webkit-box;
-                -webkit-line-clamp: 2; /* Limit to 2 lines */
-                line-clamp: 2; /* Limit to 2 lines */
-                -webkit-box-orient: vertical;
+                line-height: 1.4;
+                min-height: 2.8em; /* Minimum height for 2 lines */
+                max-height: 2.8em; /* Maximum height for 2 lines */
                 overflow: hidden;
-                line-height: 1.5;
-                text-overflow: ellipsis;
-                cursor: default; /* Show pointer cursor on hover to indicate tooltip */
+                display: block;
+                word-wrap: break-word;
+                hyphens: auto;
             }
             .card-footer {
                 display: flex;
@@ -370,8 +368,9 @@
                 padding: 15px;
 
                 .card-description {
-                    -webkit-line-clamp: 2;
-                    line-clamp: 2;
+                    min-height: 2.8em;
+                    max-height: 2.8em;
+                    line-height: 1.4;
                 }
             }
         }

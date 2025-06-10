@@ -65,7 +65,35 @@ const CourseCard = ({
     duration,
     skill_keyword,
   } = course
-  const { locked = false, completed = false } = status
+  const { locked = false, completed = false } = status // Function to truncate text to fit exactly 2 lines
+  const truncateText = (text) => {
+    const fallbackText = 'No description available'
+    const inputText = text || fallbackText
+
+    // Force shorter limits to ensure truncation happens
+    const maxLength = 50 // Very short to test
+
+    console.log('Original text:', inputText)
+    console.log('Max length:', maxLength)
+    console.log('Text length:', inputText.length)
+
+    // Always truncate if longer than maxLength
+    if (inputText.length > maxLength) {
+      let truncated = inputText.substring(0, maxLength)
+      const lastSpace = truncated.lastIndexOf(' ')
+
+      if (lastSpace > maxLength * 0.6) {
+        truncated = inputText.substring(0, lastSpace)
+      }
+
+      const result = truncated.trim() + '...'
+      console.log('Truncated result:', result)
+      return result
+    }
+
+    console.log('No truncation needed')
+    return inputText
+  }
 
   const getCategoryName = (categoryKey) => {
     return CATEGORIES[categoryKey] || categoryKey || 'Uncategorized'
@@ -151,14 +179,14 @@ const CourseCard = ({
         </div>
 
         <div className="card-body">
-          <h3 className="card-title">{title}</h3>
+          <h3 className="card-title">{title}</h3>{' '}
           <Tooltip
             title={description || 'No description available'}
             placement="bottom"
             mouseEnterDelay={0.5}
           >
             <p className="card-description">
-              {description || 'No description available'}
+              {truncateText(description || 'No description available')}
             </p>
           </Tooltip>{' '}
           <div className="card-footer">
