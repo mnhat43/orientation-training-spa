@@ -20,11 +20,6 @@ const ProfileDrawer = ({ visible, onClose, currentUser, onUpdateUser }) => {
     onClose()
   }
 
-  const handlePasswordChanged = () => {
-    // Optional callback when password is changed successfully
-    // You can add any additional logic here if needed
-  }
-
   return (
     <Drawer
       placement="right"
@@ -44,11 +39,7 @@ const ProfileDrawer = ({ visible, onClose, currentUser, onUpdateUser }) => {
 
         <Divider />
 
-        <ChangePasswordForm
-          ref={passwordFormRef}
-          currentUser={currentUser}
-          onPasswordChanged={handlePasswordChanged}
-        />
+        <ChangePasswordForm ref={passwordFormRef} currentUser={currentUser} />
       </div>
     </Drawer>
   )

@@ -115,10 +115,6 @@ const ProfileInformationForm = forwardRef(
 
         setTempAvatar(base64String)
         setHasProfileChanges(true)
-
-        message.success(
-          'Avatar selected! Click "Update Profile" to save changes.',
-        )
       } catch (error) {
         message.error(
           'Error processing avatar: ' + (error.message || 'Unknown error'),
