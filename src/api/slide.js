@@ -3,9 +3,6 @@ const slide = {
     try {
       let encodedPath = filePath.replace(/\/files\//, '/files%2F')
 
-      console.log('Original path:', filePath)
-      console.log('Encoded path:', encodedPath)
-
       let response = await fetch(encodedPath, {
         method: 'GET',
         mode: 'cors',
@@ -18,8 +15,6 @@ const slide = {
         encodedPath = filePath.replace(/\/([^\/]+)$/, (match, filename) => {
           return '/' + encodeURIComponent(filename)
         })
-
-        console.log('Trying alternative encoding:', encodedPath)
 
         response = await fetch(encodedPath, {
           method: 'GET',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Badge, Card, Spin, Alert, Typography } from 'antd'
+import { Button, Badge, Card, Spin, Alert, Typography, Space } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
 import JSZip from 'jszip'
 import slideApi from '@api/slide'
@@ -28,16 +28,6 @@ const Slide = ({ filePath }) => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState([])
   const [timeSpent, setTimeSpent] = useState(0)
-
-  useEffect(() => {
-    const startTime = Date.now()
-
-    const timer = setInterval(() => {
-      setTimeSpent(Math.floor((Date.now() - startTime) / 1000))
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [])
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -77,11 +67,7 @@ const Slide = ({ filePath }) => {
         setIsLoading(true)
         setError(null)
 
-        console.log('Loading slides from:', filePath)
-
         const arrayBuffer = await slideApi.getSlideFile(filePath)
-        console.log('Successfully fetched slide file')
-
         const zip = new JSZip()
         const zipData = await zip.loadAsync(arrayBuffer)
 
@@ -118,51 +104,6 @@ const Slide = ({ filePath }) => {
                     const mimeType = getMimeType(extension)
                     const typedBlob = new Blob([blob], { type: mimeType })
                     content = URL.createObjectURL(typedBlob)
-
-                    console.log(`✅ Created blob URL for image ${filename}:`, {
-                      url: content,
-                      originalSize: blob.size,
-                      newSize: typedBlob.size,
-                      mimeType: mimeType,
-                      extension: extension,
-                    })
-
-                    try {
-                      const testResponse = await fetch(content, {
-                        method: 'HEAD',
-                      })
-                      console.log(`🧪 Blob URL test for ${filename}:`, {
-                        status: testResponse.status,
-                        contentType: testResponse.headers.get('content-type'),
-                        contentLength:
-                          testResponse.headers.get('content-length'),
-                      })
-                    } catch (testError) {
-                      console.warn(
-                        `⚠️ Blob URL test failed for ${filename}:`,
-                        testError.message,
-                      )
-
-                      try {
-                        const reader = new FileReader()
-                        const dataUrl = await new Promise((resolve, reject) => {
-                          reader.onload = () => resolve(reader.result)
-                          reader.onerror = reject
-                          reader.readAsDataURL(typedBlob)
-                        })
-
-                        URL.revokeObjectURL(content)
-                        content = dataUrl
-                        console.log(
-                          `🔄 Using data URL fallback for ${filename}`,
-                        )
-                      } catch (dataUrlError) {
-                        console.error(
-                          `❌ Data URL fallback failed for ${filename}:`,
-                          dataUrlError,
-                        )
-                      }
-                    }
                   } else {
                     console.warn(`❌ Invalid blob for ${filename}:`, blob)
                     continue
@@ -310,14 +251,14 @@ const Slide = ({ filePath }) => {
   if (isLoading) {
     return (
       <div className="slide-container loading">
-        <Card className="slide-loading-card">
+        <Space>
           <Spin size="large" />
           <Text
             style={{ marginTop: 16, display: 'block', textAlign: 'center' }}
           >
             Loading slide content...
           </Text>
-        </Card>
+        </Space>
       </div>
     )
   }
