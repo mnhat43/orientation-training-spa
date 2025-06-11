@@ -7,7 +7,7 @@ export const CATEGORIES = {
 }
 
 export const CATEGORY_COLORS = {
-  Onboarding: 'blue',
+  Onboarding: 'magenta',
   Company: 'orange',
   Technical: 'green',
   Soft: 'purple',

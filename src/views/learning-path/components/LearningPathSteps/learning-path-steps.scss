@@ -121,25 +121,6 @@
                             font-size: 11px;
                         }
                     }
-
-                    .skill-keyword-tag {
-                        margin: 0;
-                        font-size: 11px;
-                        padding: 2px 8px;
-                        border-radius: 12px;
-                        background: linear-gradient(135deg, #00bcd4 0%, #0097a7 50%, #006064 100%);
-                        color: white;
-                        border: none;
-                        font-weight: 500;
-                        letter-spacing: 0.2px;
-                        box-shadow: 0 2px 4px rgba(0, 188, 212, 0.2);
-                        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-
-                        &:hover {
-                            transform: translateY(-1px);
-                            box-shadow: 0 4px 8px rgba(0, 188, 212, 0.3);
-                        }
-                    }
                 }
 
                 .course-actions {

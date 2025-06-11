@@ -124,8 +124,12 @@ const LearningPathSteps = ({
                           {course.skill_keyword.map((skill, index) => (
                             <Tag
                               key={index}
-                              className="skill-keyword-tag"
-                              color="cyan"
+                              color="blue"
+                              style={{
+                                fontSize: '12px',
+                                padding: '0 8px',
+                                borderRadius: '10px',
+                              }}
                             >
                               {skill}
                             </Tag>

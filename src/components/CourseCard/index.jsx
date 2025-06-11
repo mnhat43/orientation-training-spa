@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tooltip, Popconfirm } from 'antd'
+import { Tooltip, Popconfirm, Tag } from 'antd'
 import {
   EditOutlined,
   DeleteOutlined,
@@ -185,9 +185,17 @@ const CourseCard = ({
             {skill_keyword && skill_keyword.length > 0 && (
               <div className="skill-keywords">
                 {skill_keyword.map((skill, index) => (
-                  <span key={index} className="skill-tag">
+                  <Tag
+                    key={index}
+                    color="blue"
+                    style={{
+                      fontSize: '12px',
+                      padding: '0 8px',
+                      borderRadius: '10px',
+                    }}
+                  >
                     {skill}
-                  </span>
+                  </Tag>
                 ))}
               </div>
             )}

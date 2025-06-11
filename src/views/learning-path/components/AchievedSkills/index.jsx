@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tag, Tooltip } from 'antd'
+import { Tag } from 'antd'
 import {
   TrophyOutlined,
   StarOutlined,
@@ -13,7 +13,7 @@ const AchievedSkills = ({ mySkills = [] }) => {
       <div className="achieved-skills-section">
         <div className="skills-header">
           <TrophyOutlined className="skills-icon" />
-          <h3>Your Achievements</h3>
+          <h3>Acquired Skills</h3>
         </div>
         <div className="no-skills-message">
           <p>
@@ -28,11 +28,7 @@ const AchievedSkills = ({ mySkills = [] }) => {
     <div className="achieved-skills-section">
       <div className="skills-header">
         <TrophyOutlined className="skills-icon" />
-        <h3>Your Achievements</h3>
-        <div className="skills-count">
-          <CheckCircleOutlined />
-          <span>{mySkills.length} Skills Mastered</span>
-        </div>
+        <h3>Acquired Skills</h3>
       </div>
 
       <div className="skills-content">
@@ -44,8 +40,12 @@ const AchievedSkills = ({ mySkills = [] }) => {
           {mySkills.map((skill, index) => (
             <Tag
               key={index}
-              className="achievement-skill-tag"
-              icon={<StarOutlined />}
+              color="purple"
+              style={{
+                padding: '4px 10px',
+                borderRadius: '16px',
+                fontSize: '14px',
+              }}
             >
               {skill}
             </Tag>
