@@ -42,7 +42,11 @@ const AchievedSkills = ({ mySkills = [] }) => {
 
         <div className="skills-list">
           {mySkills.map((skill, index) => (
-            <Tag className="achievement-skill-tag" icon={<StarOutlined />}>
+            <Tag
+              key={index}
+              className="achievement-skill-tag"
+              icon={<StarOutlined />}
+            >
               {skill}
             </Tag>
           ))}

@@ -223,7 +223,7 @@ const ProfileDrawer = ({ visible, onClose, currentUser, onUpdateUser }) => {
                   {' '}
                   <div style={{ position: 'relative' }}>
                     <Avatar
-                      size={80}
+                      size={100}
                       src={tempAvatar || currentUser?.avatar}
                       icon={
                         !(tempAvatar || currentUser?.avatar) && <UserOutlined />
