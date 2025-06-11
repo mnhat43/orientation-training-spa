@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Form,
   Input,
@@ -7,11 +7,10 @@ import {
   DatePicker,
   Typography,
   Space,
-  Modal,
+  Drawer,
   message,
   Row,
   Col,
-  Tooltip,
   Radio,
 } from 'antd'
 import {
@@ -25,29 +24,46 @@ import {
   UploadOutlined,
   ManOutlined,
   WomanOutlined,
+  CopyOutlined,
 } from '@ant-design/icons'
 import { DEPARTMENT_NAMES } from '@constants'
 import { generateRandomPassword } from '@helpers/common'
 import moment from 'moment'
+import './AddEmployeeForm.scss'
 
-const { Title, Text } = Typography
+const { Title } = Typography
 const { Option } = Select
 
-const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
+const AddEmployeeForm = ({ visible, onCancel, onSubmit, loading = false }) => {
   const [form] = Form.useForm()
   const [password, setPassword] = useState(generateRandomPassword())
   const [avatar, setAvatar] = useState(null)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
 
-  const getRandomAvatarUrl = () => {
-    const gender = Math.random() < 0.5 ? 'men' : 'women'
-    const id = Math.floor(Math.random() * 100)
-    return `https://randomuser.me/api/portraits/${gender}/${id}.jpg`
-  }
+  useEffect(() => {
+    if (visible) {
+      const initialPassword = generateRandomPassword()
+      setPassword(initialPassword)
+      form.setFieldsValue({ password: initialPassword })
+    }
+  }, [visible, form])
 
   const handleRegeneratePassword = () => {
     const newPassword = generateRandomPassword()
     setPassword(newPassword)
     form.setFieldsValue({ password: newPassword })
+  }
+  const handleCopyPassword = () => {
+    try {
+      navigator.clipboard.writeText(password)
+    } catch (error) {
+      const textArea = document.createElement('textarea')
+      textArea.value = password
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+    }
   }
 
   const handleSubmit = (values) => {
@@ -56,7 +72,10 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
       birthday: values.birthday
         ? moment(values.birthday).format('YYYY-MM-DD')
         : null,
-      avatar: avatar || getRandomAvatarUrl(),
+      company_joined_date: values.company_joined_date
+        ? moment(values.company_joined_date).format('YYYY-MM-DD')
+        : moment().format('YYYY-MM-DD'),
+      avatar: avatar || null,
     }
 
     onSubmit(employeeData)
@@ -65,22 +84,39 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
 
   const resetForm = () => {
     form.resetFields()
-    setPassword(generateRandomPassword())
+    const newPassword = generateRandomPassword()
+    setPassword(newPassword)
+    form.setFieldsValue({ password: newPassword })
     setAvatar(null)
   }
 
   return (
-    <Modal
+    <Drawer
       title={<Title level={4}>Add New Employee</Title>}
       open={visible}
-      onCancel={onCancel}
-      footer={null}
-      width={1500}
-      centered
-      className="add-employee-modal-centered"
-      style={{ pointerEvents: 'auto' }}
-      forceRender
+      onClose={loading ? undefined : onCancel}
+      width={720}
+      className={`add-employee-drawer ${loading ? 'is-loading' : ''}`}
+      destroyOnClose={true}
+      maskClosable={!loading}
+      footer={
+        <div style={{ textAlign: 'right' }}>
+          <Space>
+            <Button onClick={onCancel} disabled={loading}>
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => form.submit()}
+              loading={loading}
+            >
+              {loading ? 'Creating...' : 'Create Employee'}
+            </Button>
+          </Space>
+        </div>
+      }
     >
+      {' '}
       <Form
         form={form}
         layout="vertical"
@@ -88,15 +124,19 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
         initialValues={{
           password,
           gender: 1,
+          company_joined_date: moment(),
         }}
+        className="employee-form"
+        disabled={loading}
       >
-        <Row gutter={16}>
-          <Col span={6}>
+        <Row gutter={24}>
+          {/* Left Column - Avatar */}
+          <Col span={8}>
             <div className="profile-picture-container">
               <div
-                className={`avatar-container ${avatar ? 'has-avatar' : ''}`}
+                className={`avatar-container ${avatar ? 'has-avatar' : ''} ${isUploadingAvatar ? 'uploading' : ''}`}
                 onClick={() => {
-                  if (avatar) {
+                  if (!loading && !isUploadingAvatar) {
                     document.getElementById('avatar-upload-input').click()
                   }
                 }}
@@ -109,7 +149,18 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
                   />
                 ) : (
                   <div className="avatar-placeholder">
-                    <UserOutlined className="avatar-icon" />
+                    <UserOutlined
+                      className={
+                        isUploadingAvatar
+                          ? 'avatar-icon loading'
+                          : 'avatar-icon'
+                      }
+                    />
+                  </div>
+                )}
+                {isUploadingAvatar && (
+                  <div className="avatar-loading-overlay">
+                    <div>Uploading...</div>
                   </div>
                 )}
               </div>
@@ -118,6 +169,7 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
                 type="file"
                 id="avatar-upload-input"
                 accept="image/*"
+                disabled={loading || isUploadingAvatar}
                 style={{ display: 'none' }}
                 onChange={(e) => {
                   const file = e.target.files?.[0]
@@ -127,14 +179,17 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
                       return
                     }
 
+                    setIsUploadingAvatar(true)
                     const reader = new FileReader()
                     reader.onload = (event) => {
                       if (event.target?.result) {
                         setAvatar(event.target.result)
                       }
+                      setIsUploadingAvatar(false)
                     }
                     reader.onerror = () => {
                       message.error('Failed to read image file')
+                      setIsUploadingAvatar(false)
                     }
                     reader.readAsDataURL(file)
                   }
@@ -151,6 +206,7 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
                       onClick={() =>
                         document.getElementById('avatar-upload-input').click()
                       }
+                      disabled={loading}
                     >
                       Upload
                     </Button>
@@ -160,6 +216,7 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
                       danger
                       className="remove-btn"
                       onClick={() => setAvatar(null)}
+                      disabled={loading}
                     >
                       Remove
                     </Button>
@@ -167,98 +224,10 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
                 </Space>
               </div>
             </div>
-
-            <style>{`
-              .profile-picture-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-              }
-              .avatar-container {
-                position: relative;
-                width: 90px;
-                height: 90px;
-                border-radius: 50%;
-                overflow: hidden;
-                background-color: #f5f5f5;
-                cursor: pointer;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease;
-                margin-bottom: 12px;
-              }
-
-              .avatar-container:hover {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-              }
-
-              .avatar-image {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-              }
-
-              .avatar-placeholder {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 100%;
-                height: 100%;
-                background-color: #e6f7ff;
-              }
-              .avatar-icon {
-                font-size: 36px;
-                color: #1890ff;
-              }
-              .avatar-overlay {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 30px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background: rgba(0, 0, 0, 0.5);
-                color: white;
-                opacity: 0;
-                transition: opacity 0.3s;
-              }
-
-              .avatar-container:hover .avatar-overlay {
-                opacity: 1;
-              }
-
-              .avatar-edit-icon {
-                font-size: 20px;
-              }
-
-              .profile-picture-actions {
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 8px;
-              }
-              .upload-text {
-                margin-bottom: 4px;
-                font-size: 12px;
-              }
-
-              .button-group {
-                display: flex;
-                justify-content: center;
-                width: 100%;
-              }
-
-              .upload-btn,
-              .remove-btn {
-                min-width: 80px;
-                font-size: 12px;
-              }
-            `}</style>
           </Col>
 
-          <Col span={18}>
+          {/* Right Column - Form Fields */}
+          <Col span={16}>
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
@@ -283,61 +252,83 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                { required: true, message: 'Please enter email' },
-                { type: 'email', message: 'Please enter a valid email' },
-              ]}
-            >
-              <Input prefix={<MailOutlined />} placeholder="Email" />
-            </Form.Item>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="email"
+                  label="Email"
+                  rules={[
+                    { required: true, message: 'Please enter email' },
+                    { type: 'email', message: 'Please enter a valid email' },
+                  ]}
+                >
+                  <Input prefix={<MailOutlined />} placeholder="Email" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="department"
+                  label="Department"
+                  rules={[
+                    { required: true, message: 'Please select department' },
+                  ]}
+                >
+                  <Select
+                    placeholder="Select Department"
+                    suffixIcon={<TeamOutlined />}
+                  >
+                    {DEPARTMENT_NAMES.map((dept) => (
+                      <Option key={dept} value={dept}>
+                        {dept}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
           </Col>
         </Row>
 
-        <Row gutter={16}>
-          <Col span={9}>
+        {/* Full Width Form Fields */}
+        <Row gutter={16} className="mt-4">
+          <Col span={8}>
             <Form.Item
               name="gender"
               label="Gender"
               rules={[{ required: true, message: 'Please select gender' }]}
             >
-              <Radio.Group buttonStyle="solid">
-                <Radio.Button value={1}>
+              <Radio.Group className="gender-radio-group">
+                <Radio value={1}>
                   <Space>
                     <ManOutlined />
                     Male
                   </Space>
-                </Radio.Button>
-                <Radio.Button value={2}>
+                </Radio>
+                <Radio value={2}>
                   <Space>
                     <WomanOutlined />
                     Female
                   </Space>
-                </Radio.Button>
+                </Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item
-              name="department"
-              label="Department"
-              rules={[{ required: true, message: 'Please select department' }]}
+              name="company_joined_date"
+              label="Joined Date"
+              rules={[{ required: true, message: 'Please select joined date' }]}
             >
-              <Select
-                placeholder="Select Department"
-                suffixIcon={<TeamOutlined />}
-              >
-                {DEPARTMENT_NAMES.map((dept) => (
-                  <Option key={dept} value={dept}>
-                    {dept}
-                  </Option>
-                ))}
-              </Select>
+              <DatePicker
+                style={{ width: '100%' }}
+                format="YYYY-MM-DD"
+                placeholder="Select Joined Date"
+                suffixIcon={<CalendarOutlined />}
+              />
             </Form.Item>
           </Col>
-          <Col span={7}>
+          <Col span={8}>
             <Form.Item name="birthday" label="Birthday">
               <DatePicker
                 style={{ width: '100%' }}
@@ -348,36 +339,44 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
             </Form.Item>
           </Col>
         </Row>
+
         <Row gutter={16}>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item name="phone_number" label="Phone Number">
               <Input prefix={<PhoneOutlined />} placeholder="Phone Number" />
             </Form.Item>
           </Col>
-
-          <Col span={16}>
+          <Col span={12}>
             <Form.Item
               name="password"
-              label={
-                <Space>
-                  <Text>Password</Text>
-                  <Tooltip title="This password will be provided to the employee"></Tooltip>
-                </Space>
-              }
+              label="Password"
+              rules={[{ required: true, message: 'Password is required' }]}
             >
               <Input.Password
                 prefix={<LockOutlined />}
                 value={password}
                 readOnly
                 addonAfter={
-                  <Tooltip title="Generate a new password">
+                  <Space>
+                    {' '}
                     <Button
                       type="text"
                       icon={<ReloadOutlined />}
                       onClick={handleRegeneratePassword}
                       style={{ border: 'none' }}
+                      title="Generate new password"
+                      disabled={loading}
                     />
-                  </Tooltip>
+                    <Button
+                      type="text"
+                      icon={<CopyOutlined />}
+                      onClick={handleCopyPassword}
+                      style={{ border: 'none' }}
+                      title="Copy password"
+                      className="copy-password-btn"
+                      disabled={loading}
+                    />
+                  </Space>
                 }
               />
             </Form.Item>
@@ -387,17 +386,8 @@ const AddEmployeeForm = ({ visible, onCancel, onSubmit }) => {
         <Form.Item name="role_id" hidden initialValue={3}>
           <Input />
         </Form.Item>
-
-        <div style={{ textAlign: 'right', marginTop: 24 }}>
-          <Space>
-            <Button onClick={onCancel}>Cancel</Button>
-            <Button type="primary" htmlType="submit">
-              Create Employee
-            </Button>
-          </Space>
-        </div>
       </Form>
-    </Modal>
+    </Drawer>
   )
 }
 

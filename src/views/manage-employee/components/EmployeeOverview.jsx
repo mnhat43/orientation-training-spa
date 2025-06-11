@@ -3,7 +3,6 @@ import {
   Table,
   Tag,
   Button,
-  Card,
   Space,
   Avatar,
   Input,
@@ -21,7 +20,6 @@ import {
   SearchOutlined,
   FilterOutlined,
   BarsOutlined,
-  DashboardOutlined,
   SolutionOutlined,
   UserAddOutlined,
 } from '@ant-design/icons'
@@ -40,6 +38,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
   const [statusFilter, setStatusFilter] = useState('all')
   const [filteredOverview, setFilteredOverview] = useState([])
   const [addEmployeeVisible, setAddEmployeeVisible] = useState(false)
+  const [isAddingEmployee, setIsAddingEmployee] = useState(false)
 
   useEffect(() => {
     let result = [...overviewData]
@@ -86,14 +85,17 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
     }
   }
   const handleAddEmployee = async (employeeData) => {
+    setIsAddingEmployee(true)
     try {
       const response = await userApi.register(employeeData)
 
       if (response && response.data) {
-        message.success(
-          `Employee ${employeeData.first_name} ${employeeData.last_name} created successfully!`,
-        )
+        message.success({
+          content: `Employee ${employeeData.first_name} ${employeeData.last_name} created successfully!`,
+          duration: 5,
+        })
         onRefresh()
+        setAddEmployeeVisible(false)
       } else {
         message.error('Failed to create employee. Please try again.')
       }
@@ -104,7 +106,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
         'Failed to create employee. Please try again.'
       message.error(errorMessage)
     } finally {
-      setAddEmployeeVisible(false)
+      setIsAddingEmployee(false)
     }
   }
 
@@ -251,12 +253,12 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
             ),
           }}
         />
-      </>
-
+      </>{' '}
       <AddEmployeeForm
         visible={addEmployeeVisible}
         onCancel={() => setAddEmployeeVisible(false)}
         onSubmit={handleAddEmployee}
+        loading={isAddingEmployee}
       />
     </>
   )
