@@ -151,6 +151,42 @@ const ProfileSummary = ({ userInfo, processStats }) => {
 
       <Divider style={{ margin: '24px 0 16px' }} />
 
+      {/* Skills Section - New section to display user skills */}
+      {processStats.userSkills && processStats.userSkills.length > 0 && (
+        <>
+          <div className="skills-section">
+            <div className="section-header">
+              <TrophyOutlined
+                className="section-icon"
+                style={{ color: '#722ed1' }}
+              />
+              <Text strong className="section-title">
+                Acquired Skills
+              </Text>
+            </div>
+
+            <div className="skills-container">
+              <Space wrap size={[8, 12]}>
+                {processStats.userSkills.map((skill) => (
+                  <Tag
+                    color="purple"
+                    key={skill}
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '16px',
+                      fontSize: '14px',
+                    }}
+                  >
+                    {skill}
+                  </Tag>
+                ))}
+              </Space>
+            </div>
+          </div>
+          <Divider style={{ margin: '24px 0 16px' }} />
+        </>
+      )}
+
       {/* Performance Section - Modified to use single row per metric */}
       <div
         className="performance-section"

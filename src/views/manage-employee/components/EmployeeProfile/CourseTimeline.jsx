@@ -178,6 +178,26 @@ const CourseTimeline = ({
                       Completed: {course.completedDate}
                     </span>
                   </div>
+                  {course.skill_keywords &&
+                    course.skill_keywords.length > 0 && (
+                      <div className="course-skills">
+                        <Space wrap size={[4, 8]}>
+                          {course.skill_keywords.map((skill) => (
+                            <Tag
+                              color="blue"
+                              key={skill}
+                              style={{
+                                fontSize: '12px',
+                                padding: '0 8px',
+                                borderRadius: '10px',
+                              }}
+                            >
+                              {skill}
+                            </Tag>
+                          ))}
+                        </Space>
+                      </div>
+                    )}
                 </div>
               </div>
 
@@ -301,10 +321,36 @@ const CourseTimeline = ({
                     {course.course_title}
                   </Text>
                   <div className="course-meta">
-                    <span className="progress-percent">
-                      {course.progress}% complete
-                    </span>
+                    <Text type="secondary">
+                      Progress: {course.progress || 0}%
+                    </Text>
+                    {course.startDate && (
+                      <span className="start-date">
+                        Started: {course.startDate}
+                      </span>
+                    )}
                   </div>
+                  {course.skill_keywords &&
+                    course.skill_keywords.length > 0 && (
+                      <div className="course-skills">
+                        <Space wrap size={[4, 8]}>
+                          {course.skill_keywords.map((skill) => (
+                            <Tag
+                              color="blue"
+                              key={skill}
+                              style={{
+                                fontSize: '12px',
+                                padding: '0 8px',
+                                borderRadius: '10px',
+                                opacity: '0.75',
+                              }}
+                            >
+                              {skill}
+                            </Tag>
+                          ))}
+                        </Space>
+                      </div>
+                    )}
                 </div>
               </div>
 
