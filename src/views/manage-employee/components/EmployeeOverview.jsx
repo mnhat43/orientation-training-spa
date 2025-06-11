@@ -164,7 +164,11 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
       key: 'employee',
       render: (_, record) => (
         <Space>
-          <Avatar src={record.avatar} icon={<UserOutlined />} size="large" />
+          <Avatar
+            src={record.avatar || null}
+            icon={<UserOutlined />}
+            size="large"
+          />
           <div>
             <div className="employee-name">{record.fullname}</div>
             <div className="employee-email">{record.email}</div>
