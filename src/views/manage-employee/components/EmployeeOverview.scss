@@ -115,3 +115,18 @@
         gap: 8px;
     }
 }
+
+.employee-table {
+    .skill-keywords {
+        .ant-tag {
+            margin: 2px;
+            font-size: 12px;
+        }
+
+        .no-skills {
+            color: #999;
+            font-style: italic;
+            font-size: 12px;
+        }
+    }
+}

@@ -11,6 +11,7 @@ import {
   message,
   Row,
   Col,
+  Tooltip,
 } from 'antd'
 import {
   UserOutlined,
@@ -22,12 +23,14 @@ import {
   BarsOutlined,
   SolutionOutlined,
   UserAddOutlined,
+  TagsOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import './EmployeeOverview.scss'
 import AddEmployeeForm from './AddEmployeeForm'
 import { DEPARTMENT_NAMES, STATUS_PROGRESS } from '@constants'
 import userApi from '@api/user'
+import skillkeywordApi from '@api/skillkeyword'
 
 const { Option } = Select
 
@@ -36,9 +39,32 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
   const [searchText, setSearchText] = useState('')
   const [departmentFilter, setDepartmentFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [skillKeywordFilter, setSkillKeywordFilter] = useState([])
   const [filteredOverview, setFilteredOverview] = useState([])
   const [addEmployeeVisible, setAddEmployeeVisible] = useState(false)
   const [isAddingEmployee, setIsAddingEmployee] = useState(false)
+  const [availableSkills, setAvailableSkills] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  // Fetch skill keywords from API
+  useEffect(() => {
+    const fetchSkillKeywords = async () => {
+      setLoading(true)
+      try {
+        const response = await skillkeywordApi.list()
+        if (response && response.data) {
+          setAvailableSkills(response.data)
+        }
+      } catch (error) {
+        console.error('Error fetching skill keywords:', error)
+        message.error('Failed to load skill keywords')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSkillKeywords()
+  }, [])
 
   useEffect(() => {
     let result = [...overviewData]
@@ -47,7 +73,13 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
       result = result.filter(
         (employee) =>
           employee.fullname.toLowerCase().includes(searchText.toLowerCase()) ||
-          employee.department.toLowerCase().includes(searchText.toLowerCase()),
+          employee.department
+            .toLowerCase()
+            .includes(searchText.toLowerCase()) ||
+          (employee.skill_keywords &&
+            employee.skill_keywords.some((skill) =>
+              skill.toLowerCase().includes(searchText.toLowerCase()),
+            )),
       )
     }
 
@@ -61,8 +93,24 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
       result = result.filter((employee) => employee.status === statusFilter)
     }
 
+    if (skillKeywordFilter.length > 0) {
+      result = result.filter(
+        (employee) =>
+          employee.skill_keywords &&
+          skillKeywordFilter.every((filterSkill) =>
+            employee.skill_keywords.includes(filterSkill),
+          ),
+      )
+    }
+
     setFilteredOverview(result)
-  }, [searchText, departmentFilter, statusFilter, overviewData])
+  }, [
+    searchText,
+    departmentFilter,
+    statusFilter,
+    skillKeywordFilter,
+    overviewData,
+  ])
 
   const getStatusTag = (status) => {
     switch (status) {
@@ -136,6 +184,25 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
       render: (status, record) => getStatusTag(status),
     },
     {
+      title: 'Skills',
+      key: 'skills',
+      render: (_, record) => (
+        <div className="skill-keywords">
+          {record.skill_keywords && record.skill_keywords.length > 0 ? (
+            <Space wrap>
+              {record.skill_keywords.map((skill) => (
+                <Tag color="blue" key={skill}>
+                  {skill}
+                </Tag>
+              ))}
+            </Space>
+          ) : (
+            <span className="no-skills">No skills</span>
+          )}
+        </div>
+      ),
+    },
+    {
       title: 'Contact',
       key: 'contact',
       render: (_, record) => (
@@ -179,9 +246,9 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
     <>
       <>
         <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <Input
-              placeholder="Search employees..."
+              placeholder="Search by name, department or skills..."
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
@@ -189,7 +256,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
               style={{ height: '42px' }}
             />
           </Col>
-          <Col xs={8} sm={8} md={4} lg={4} xl={4}>
+          <Col xs={8} sm={8} md={6} lg={4} xl={4}>
             <Select
               placeholder="Department"
               value={departmentFilter}
@@ -205,7 +272,7 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
               ))}
             </Select>
           </Col>
-          <Col xs={8} sm={8} md={4} lg={4} xl={4}>
+          <Col xs={8} sm={8} md={6} lg={4} xl={4}>
             <Select
               placeholder="Status"
               value={statusFilter}
@@ -221,7 +288,29 @@ const EmployeeOverview = ({ overviewData, onSelectEmployee, onRefresh }) => {
               ))}
             </Select>
           </Col>
-          <Col xs={8} sm={8} md={4} lg={4} xl={4}>
+          <Col xs={8} sm={8} md={6} lg={4} xl={4}>
+            <Select
+              placeholder="Skills"
+              value={skillKeywordFilter}
+              onChange={setSkillKeywordFilter}
+              suffixIcon={<TagsOutlined />}
+              style={{ height: '42px', width: '100%' }}
+              loading={loading}
+              mode="multiple"
+              maxTagCount={1}
+              maxTagPlaceholder={(omittedValues) =>
+                `+${omittedValues.length} skills`
+              }
+              allowClear
+            >
+              {availableSkills.map((skill) => (
+                <Option key={skill._id || skill.id} value={skill.name}>
+                  {skill.name}
+                </Option>
+              ))}
+            </Select>
+          </Col>
+          <Col xs={8} sm={8} md={6} lg={4} xl={4}>
             <Button
               type="primary"
               icon={<UserAddOutlined />}
