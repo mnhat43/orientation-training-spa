@@ -9,7 +9,7 @@ import {
 import { Link } from 'react-router-dom'
 import Logo from '@components/Logo'
 import useWindowSize from '@hooks/useWindowSize'
-import ProfileDrawer from './ProfileDrawer'
+import ProfileDrawer from '@components/Profile'
 
 const MobileDrawer = ({
   visible,

@@ -5,9 +5,9 @@ const user = {
     const url = '/user/profile'
     return API.get(url)
   },
-  updateUserInfo: (user_id, params) => {
-    const url = `/user/${user_id}`
-    return API.put(url, params)
+  updateProfile: (params) => {
+    const url = `/user/update-profile`
+    return API.post(url, params)
   },
   changePassword: (params) => {
     const url = '/user/change-password'

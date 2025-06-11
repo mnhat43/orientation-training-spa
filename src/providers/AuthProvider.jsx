@@ -1,5 +1,4 @@
-import { useContext, createContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { createContext, useState, useEffect } from 'react'
 import apiUser from '@api/user'
 import apiAuth from '@api/auth'
 

@@ -5,7 +5,7 @@ import {
   LogoutOutlined,
   SettingOutlined,
 } from '@ant-design/icons'
-import ProfileDrawer from './ProfileDrawer'
+import ProfileDrawer from '@components/Profile'
 
 const UserMenu = ({ currentUser, onLogout, navigate, onUpdateUser }) => {
   const [profileDrawerVisible, setProfileDrawerVisible] = useState(false)
