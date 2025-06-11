@@ -148,7 +148,7 @@ const ManageEmployees = () => {
         label: (
           <span>
             <FileTextOutlined />
-            Reviews ({totalReviews}){' '}
+            Reviews Quiz Essay ({totalReviews}){' '}
             {reviewsLoading && (
               <LoadingOutlined spin style={{ marginLeft: 8 }} />
             )}
