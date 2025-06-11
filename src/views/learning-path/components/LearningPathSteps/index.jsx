@@ -6,6 +6,7 @@ import {
   RightCircleOutlined,
   ClockCircleOutlined,
   UserOutlined,
+  TagOutlined,
 } from '@ant-design/icons'
 import { CATEGORY_COLORS } from '@constants'
 import './learning-path-steps.scss'
@@ -112,8 +113,25 @@ const LearningPathSteps = ({
                           <ClockCircleOutlined /> {formatTime(course.duration)}
                         </span>
                       )}
-                    </div>
-
+                    </div>{' '}
+                    {/* Skill Keywords Section */}
+                    {course.skill_keyword &&
+                      course.skill_keyword.length > 0 && (
+                        <div className="skill-keywords-section">
+                          <span className="skill-keywords-label">
+                            <TagOutlined /> Skills:
+                          </span>
+                          {course.skill_keyword.map((skill, index) => (
+                            <Tag
+                              key={index}
+                              className="skill-keyword-tag"
+                              color="cyan"
+                            >
+                              {skill}
+                            </Tag>
+                          ))}
+                        </div>
+                      )}
                     {hasAssessment && (
                       <div className="course-assessment">
                         <h4>Trainer Assessment</h4>

@@ -10,10 +10,12 @@ import LearningPathSteps from './components/LearningPathSteps'
 import ProgressStats from './components/ProgressStats'
 import NextAction from './components/NextAction'
 import CourseList from './components/CourseList'
+import AchievedSkills from './components/AchievedSkills'
 
 const MyLearningPath = () => {
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
+  const [mySkills, setMySkills] = useState([])
   const [userProgress, setUserProgress] = useState({
     totalCompleted: 0,
     progressPercentage: 0,
@@ -33,6 +35,10 @@ const MyLearningPath = () => {
           const sortedCourses = [...response.data.courses].sort(
             (a, b) => a.course_position - b.course_position,
           )
+
+          if (response.data.my_skills) {
+            setMySkills(response.data.my_skills)
+          }
 
           const completedCount = sortedCourses.filter(
             (course) => course.completed,
@@ -132,14 +138,17 @@ const MyLearningPath = () => {
                 navigate={navigate}
                 getCourseStatus={getCourseStatus}
               />
-            </div>
-
+            </div>{' '}
             <div className="right-column">
               <div className="stat-card progress-card">
                 <ProgressStats
                   userProgress={userProgress}
                   totalCourses={courses.length}
                 />
+              </div>
+
+              <div className="stat-card achieved-skills-card">
+                <AchievedSkills mySkills={mySkills} />
               </div>
 
               <div className="stat-card next-action-card">
