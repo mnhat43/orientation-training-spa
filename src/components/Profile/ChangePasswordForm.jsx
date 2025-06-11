@@ -41,10 +41,12 @@ const ChangePasswordForm = forwardRef((props, ref) => {
         passwordForm.resetFields()
         setHasPasswordChanges(false)
       } else {
-        const errorMessage =
-          response.message ||
-          'Failed to change password. Please check your current password.'
-        message.error(errorMessage)
+        passwordForm.setFields([
+          {
+            name: 'currentPassword',
+            errors: ['Current password is incorrect'],
+          },
+        ])
       }
     } catch (error) {
       console.error('Password change error:', error)
@@ -58,9 +60,33 @@ const ChangePasswordForm = forwardRef((props, ref) => {
     }
   }
 
+  // Enhanced password validation
   const validatePassword = (_, value) => {
-    if (!value || value.length < 6) {
-      return Promise.reject(new Error('Password must be at least 6 characters'))
+    if (!value) {
+      return Promise.reject(new Error('Password is required'))
+    }
+    if (value.length < 8) {
+      return Promise.reject(new Error('Password must be at least 8 characters'))
+    }
+    if (!/[A-Z]/.test(value)) {
+      return Promise.reject(
+        new Error('Password must contain at least one uppercase letter'),
+      )
+    }
+    if (!/[a-z]/.test(value)) {
+      return Promise.reject(
+        new Error('Password must contain at least one lowercase letter'),
+      )
+    }
+    if (!/[0-9]/.test(value)) {
+      return Promise.reject(
+        new Error('Password must contain at least one number'),
+      )
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+      return Promise.reject(
+        new Error('Password must contain at least one special character'),
+      )
     }
     return Promise.resolve()
   }
@@ -87,6 +113,7 @@ const ChangePasswordForm = forwardRef((props, ref) => {
               message: 'Please enter your current password',
             },
           ]}
+          validateTrigger={['onChange', 'onBlur']}
         >
           <Input.Password
             placeholder="Enter current password"
@@ -106,6 +133,8 @@ const ChangePasswordForm = forwardRef((props, ref) => {
             },
             { validator: validatePassword },
           ]}
+          validateTrigger={['onChange', 'onBlur']}
+          extra="Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
         >
           <Input.Password
             placeholder="Enter new password"
@@ -133,6 +162,7 @@ const ChangePasswordForm = forwardRef((props, ref) => {
               },
             }),
           ]}
+          validateTrigger={['onChange', 'onBlur']}
         >
           <Input.Password
             placeholder="Confirm new password"
