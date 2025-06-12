@@ -1,0 +1,129 @@
+.feedback-modal {
+    position: relative;
+
+    top: 0 !important;
+    transform: translateY(0) !important;
+
+    &.ant-modal {
+        transform-origin: center !important;
+        transition: all 0.3s ease-out !important;
+    }
+
+    .ant-modal-header {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 16px 24px;
+        background: linear-gradient(to right, #f0f6ff, #effbff);
+    }
+
+    .feedback-modal-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .feedback-icon {
+            font-size: 22px;
+            color: #1890ff;
+        }
+
+        span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+    }
+
+    .ant-modal-body {
+        padding: 24px;
+        background-color: #fafafa;
+    }
+
+    .ant-form-item-label {
+        font-weight: 500;
+    }
+
+    .ant-rate {
+        font-size: 28px;
+    }
+
+    .rating-section {
+        text-align: center;
+        margin-bottom: 20px;
+
+        h4 {
+            margin-bottom: 16px;
+        }
+    }
+
+    .emoji-display {
+        margin: 15px 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .feedback-emoji {
+            font-size: 48px;
+            transition: all 0.3s ease;
+
+            &.happy {
+                color: #52c41a;
+            }
+
+            &.neutral {
+                color: #faad14;
+            }
+
+            &.sad {
+                color: #ff4d4f;
+            }
+        }
+    }
+
+    .feedback-textarea {
+        resize: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:focus,
+        &:hover {
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+    }
+
+    .feedback-success {
+        text-align: center;
+        padding: 32px 0;
+
+        .success-icon {
+            font-size: 64px;
+            color: #52c41a;
+            margin-bottom: 24px;
+            animation: bounce 1s ease infinite;
+        }
+
+        h4 {
+            margin-bottom: 16px;
+        }
+    }
+}
+
+// This class is applied to the modal wrapper
+.ant-modal-wrap.feedback-modal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ant-modal {
+        top: 0 !important;
+        padding-bottom: 0;
+    }
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
