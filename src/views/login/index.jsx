@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, Spin } from 'antd'
 import {
   UserOutlined,
   LockOutlined,
@@ -12,29 +12,26 @@ import useAuth from '@hooks/useAuth'
 
 function LoginPage() {
   const navigate = useNavigate()
-  const { handleLogin } = useAuth()
+  const { handleLogin, loading } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [form] = Form.useForm() // Handle form submission and login
+  const [form] = Form.useForm()
+
   const onFinish = async (values) => {
     setIsLoading(true)
     setErrorMessage('')
 
     try {
-      // Instead of await and then navigate, use the return value
       const loginSuccess = await handleLogin(values.email, values.password)
 
-      // Only navigate if login was successful
       if (loginSuccess) {
         navigate('/dashboard')
       } else {
-        // Show error if login failed
         setErrorMessage(
           'Your email or password is incorrect. Please try again.',
         )
       }
     } catch (error) {
-      // Handle API errors with more descriptive message
       if (error.response && error.response.status === 429) {
         setErrorMessage(
           'Too many failed login attempts. Please try again later.',
@@ -55,15 +52,29 @@ function LoginPage() {
   const goToHome = () => {
     navigate('/')
   }
-  // Clear error message when user starts typing with a slight delay
   const handleValuesChange = () => {
-    // Keep the error message visible briefly so user can read it
-    // Then clear it when they start entering new credentials
     if (errorMessage) {
       setTimeout(() => {
         setErrorMessage('')
       }, 300)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="login-container">
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -130,7 +141,6 @@ function LoginPage() {
                 autoComplete="current-password"
               />
             </Form.Item>{' '}
-            {/* Error message with improved design */}
             <div
               className={`login-error-alert ${errorMessage ? 'visible' : ''}`}
             >

@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
     localStorage.getItem('token'),
   )
   const [currentUser, setCurrentUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (authToken) {
@@ -17,10 +18,12 @@ const AuthProvider = ({ children }) => {
       localStorage.removeItem('token')
     }
   }, [authToken])
-
   useEffect(() => {
     const fetchUser = async () => {
-      if (!authToken) return
+      if (!authToken) {
+        setLoading(false)
+        return
+      }
 
       try {
         const userResponse = await apiUser.getUserInfo()
@@ -31,12 +34,14 @@ const AuthProvider = ({ children }) => {
         console.error('Error fetching user info:', error)
         setCurrentUser(null)
         setAuthToken(null)
+      } finally {
+        setLoading(false)
       }
     }
     fetchUser()
   }, [authToken])
-
   const handleLogin = async (email, password) => {
+    setLoading(true)
     const formData = new FormData()
     formData.append('email', email)
     formData.append('password', password)
@@ -57,27 +62,35 @@ const AuthProvider = ({ children }) => {
           }
         } catch (userError) {
           console.error('Error fetching user info:', userError)
+          setLoading(false)
           return false
         }
 
+        setLoading(false)
         return true
       }
+      setLoading(false)
       return false
     } catch (error) {
       console.error('Login error:', error)
       setAuthToken(null)
       setCurrentUser(null)
+      setLoading(false)
       return false
     }
   }
+
   const handleLogout = async () => {
+    setLoading(true)
     try {
       await apiAuth.logout()
+      localStorage.removeItem('token')
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
       setAuthToken(null)
       setCurrentUser(null)
+      setLoading(false)
     }
   }
 
@@ -91,7 +104,6 @@ const AuthProvider = ({ children }) => {
   const isAuthenticated = () => {
     return !!authToken && !!currentUser
   }
-
   return (
     <AuthContext.Provider
       value={{
@@ -101,6 +113,7 @@ const AuthProvider = ({ children }) => {
         handleLogout,
         updateCurrentUser,
         isAuthenticated,
+        loading,
       }}
     >
       {children}

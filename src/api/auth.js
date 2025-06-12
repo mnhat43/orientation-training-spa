@@ -6,7 +6,8 @@ const auth = {
     return API.post(url, params)
   },
   logout: () => {
-    localStorage.removeItem('token')
+    const url = '/auth/logout'
+    return API.get(url)
   },
 }
 
