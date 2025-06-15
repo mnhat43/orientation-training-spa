@@ -25,12 +25,6 @@ const user = {
     const url = `/user/employee-detail`
     return API.post(url, user_id)
   },
-  logout: () => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
-    localStorage.removeItem('expiresAt')
-    localStorage.removeItem('collapsed')
-  },
 }
 
 export default user

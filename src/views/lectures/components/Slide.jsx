@@ -1,353 +1,120 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Badge, Card, Spin, Alert, Typography, Space } from 'antd'
-import { DownloadOutlined } from '@ant-design/icons'
-import JSZip from 'jszip'
-import slideApi from '@api/slide'
+import React, { useState, useEffect, useRef } from 'react'
+import PropTypes from 'prop-types'
+import { Alert, Spin, Card, Button } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import './Slide.scss'
 
-const { Text } = Typography
-
-const getMimeType = (extension) => {
-  const mimeTypes = {
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.webp': 'image/webp',
-    '.pdf': 'application/pdf',
-    '.html': 'text/html',
-    '.htm': 'text/html',
-  }
-  return mimeTypes[extension] || 'application/octet-stream'
-}
-
-const Slide = ({ filePath }) => {
-  const [isLoading, setIsLoading] = useState(true)
+const Slide = ({ filePath, requiredTime }) => {
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [slides, setSlides] = useState([])
-  const [timeSpent, setTimeSpent] = useState(0)
+  const [iframeLoaded, setIframeLoaded] = useState(false)
+  const [iframeError, setIframeError] = useState(false)
+  const [currentViewer, setCurrentViewer] = useState('office-online') // Default to Office Online
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (slides.length === 0) return
-
-      switch (event.key) {
-        case 'ArrowLeft':
-        case 'ArrowUp':
-          event.preventDefault()
-          setCurrentSlide((prev) => Math.max(0, prev - 1))
-          break
-        case 'ArrowRight':
-        case 'ArrowDown':
-        case ' ':
-          event.preventDefault()
-          setCurrentSlide((prev) => Math.min(slides.length - 1, prev + 1))
-          break
-        case 'Home':
-          event.preventDefault()
-          setCurrentSlide(0)
-          break
-        case 'End':
-          event.preventDefault()
-          setCurrentSlide(slides.length - 1)
-          break
-        default:
-          break
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [slides.length])
-  useEffect(() => {
-    const loadSlides = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
-
-        const arrayBuffer = await slideApi.getSlideFile(filePath)
-        const zip = new JSZip()
-        const zipData = await zip.loadAsync(arrayBuffer)
-
-        const slideFiles = []
-        const supportedExtensions = [
-          '.jpg',
-          '.jpeg',
-          '.png',
-          '.gif',
-          '.svg',
-          '.webp',
-          '.pdf',
-          '.html',
-          '.htm',
-        ]
-        for (const [filename, file] of Object.entries(zipData.files)) {
-          if (!file.dir) {
-            const extension = filename
-              .toLowerCase()
-              .substring(filename.lastIndexOf('.'))
-
-            if (supportedExtensions.includes(extension)) {
-              let content = null
-
-              try {
-                if (
-                  ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'].includes(
-                    extension,
-                  )
-                ) {
-                  const blob = await file.async('blob')
-
-                  if (blob && blob.size > 0) {
-                    const mimeType = getMimeType(extension)
-                    const typedBlob = new Blob([blob], { type: mimeType })
-                    content = URL.createObjectURL(typedBlob)
-                  } else {
-                    console.warn(`❌ Invalid blob for ${filename}:`, blob)
-                    continue
-                  }
-                } else if (extension === '.pdf') {
-                  const blob = await file.async('blob')
-                  if (blob && blob.size > 0) {
-                    content = URL.createObjectURL(blob)
-                    console.log(
-                      `Created blob URL for PDF ${filename}:`,
-                      content,
-                    )
-                  } else {
-                    console.warn(`Invalid PDF blob for ${filename}`)
-                    continue
-                  }
-                } else if (['.html', '.htm'].includes(extension)) {
-                  content = await file.async('text')
-                  if (!content || content.trim().length === 0) {
-                    console.warn(`Empty HTML content for ${filename}`)
-                    continue
-                  }
-                }
-
-                slideFiles.push({
-                  name: filename,
-                  type: extension.substring(1),
-                  content: content,
-                  size: file._data
-                    ? file._data.uncompressedSize
-                    : blob?.size || 0,
-                })
-
-                console.log(`Successfully processed ${filename} (${extension})`)
-              } catch (fileError) {
-                console.error(`Error processing file ${filename}:`, fileError)
-              }
-            }
-          }
-        }
-
-        slideFiles.sort((a, b) =>
-          a.name.localeCompare(b.name, undefined, { numeric: true }),
-        )
-
-        setSlides(slideFiles)
-
-        if (slideFiles.length === 0) {
-          setError(
-            'No supported slide files found in the ZIP. Supported formats: images (jpg, png, gif, svg, webp), PDF, HTML',
-          )
-        }
-      } catch (err) {
-        console.error('Error loading slides:', err)
-        setError(`Failed to load slides: ${err.message}`)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     if (filePath) {
-      loadSlides()
+      console.log('Slide component mounted with filePath:', filePath)
+      setLoading(false)
     }
   }, [filePath])
 
-  useEffect(() => {
-    return () => {
-      slides.forEach((slide) => {
-        if (slide.content && slide.content.startsWith('blob:')) {
-          URL.revokeObjectURL(slide.content)
-        }
-      })
-    }
-  }, [slides])
-  const renderSlideContent = (slide) => {
-    if (!slide) return null
-
-    switch (slide.type) {
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'gif':
-      case 'svg':
-      case 'webp':
-        return (
-          <div className="slide-image-container">
-            <img
-              src={slide.content}
-              alt={`Slide: ${slide.name}`}
-              className="slide-image"
-              onError={(e) => {
-                if (slide.content.startsWith('blob:')) {
-                  fetch(slide.content, { method: 'HEAD' })
-                    .then((response) => {
-                      console.log('🔍 Blob URL fetch test:', {
-                        status: response.status,
-                        statusText: response.statusText,
-                        headers: Object.fromEntries(response.headers.entries()),
-                        url: slide.content,
-                      })
-                    })
-                    .catch((err) => {
-                      console.error('🔍 Blob URL fetch failed:', err.message)
-                    })
-                }
-              }}
-            />
-          </div>
-        )
-
-      case 'pdf':
-        return (
-          <iframe
-            src={slide.content}
-            className="slide-pdf"
-            title={`Slide: ${slide.name}`}
-            onLoad={() => console.log('PDF loaded:', slide.name)}
-            onError={(e) => console.error('PDF load error:', slide.name, e)}
-          />
-        )
-
-      case 'html':
-      case 'htm':
-        return (
-          <iframe
-            srcDoc={slide.content}
-            className="slide-html"
-            title={`Slide: ${slide.name}`}
-            sandbox="allow-scripts allow-same-origin"
-            onLoad={() => console.log('HTML loaded:', slide.name)}
-            onError={(e) => console.error('HTML load error:', slide.name, e)}
-          />
-        )
-
-      default:
-        return (
-          <div className="slide-unsupported">
-            <p>Unsupported file type: {slide.type}</p>
-            <p>File: {slide.name}</p>
-          </div>
-        )
-    }
+  // Handle iframe load
+  const handleIframeLoad = () => {
+    setIframeLoaded(true)
+    console.log('Viewer loaded successfully')
   }
 
-  if (isLoading) {
+  const handleIframeError = () => {
+    setIframeError(true)
+    console.error('Viewer failed to load')
+  }
+
+  // Create viewer URLs
+  const encodedFilePath = encodeURIComponent(filePath)
+
+  // Office Online URL for PowerPoint-like experience (like in the image)
+  const officeOnlineUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedFilePath}&wdStartSlideShow=0&wdView=0`
+
+  // Google Docs viewer as fallback
+  const googleDocsUrl = `https://docs.google.com/viewer?url=${encodedFilePath}&embedded=true`
+
+  const switchToFallback = () => {
+    if (currentViewer === 'office-online') {
+      setCurrentViewer('google-docs')
+      setIframeError(false)
+    }
+  }
+  console.log('Rendering Slide component:', {
+    filePath,
+    loading,
+    error,
+    officeOnlineUrl,
+    googleDocsUrl,
+    currentViewer,
+    iframeLoaded,
+    iframeError,
+  })
+  if (loading) {
     return (
       <div className="slide-container loading">
-        <Space>
+        <Card className="slide-loading-card">
           <Spin size="large" />
-          <Text
-            style={{ marginTop: 16, display: 'block', textAlign: 'center' }}
-          >
-            Loading slide content...
-          </Text>
-        </Space>
+          <p style={{ marginTop: 16, textAlign: 'center' }}>
+            Loading presentation...
+          </p>
+        </Card>
       </div>
     )
   }
-
   if (error) {
     return (
       <div className="slide-container error">
         <Alert
-          message="Slide Not Available"
+          message="Failed to Load Presentation"
           description={error}
           type="error"
           showIcon
+          icon={<ExclamationCircleOutlined />}
           className="slide-error-alert"
-          action={
-            <Button
-              size="small"
-              icon={<DownloadOutlined />}
-              onClick={() => window.open(filePath, '_blank')}
-            >
-              Download
-            </Button>
-          }
-        />
+        />{' '}
       </div>
     )
   }
   return (
-    <div>
-      <div className="slide-header">
-        <Badge
-          count={`${currentSlide + 1} / ${slides.length}`}
+    <div className="slide-container">
+      {/* Google Docs viewer - Full width */}
+      <div className="slide-viewer-content">
+        {iframeError && (
+          <div className="slide-error-overlay">
+            <Alert
+              message="Google Docs viewer failed to load"
+              description="Please check the file URL and try again"
+              type="warning"
+              showIcon
+            />
+          </div>
+        )}
+
+        <iframe
+          src={googleDocsUrl}
+          className="slide-viewer-iframe"
+          title="Google Docs Presentation Viewer"
+          frameBorder="0"
+          allowFullScreen
+          onLoad={handleIframeLoad}
+          onError={handleIframeError}
           style={{
-            backgroundColor: '#1890ff',
-            fontSize: '12px',
-            fontWeight: 'bold',
+            display: !iframeError ? 'block' : 'none',
           }}
         />
       </div>
-
-      {/* Simple two-column layout */}
-      <div className="slide-main-layout">
-        {/* Left: Thumbnail list with fixed width */}
-        <div className="slide-thumbnails-list">
-          {slides.map((slide, index) => (
-            <div
-              key={index}
-              className={`thumbnail-item ${index === currentSlide ? 'active' : ''}`}
-              onClick={() => setCurrentSlide(index)}
-            >
-              {/* Thumbnail image/preview */}
-              <div className="thumbnail-preview">
-                {slide.type !== 'pdf' &&
-                slide.type !== 'html' &&
-                slide.type !== 'htm' ? (
-                  <img
-                    src={slide.content}
-                    alt={slide.name}
-                    onError={(e) => {
-                      e.target.style.display = 'none'
-                      e.target.nextSibling.style.display = 'flex'
-                    }}
-                  />
-                ) : null}
-                <div className="thumbnail-fallback">
-                  {slide.type.toUpperCase()}
-                </div>
-              </div>
-
-              {/* Slide number */}
-              <div className="thumbnail-number">{index + 1}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Right: Main slide content with fixed dimensions */}
-        <div className="slide-content-area">
-          {slides.length > 0 ? (
-            <div className="slide-viewer">
-              {renderSlideContent(slides[currentSlide])}
-            </div>
-          ) : (
-            <div className="no-slides">
-              <Text type="secondary">No slides available</Text>
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   )
+}
+
+Slide.propTypes = {
+  filePath: PropTypes.string.isRequired,
+  requiredTime: PropTypes.number,
 }
 
 export default Slide

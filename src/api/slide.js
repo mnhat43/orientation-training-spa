@@ -7,7 +7,8 @@ const slide = {
         method: 'GET',
         mode: 'cors',
         headers: {
-          Accept: 'application/zip, application/octet-stream, */*',
+          Accept:
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation, application/zip, application/octet-stream, */*',
         },
       })
 
@@ -20,7 +21,8 @@ const slide = {
           method: 'GET',
           mode: 'cors',
           headers: {
-            Accept: 'application/zip, application/octet-stream, */*',
+            Accept:
+              'application/vnd.openxmlformats-officedocument.presentationml.presentation, application/zip, application/octet-stream, */*',
           },
         })
       }
