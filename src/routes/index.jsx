@@ -13,7 +13,7 @@ import TemplateFormPage from '@views/template-form'
 import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
 import { ROLES } from '@constants'
-// import MyLearningPath from '@views/learning-path'
+import { UserManagement, FeedbackManagement } from '@views/dashboard/components'
 
 function AllRoutes() {
   return (
@@ -23,7 +23,6 @@ function AllRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<LandingPage />} />
       </Route>
-
       {/* Routes accessible by all authenticated users */}
       <Route
         element={
@@ -50,12 +49,21 @@ function AllRoutes() {
           element={<MainLayout component={Lectures} />}
         />
       </Route>
-
       {/* Routes accessible only by Admin and Manager */}
       <Route
         element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MANAGER]} />}
       ></Route>
-
+      {/* Routes accessible only by ADMIN */}
+      <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN]} />}>
+        <Route
+          path="/admin/users"
+          element={<MainLayout component={UserManagement} />}
+        />
+        <Route
+          path="/admin/feedbacks"
+          element={<MainLayout component={FeedbackManagement} />}
+        />
+      </Route>
       {/* Routes accessible only by MANAGER */}
       <Route element={<ProtectedRoute allowedRoles={[ROLES.MANAGER]} />}>
         <Route
@@ -79,7 +87,6 @@ function AllRoutes() {
           element={<MainLayout component={TraineePathCreator} />}
         />
       </Route>
-
       {/* Routes accessible only by EMPLOYEE */}
       <Route element={<ProtectedRoute allowedRoles={[ROLES.EMPLOYEE]} />}>
         {/* <Route
@@ -87,7 +94,6 @@ function AllRoutes() {
           element={<MainLayout component={MyLearningPath} />}
         /> */}
       </Route>
-
       <Route path="*" element={<div>404</div>} />
     </Routes>
   )

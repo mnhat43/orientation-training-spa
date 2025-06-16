@@ -1,7 +1,6 @@
 import React from 'react'
 import useAuth from '@hooks/useAuth'
 import { ROLES } from '@constants'
-import AdminDashboard from './AdminDashboard'
 import { Spin } from 'antd'
 import MyLearningPath from '@views/learning-path'
 import { Navigate } from 'react-router-dom'
@@ -33,7 +32,7 @@ const Dashboard = () => {
 
   const renderDashboardByRole = () => {
     if (currentUser.role_id === ROLES.ADMIN) {
-      return <AdminDashboard />
+      return <Navigate to="/admin/users" replace />
     } else if (currentUser.role_id === ROLES.MANAGER) {
       return <Navigate to="/manage-employee" replace />
     } else if (currentUser.role_id === ROLES.EMPLOYEE) {

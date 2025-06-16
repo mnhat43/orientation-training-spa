@@ -1,33 +1,18 @@
 import { ROLES } from './roles'
 
 export const ROLE_NAVIGATION = {
-  // [ROLES.ADMIN]: [
-  //   {
-  //     key: 'dashboard',
-  //     label: 'Dashboard',
-  //     path: '/dashboard',
-  //   },
-  //   {
-  //     key: 'courses',
-  //     label: 'Courses',
-  //     path: '/courses',
-  //   },
-  //   {
-  //     key: 'manage-employee',
-  //     label: 'Manage Employees',
-  //     path: '/manage-employee',
-  //   },
-  //   {
-  //     key: 'templates',
-  //     label: 'Templates',
-  //     path: '/templates',
-  //   },
-  //   {
-  //     key: 'learning-paths',
-  //     label: 'Learning Paths',
-  //     path: '/learning-paths/create',
-  //   },
-  // ],
+  [ROLES.ADMIN]: [
+    {
+      key: 'user-management',
+      label: 'User Management',
+      path: '/admin/users',
+    },
+    {
+      key: 'feedback-management',
+      label: 'Feedback Management',
+      path: '/admin/feedbacks',
+    },
+  ],
   [ROLES.MANAGER]: [
     {
       key: 'manage-employee',

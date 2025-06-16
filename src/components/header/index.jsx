@@ -19,7 +19,7 @@ const HeaderRender = () => {
   const navItems = useMemo(() => {
     if (!currentUser) return DEFAULT_NAVIGATION
 
-    return ROLE_NAVIGATION[currentUser.role_id] || []
+    return ROLE_NAVIGATION[currentUser.role_id]
   }, [currentUser])
 
   const toggleMobileMenu = useCallback(

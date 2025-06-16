@@ -1,0 +1,118 @@
+.user-modal-drawer {
+    .profile-picture-container {
+        text-align: center;
+        margin-bottom: 24px;
+
+        .avatar-container {
+            position: relative;
+            transition: all 0.3s ease;
+
+            &:hover {
+                border-color: #1890ff;
+                box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+            }
+
+            &.has-avatar:hover {
+                &::after {
+                    content: "Click to change";
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    white-space: nowrap;
+                    z-index: 2;
+                }
+            }
+
+            &.uploading {
+                border-color: #1890ff;
+                background-color: #f0f7ff;
+            }
+        }
+    }
+
+    &.is-loading {
+        .ant-drawer-body {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    }
+
+    .ant-form-item-label {
+        label {
+            font-weight: 500;
+            color: #333;
+        }
+    }
+
+    .ant-input-affix-wrapper {
+        border-radius: 6px;
+
+        &:focus,
+        &:focus-within {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+    }
+
+    .ant-select {
+        .ant-select-selector {
+            border-radius: 6px;
+
+            &:focus,
+            &:focus-within {
+                border-color: #1890ff;
+                box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+            }
+        }
+    }
+
+    .ant-input-password {
+        .ant-input-suffix {
+            .ant-btn {
+                border: none;
+                padding: 0 4px;
+                height: auto;
+
+                &:hover {
+                    background-color: #f5f5f5;
+                }
+            }
+        }
+    }
+
+    .ant-drawer-footer {
+        border-top: 1px solid #f0f0f0;
+        padding: 16px 24px;
+        background: #fafafa;
+    }
+
+    .ant-btn-primary {
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .ant-btn {
+        border-radius: 6px;
+        font-weight: 500;
+    }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+    .user-modal-drawer {
+        width: 100% !important;
+
+        .profile-picture-container {
+            .avatar-container {
+                width: 100px !important;
+                height: 100px !important;
+            }
+        }
+    }
+}
