@@ -95,18 +95,13 @@ const CourseCard = ({
     const colorName = CATEGORY_COLORS[categoryKey] || 'default'
     return COLOR_MAP[colorName] || COLOR_MAP.default
   }
-
   const handleEditClick = (e) => {
     e.stopPropagation()
     onEdit(course_id)
   }
 
-  const handleDeleteClick = (e) => {
-    e.stopPropagation()
-  }
-
   const confirmDelete = () => {
-    onDelete(course_id)
+    onDelete(Number(course_id))
   }
 
   const handleImageError = (e) => {
@@ -215,24 +210,22 @@ const CourseCard = ({
                       <EditOutlined />
                     </button>
                   </Tooltip>
-
                   <Tooltip title="Delete course">
-                    <Popconfirm
-                      title="Delete this course?"
-                      description="All course content and progress will be permanently removed."
-                      onConfirm={confirmDelete}
-                      okText="Delete"
-                      cancelText="Cancel"
-                      okButtonProps={{ danger: true }}
-                      placement="topRight"
-                    >
-                      <button
-                        className="action-btn delete"
-                        onClick={handleDeleteClick}
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <Popconfirm
+                        title="Delete this course?"
+                        description="All course content and progress will be permanently removed."
+                        onConfirm={confirmDelete}
+                        okText="Delete"
+                        cancelText="Cancel"
+                        okButtonProps={{ danger: true }}
+                        placement="topRight"
                       >
-                        <DeleteOutlined />
-                      </button>
-                    </Popconfirm>
+                        <button className="action-btn delete">
+                          <DeleteOutlined />
+                        </button>
+                      </Popconfirm>
+                    </div>
                   </Tooltip>
                 </div>
               )}

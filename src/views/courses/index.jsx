@@ -6,6 +6,7 @@ import courseApi from '@api/course'
 import skillkeywordApi from '@api/skillkeyword'
 import CourseCard from '@components/CourseCard'
 import AddCourseDrawer from './components/AddCourseDrawer.jsx'
+import EditCourseDrawer from './components/EditCourseDrawer.jsx'
 import './index.scss'
 import { toast } from 'react-toastify'
 import { convertFileToBase64 } from '@helpers/common.js'
@@ -39,6 +40,8 @@ const useResponsive = () => {
 
 const Courses = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false)
+  const [editingCourse, setEditingCourse] = useState(null)
   const [courseList, setCourseList] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -94,12 +97,13 @@ const Courses = () => {
       console.error('Error fetching skill keywords:', error)
     }
   }
-
   const handleDeleteCourse = async (courseID) => {
     try {
-      const response = await courseApi.deleteCourse({ id: courseID })
+      const response = await courseApi.deleteCourse({ course_id: courseID })
       if (response.status === 1) {
-        fetchCourses()
+        setCourseList((prevCourses) =>
+          prevCourses.filter((course) => course.course_id !== courseID),
+        )
         toast.success('Course deleted successfully')
       }
     } catch (error) {
@@ -112,7 +116,6 @@ const Courses = () => {
   const handleClickCard = (courseId) => {
     navigate(`/course/${courseId}/modules`)
   }
-
   const handleAddCourse = async (values) => {
     try {
       let base64String = ''
@@ -135,8 +138,21 @@ const Courses = () => {
       const response = await courseApi.addCourse(payload)
 
       if (response.status === 1) {
+        const newCourse = {
+          ...payload,
+          course_id: response.data.course_id,
+          duration: 0,
+          skill_keyword: skill_keyword_ids
+            ? skill_keyword_ids
+                .map((id) => {
+                  const keyword = skillKeywords.find((sk) => sk.id === id)
+                  return keyword ? keyword.name : ''
+                })
+                .filter(Boolean)
+            : [],
+        }
+        setCourseList((prevCourses) => [newCourse, ...prevCourses])
         toast.success('Course added successfully!')
-        fetchCourses()
         setIsDrawerOpen(false)
       } else {
         toast.error('Error: ' + response.message)
@@ -145,9 +161,166 @@ const Courses = () => {
       toast.error('Error: ' + (error.message || 'Unknown error'))
     }
   }
-
   const handleEditCourse = async (courseID) => {
-    console.log('Edit course:', courseID)
+    console.log('handleEditCourse called with courseID:', courseID)
+
+    const courseToEdit = courseList.find(
+      (course) => course.course_id === courseID,
+    )
+
+    console.log('Found courseToEdit:', courseToEdit)
+
+    if (courseToEdit) {
+      const enrichedCourse = {
+        ...courseToEdit,
+        skill_keyword_ids:
+          courseToEdit.skill_keyword_ids ||
+          (courseToEdit.skill_keyword
+            ? courseToEdit.skill_keyword
+                .map((skillName) => {
+                  const keyword = skillKeywords.find(
+                    (sk) => sk.name === skillName,
+                  )
+                  return keyword ? keyword.id : null
+                })
+                .filter(Boolean)
+            : []),
+      }
+
+      console.log('Setting editingCourse to:', enrichedCourse)
+      setEditingCourse(enrichedCourse)
+      setIsEditDrawerOpen(true)
+    } else {
+      console.error('Course not found with ID:', courseID)
+      toast.error('Course not found')
+    }
+  }
+  const handleUpdateCourse = async (values) => {
+    try {
+      const {
+        title,
+        description,
+        thumbnail,
+        category,
+        skill_keyword_ids,
+        course_id,
+      } = values
+
+      console.log(
+        'handleUpdateCourse - course_id:',
+        course_id,
+        'type:',
+        typeof course_id,
+      )
+      console.log('handleUpdateCourse - values:', values)
+
+      if (!course_id) {
+        toast.error('Course ID is missing')
+        console.error('Course ID is null or undefined:', course_id)
+        return
+      }
+
+      const originalCourse = courseList.find(
+        (course) => course.course_id === parseInt(course_id, 10),
+      )
+
+      console.log('Found original course:', originalCourse)
+
+      if (!originalCourse) {
+        toast.error('Course not found')
+        console.error('Course not found with ID:', course_id)
+        console.log(
+          'Available courses:',
+          courseList.map((c) => ({ id: c.course_id, title: c.title })),
+        )
+        return
+      }
+      const payload = { course_id: parseInt(course_id, 10) }
+      let hasChanges = false
+
+      if (title !== originalCourse.title) {
+        payload.title = title
+        hasChanges = true
+      }
+
+      if (description !== originalCourse.description) {
+        payload.description = description || ''
+        hasChanges = true
+      }
+
+      if (category !== originalCourse.category) {
+        payload.category = category
+        hasChanges = true
+      }
+      const originalSkillIds = originalCourse.skill_keyword_ids || []
+      const newSkillIds = (skill_keyword_ids || []).map((id) =>
+        parseInt(id, 10),
+      )
+
+      const skillsChanged =
+        originalSkillIds.length !== newSkillIds.length ||
+        !originalSkillIds.every((id) => newSkillIds.includes(id)) ||
+        !newSkillIds.every((id) => originalSkillIds.includes(id))
+
+      if (skillsChanged) {
+        payload.skill_keyword_ids = newSkillIds
+        hasChanges = true
+      }
+
+      if (thumbnail && thumbnail[0]?.originFileObj) {
+        const file = thumbnail[0].originFileObj
+        payload.thumbnail = await convertFileToBase64(file)
+        hasChanges = true
+      } else if (
+        thumbnail &&
+        thumbnail[0]?.url &&
+        thumbnail[0].url !== originalCourse.thumbnail
+      ) {
+        payload.thumbnail = thumbnail[0].url
+        hasChanges = true
+      } else if (!thumbnail && originalCourse.thumbnail) {
+        payload.thumbnail = ''
+        hasChanges = true
+      }
+
+      if (!hasChanges) {
+        toast.info('No changes detected')
+        setIsEditDrawerOpen(false)
+        setEditingCourse(null)
+        return
+      }
+
+      const response = await courseApi.updateCourse(payload)
+
+      if (response.status === 1) {
+        setCourseList((prevCourses) =>
+          prevCourses.map((course) =>
+            course.course_id === course_id
+              ? {
+                  ...course,
+                  ...payload,
+
+                  ...(payload.skill_keyword_ids && {
+                    skill_keyword: payload.skill_keyword_ids
+                      .map((id) => {
+                        const keyword = skillKeywords.find((sk) => sk.id === id)
+                        return keyword ? keyword.name : ''
+                      })
+                      .filter(Boolean),
+                  }),
+                }
+              : course,
+          ),
+        )
+        toast.success('Course updated successfully!')
+        setIsEditDrawerOpen(false)
+        setEditingCourse(null)
+      } else {
+        toast.error('Error: ' + response.message)
+      }
+    } catch (error) {
+      toast.error('Error: ' + (error.message || 'Unknown error'))
+    }
   }
   const filteredCourses = courseList.filter((course) => {
     const matchesSearch =
@@ -317,12 +490,20 @@ const Courses = () => {
             />
           </div>
         )}
-      </div>
+      </div>{' '}
       {isDrawerOpen && (
         <AddCourseDrawer
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
           handleAddCourse={handleAddCourse}
+        />
+      )}
+      {isEditDrawerOpen && (
+        <EditCourseDrawer
+          isDrawerOpen={isEditDrawerOpen}
+          setIsDrawerOpen={setIsEditDrawerOpen}
+          handleEditCourse={handleUpdateCourse}
+          course={editingCourse}
         />
       )}
     </div>
