@@ -15,11 +15,10 @@ const HeaderRender = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false)
-
   const navItems = useMemo(() => {
     if (!currentUser) return DEFAULT_NAVIGATION
 
-    return ROLE_NAVIGATION[currentUser.role_id]
+    return ROLE_NAVIGATION[currentUser.role_id] || []
   }, [currentUser])
 
   const toggleMobileMenu = useCallback(
