@@ -73,9 +73,6 @@ const NextAction = ({ allCompleted, nextCourse, navigate }) => {
               Congratulations on completing your learning path. You've mastered
               all the required skills.
             </p>
-            <Button type="primary" icon={<StarOutlined />}>
-              View Certificate
-            </Button>
           </div>
         </div>
       )}

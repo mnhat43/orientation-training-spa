@@ -169,7 +169,7 @@ const TraineePathCreator = () => {
 
   const steps = [
     {
-      title: 'Select Trainee',
+      title: 'Select Employee',
       content: renderTraineeSelector,
       icon: <UserOutlined />,
     },
