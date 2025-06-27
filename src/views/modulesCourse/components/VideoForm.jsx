@@ -43,7 +43,7 @@ const VideoForm = ({ form, onSubmit }) => {
         </div>
 
         <Alert
-          message="Supported: YouTube, Vimeo, and other streaming services"
+          message="Supported: YouTube"
           type="info"
           showIcon
           className="form-content__alert"
@@ -60,7 +60,7 @@ const VideoForm = ({ form, onSubmit }) => {
         >
           <Input
             prefix={<LinkOutlined />}
-            placeholder="Enter video URL (YouTube, Vimeo, etc.)"
+            placeholder="Enter video URL (YouTube)"
             className="form-content__input"
           />
         </Form.Item>

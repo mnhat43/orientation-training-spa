@@ -27,7 +27,7 @@ import './SlideForm.scss'
 const { Text } = Typography
 const { Dragger } = Upload
 
-const SlideForm = ({ form, onSubmit }) => {
+const SlideForm = ({ form, onSubmit, resetForm }) => {
   const [fileList, setFileList] = useState([])
   const [fileToBase64Loading, setFileToBase64Loading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -50,6 +50,16 @@ const SlideForm = ({ form, onSubmit }) => {
       form.setFieldsValue({ fileResource: undefined })
     }
   }, [fileList, form])
+
+  useEffect(() => {
+    if (resetForm) {
+      form.resetFields()
+      setFileList([])
+      setFileBase64(null)
+      setUploadProgress(0)
+      setFormSubmitting(false)
+    }
+  }, [resetForm, form])
 
   const convertFileToBase64 = (file) => {
     setFileToBase64Loading(true)
@@ -178,8 +188,7 @@ const SlideForm = ({ form, onSubmit }) => {
       return `${(size / 1024 / 1024).toFixed(2)} MB`
     }
   }
-
-  const validateAndSubmit = () => {
+  const validateAndSubmit = async () => {
     const values = form.getFieldsValue()
 
     if (!values.title || !values.title.trim()) {
@@ -206,10 +215,16 @@ const SlideForm = ({ form, onSubmit }) => {
     }
 
     try {
-      onSubmit({ ...formData })
+      await onSubmit({ ...formData })
+
+      form.resetFields()
+      setFileList([])
+      setFileBase64(null)
+      setUploadProgress(0)
     } catch (error) {
       console.error('Error in form submission:', error)
       message.error('Error submitting form')
+    } finally {
       setFormSubmitting(false)
     }
   }
@@ -309,8 +324,7 @@ const SlideForm = ({ form, onSubmit }) => {
                     Click or drag slide file to this area to upload
                   </p>
                   <p className="ant-upload-hint">
-                    Support for PDF, PowerPoint and image files for slides. Max
-                    50MB.
+                    Support PowerPoint and image files for slides. Max 50MB.
                   </p>
                 </Dragger>
               </Form.Item>

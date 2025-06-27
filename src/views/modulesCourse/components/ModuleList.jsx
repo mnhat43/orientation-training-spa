@@ -112,18 +112,18 @@ const ModuleList = ({
         label: 'Edit Module',
         onClick: () => setEditModalVisible(true),
       },
-      !isFirst && {
-        key: 'moveUp',
-        icon: <ArrowUpOutlined />,
-        label: 'Move Up',
-        onClick: moveUp,
-      },
-      !isLast && {
-        key: 'moveDown',
-        icon: <ArrowDownOutlined />,
-        label: 'Move Down',
-        onClick: moveDown,
-      },
+      // !isFirst && {
+      //   key: 'moveUp',
+      //   icon: <ArrowUpOutlined />,
+      //   label: 'Move Up',
+      //   onClick: moveUp,
+      // },
+      // !isLast && {
+      //   key: 'moveDown',
+      //   icon: <ArrowDownOutlined />,
+      //   label: 'Move Down',
+      //   onClick: moveDown,
+      // },
       {
         key: 'divider',
         type: 'divider',

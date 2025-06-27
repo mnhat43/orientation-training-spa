@@ -27,7 +27,7 @@ import './FileForm.scss'
 const { Text } = Typography
 const { Dragger } = Upload
 
-const FileForm = ({ form, onSubmit }) => {
+const FileForm = ({ form, onSubmit, resetForm }) => {
   const [fileList, setFileList] = useState([])
   const [fileToBase64Loading, setFileToBase64Loading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -50,6 +50,17 @@ const FileForm = ({ form, onSubmit }) => {
       form.setFieldsValue({ fileResource: undefined })
     }
   }, [fileList, form])
+
+  // Reset form when resetForm prop changes
+  useEffect(() => {
+    if (resetForm) {
+      form.resetFields()
+      setFileList([])
+      setFileBase64(null)
+      setUploadProgress(0)
+      setFormSubmitting(false)
+    }
+  }, [resetForm, form])
 
   const convertFileToBase64 = (file) => {
     setFileToBase64Loading(true)
@@ -186,8 +197,7 @@ const FileForm = ({ form, onSubmit }) => {
       return `${(size / 1024 / 1024).toFixed(2)} MB`
     }
   }
-
-  const validateAndSubmit = () => {
+  const validateAndSubmit = async () => {
     const values = form.getFieldsValue()
 
     if (!values.title || !values.title.trim()) {
@@ -214,10 +224,15 @@ const FileForm = ({ form, onSubmit }) => {
     }
 
     try {
-      onSubmit({ ...formData })
+      await onSubmit({ ...formData })
+      form.resetFields()
+      setFileList([])
+      setFileBase64(null)
+      setUploadProgress(0)
     } catch (error) {
       console.error('Error in form submission:', error)
       message.error('Error submitting form')
+    } finally {
       setFormSubmitting(false)
     }
   }
@@ -314,10 +329,7 @@ const FileForm = ({ form, onSubmit }) => {
                   <p className="ant-upload-text">
                     Click or drag file to this area to upload
                   </p>
-                  <p className="ant-upload-hint">
-                    Support for PDF, Word, Excel, PowerPoint and image files.
-                    Max 50MB.
-                  </p>
+                  <p className="ant-upload-hint">Support for PDF. Max 50MB.</p>
                 </Dragger>
               </Form.Item>
             ) : (
